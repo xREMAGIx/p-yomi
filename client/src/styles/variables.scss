@@ -1,0 +1,28 @@
+// fonts
+$font-path: "~assets/fonts/";
+$font-sans: "San Francisco Display", sans-serif;
+$font-philo: "Philosopher", sans-serif;
+$font-montserrat: "Montserrat", sans-serif;
+
+// viewport
+$standard-viewport: 1366px;
+
+// transition
+$transition: 0.25s;
+$transition-long: 0.4s;
+$transition05: 0.5s;
+
+// z-index
+$z-1: 1;
+$z-2: 2;
+$z-3: 3;
+$z-header: 100;
+$z-modal: 101;
+$z-loading: 104;
+$z-notify: 105;
+
+//height header
+$header-main-desktop: 102;
+$header-main-tablet: 70;
+$header-sub-desktop: 50;
+$footer-main-desktop: 407;

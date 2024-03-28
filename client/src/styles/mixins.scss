@@ -1,0 +1,237 @@
+@mixin text-overflow($number: 2) {
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
+  -webkit-line-clamp: ($number);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@mixin aspect-ratio($width: 1, $height: 1) {
+  position: relative;
+
+  &::before {
+    content: "";
+    display: block;
+    padding-bottom: ($height / $width) * 100%;
+  }
+}
+
+@mixin transition($value) {
+  transition: $value;
+}
+
+@mixin scroll-bars(
+  $size: 12,
+  $thumb-color: var(--color-primary),
+  $track-color: $white-smoke,
+  $border-radius-thumb: 5,
+  $border-thumb: 2
+) {
+  // For Google Chrome
+  &::-webkit-scrollbar {
+    height: rem($size);
+    margin-right: rem(10);
+    width: rem($size);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $thumb-color;
+    border: rem($border-thumb) solid $track-color;
+    border-radius: rem($border-radius-thumb);
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $track-color;
+  }
+
+  // For Internet Explorer
+
+  scrollbar-face-color: $thumb-color;
+  scrollbar-track-color: $track-color;
+}
+
+@mixin font-base($font-size: 16, $line-height: 24) {
+  font-size: rem($font-size);
+  line-height: rem($line-height);
+}
+
+@mixin style-bg-color() {
+  &-bg-white {
+    background-color: $white;
+  }
+}
+
+@mixin style-font-weight() {
+  &-100 {
+    font-weight: 100;
+  }
+
+  &-200 {
+    font-weight: 200;
+  }
+
+  &-300 {
+    font-weight: 300;
+  }
+
+  &-400 {
+    font-weight: normal;
+  }
+
+  &-500 {
+    font-weight: 500;
+  }
+
+  &-600 {
+    font-weight: 600;
+  }
+
+  &-700 {
+    font-weight: bold;
+  }
+
+  &-800 {
+    font-weight: 800;
+  }
+
+  &-900 {
+    font-weight: 900;
+  }
+}
+
+@mixin style-general() {
+  &-uppercase {
+    text-transform: uppercase;
+  }
+
+  &-capitalize {
+    text-transform: capitalize;
+  }
+
+  &-underline {
+    text-decoration: underline;
+  }
+
+  &-italic {
+    font-style: italic;
+  }
+
+  &-center {
+    text-align: center;
+  }
+
+  &-justify {
+    text-align: justify;
+  }
+
+  &-left {
+    text-align: left;
+  }
+
+  &-right {
+    text-align: right;
+  }
+
+  &-lineThrough {
+    text-decoration: line-through;
+  }
+}
+
+@mixin reset-button {
+  appearance: none;
+  background-color: transparent;
+  border: 0;
+  outline: none;
+}
+
+@mixin list-style-none {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+$font-family: (
+  // 'fontPhilo': $font-philo,
+  // 'fontMontserrat': $font-montserrat,
+  // 'fontSans': $font-sans,
+);
+
+@mixin style-font-family {
+  @each $name, $font in $font-family {
+    &-#{$name} {
+      font-family: $font;
+    }
+  }
+}
+
+@mixin adjust-flex($justify-content: center, $align-item: center) {
+  align-items: $align-item;
+  display: flex;
+  justify-content: $justify-content;
+}
+
+$colors-design: (
+  "white": $white,
+  "raisinBlack": $raisin-black,
+);
+
+@mixin style-color {
+  @each $name, $color in $colors-design {
+    &-#{$name} {
+      color: $color;
+    }
+  }
+}
+
+$spaceamounts: (
+  4,
+  8,
+  16,
+  20,
+  24,
+  28,
+  32
+); // Adjust this to include the pixel amounts you need.
+$sides: (top, bottom, left, right); // Leave this variable alone
+
+@each $space in $spaceamounts {
+  @each $side in $sides {
+    .u-m-#{str-slice($side, 0, 1)}-#{$space} {
+      margin-#{$side}: #{$space}px;
+    }
+
+    .u-p-#{str-slice($side, 0, 1)}-#{$space} {
+      padding-#{$side}: #{$space}px;
+    }
+  }
+}
+
+@each $space in $spaceamounts {
+  .u-m-#{$space} {
+    margin: #{$space}px;
+  }
+
+  .u-m-x-#{$space} {
+    margin-left: #{$space}px;
+    margin-right: #{$space}px;
+  }
+
+  .u-m-y-#{$space} {
+    margin-top: #{$space}px;
+    margin-bottom: #{$space}px;
+  }
+
+  .u-p-#{$space} {
+    padding: #{$space}px;
+  }
+
+  .u-p-x-#{$space} {
+    padding-left: #{$space}px;
+    padding-right: #{$space}px;
+  }
+
+  .u-p-y-#{$space} {
+    padding-top: #{$space}px;
+    padding-bottom: #{$space}px;
+  }
+}

@@ -1,0 +1,150 @@
+.a-input {
+  $root: &;
+  position: relative;
+
+  &_label {
+    color: $raisin-black;
+    margin-bottom: rem(8);
+    @include font-base(12, 16);
+
+    &-required {
+      color: $white;
+      margin-left: rem(4);
+    }
+
+    &-error {
+      color: $sinopia;
+    }
+  }
+
+  &_wrap {
+    position: relative;
+  }
+
+  &_input {
+    appearance: none;
+    background: $white;
+    border: 1px solid $gainsboro;
+    border-radius: rem(8);
+    color: $raisin-black;
+    font: inherit;
+    font-weight: 400;
+    margin: 0;
+    outline: none;
+    padding: rem(13) rem(16);
+    transition: all $transition linear;
+    width: 100%;
+    @include font-base(14, 22);
+
+    &::placeholder {
+      color: $taupe-gray;
+      font-weight: 400;
+      @include font-base(14, 22);
+    }
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      display: none;
+    }
+  }
+
+  &_searchBtn {
+    background: transparent;
+    border-bottom: 0;
+    border-left: 1px solid $gainsboro;
+    border-right: 0;
+    border-top: 0;
+    cursor: pointer;
+    height: 100%;
+    padding: rem(8);
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+
+    .a-icon {
+      height: 100%;
+    }
+  }
+
+  &-transparent {
+    #{$root}_input {
+      background-color: transparent;
+      border: 0;
+      color: $white;
+      padding: rem(4) 0;
+      @include font-base(14, 22);
+
+      &::placeholder {
+        color: $white;
+        font-weight: 400;
+        @include font-base(14, 22);
+      }
+    }
+  }
+
+  &_message-error {
+    color: $sinopia;
+    @include font-base(12, 16);
+  }
+
+  &-default {
+    #{$root}_input {
+      border-radius: rem(8);
+      padding: rem(5) rem(12);
+    }
+
+    &-red {
+      color: $sinopia;
+    }
+  }
+
+  &-outline {
+    #{$root}_input {
+      background: transparent;
+      border: 1px solid var(--color-primary);
+      border-radius: rem(2);
+      color: $white;
+      padding: rem(8) rem(12);
+      @include font-base(16, 24);
+
+      &::placeholder {
+        color: $white;
+        @include font-base(16, 24);
+      }
+    }
+    #{$root}_label {
+      @include font-base(14, 22);
+      margin-bottom: rem(4);
+    }
+  }
+
+  &-search {
+    #{$root}_input {
+      background: $white;
+      border-radius: rem(100);
+      color: $raisin-black;
+      padding: rem(5) rem(12);
+    }
+  }
+
+  &-disabled {
+    #{$root}_input {
+      background: $snow;
+    }
+  }
+
+  &-error#{$root}-default {
+    #{$root}_input {
+      border-color: $sinopia;
+      color: $sinopia;
+    }
+  }
+
+  &-error#{$root}-outline {
+    #{$root}_input {
+      border-color: $sinopia;
+      color: $white;
+    }
+  }
+}

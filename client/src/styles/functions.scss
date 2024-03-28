@@ -1,0 +1,7 @@
+@function rem($pixel) {
+  @if not $pixel {
+    @error 'Missing argument $pixel';
+  }
+
+  @return calc($pixel / 16) + rem;
+}

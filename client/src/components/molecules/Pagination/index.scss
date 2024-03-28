@@ -1,0 +1,96 @@
+.o-pagination {
+  $root: &;
+  @include adjust-flex;
+  height: auto;
+  width: 100%;
+
+  li {
+    @include adjust-flex;
+
+    a {
+      @include adjust-flex;
+      color: $black;
+      height: 100%;
+      outline: none;
+      width: 100%;
+    }
+  }
+
+  &_page,
+  &_prev,
+  &_next {
+    height: rem(32);
+    width: rem(32);
+
+    @include mobile-down {
+      height: rem(24);
+      width: rem(24);
+    }
+  }
+
+  &_page {
+    border: 1px solid $gainsboro;
+    border-radius: rem(4);
+    height: rem(32);
+    margin-left: rem(4);
+    margin-right: rem(4);
+    min-width: rem(32);
+    transition: all $transition linear;
+    @include adjust-flex;
+
+    @include small-mobile {
+      margin-left: rem(2);
+      margin-right: rem(2);
+    }
+
+    &:not(.disabled):hover,
+    &-active {
+      background-color: $white;
+      border: 1px solid var(--color-primary);
+
+      a {
+        color: var(--color-primary) !important;
+      }
+    }
+  }
+
+  &_prev,
+  &_next {
+    background-color: $white;
+    border: 1px solid $gainsboro;
+    border-radius: rem(4);
+
+    a {
+      padding: rem(10);
+
+      @include mobile-down {
+        padding: rem(8);
+      }
+    }
+  }
+
+  &_prev {
+    margin-right: rem(4);
+
+    @include small-mobile {
+      margin-right: rem(2);
+    }
+  }
+
+  &_next {
+    margin-left: rem(4);
+
+    @include small-mobile {
+      margin-left: rem(2);
+    }
+  }
+
+  .disabled {
+    background-color: $snow;
+    border: 1px solid $gainsboro;
+
+    a {
+      cursor: not-allowed;
+    }
+  }
+}

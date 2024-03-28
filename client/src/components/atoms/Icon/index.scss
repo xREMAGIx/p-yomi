@@ -1,0 +1,57 @@
+.a-icon {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: block;
+
+  &-14 {
+    height: rem(14);
+    width: rem(14);
+  }
+
+  &-15 {
+    height: rem(15);
+    width: rem(15);
+  }
+
+  &-16 {
+    height: rem(16);
+    width: rem(16);
+  }
+
+  &-20 {
+    height: rem(20);
+    width: rem(20);
+  }
+
+  &-24 {
+    height: rem(24);
+    width: rem(24);
+  }
+
+  &-38 {
+    height: rem(38);
+    width: rem(38);
+  }
+
+  &-34 {
+    height: rem(34);
+    width: rem(34);
+  }
+
+  &-loading {
+    background-image: url("../../../assets/icons/ic_loading.svg");
+  }
+
+  &-search {
+    background-image: url("../../../assets/icons/ic_search.svg");
+  }
+
+  &-arrowLeft {
+    background-image: url("../../../assets/icons/ic_arrow_left.svg");
+  }
+
+  &-arrowRight {
+    background-image: url("../../../assets/icons/ic_arrow_right.svg");
+  }
+}

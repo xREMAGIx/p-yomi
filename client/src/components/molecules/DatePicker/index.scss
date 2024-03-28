@@ -1,0 +1,36 @@
+.m-datePicker {
+  $root: &;
+
+  &_error {
+    color: $sinopia;
+    @include font-base(12, 16);
+  }
+
+  &_label {
+    color: $raisin-black;
+    margin-bottom: rem(8);
+    @include font-base(12, 16);
+
+    &-error {
+      color: $sinopia;
+    }
+  }
+
+  &_input {
+    width: 100%;
+
+    .react-date-picker__wrapper {
+      border: 1px solid $gainsboro;
+      padding: rem(4) rem(12);
+      border-radius: rem(8);
+    }
+  }
+
+  &-error {
+    #{$root}_input {
+      .react-date-picker__wrapper {
+        border-color: $sinopia;
+      }
+    }
+  }
+}
