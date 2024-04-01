@@ -1,3 +1,4 @@
+import Layout from "@client/components/templates/Layout";
 import { Outlet, createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authenticated")({
@@ -10,9 +11,9 @@ export const Route = createFileRoute("/_authenticated")({
   },
   component: () => {
     return (
-      <div style={{ minHeight: "100vh" }}>
+      <Layout>
         <Outlet />
-      </div>
+      </Layout>
     );
   },
 });

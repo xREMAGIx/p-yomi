@@ -1,11 +1,17 @@
 import Button from "@client/components/atoms/Button";
+import Heading from "@client/components/atoms/Heading";
 import Input from "@client/components/atoms/Input";
-import Datepicker from "@client/components/molecules/DatePicker";
-import { FORM_VALIDATION, QUERY_KEYS } from "@client/libs/constants";
+import { FORM_VALIDATION } from "@client/libs/constants";
+import { handleCheckAuthError } from "@client/libs/error";
+import { productQueryKeys } from "@client/libs/query";
 import { server } from "@client/libs/server";
 import { UpdateProductParams } from "@server/models/product.model";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { createLazyFileRoute, useRouter } from "@tanstack/react-router";
+import {
+  createLazyFileRoute,
+  useNavigate,
+  useRouter,
+} from "@tanstack/react-router";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 
 export const Route = createLazyFileRoute("/_authenticated/product/$id")({
@@ -16,6 +22,7 @@ function ProductDetail() {
   //* Hooks
   const { id } = Route.useParams();
   const router = useRouter();
+  const navigate = useNavigate();
 
   //* Hook-form
   const methods = useForm<UpdateProductParams>({
@@ -23,34 +30,42 @@ function ProductDetail() {
       description: "",
       barcode: "",
       price: 0,
-      expiryDate: null,
       name: "",
     },
   });
 
   //* Query
   useQuery({
-    queryKey: [...QUERY_KEYS.PRODUCT_DETAIL],
+    queryKey: [...productQueryKeys.detail(id)],
     queryFn: async () => {
-      const { data } = await server.api.v1.product({ id: id }).get();
+      const { data, error } = await server.api.v1.product({ id: id }).get();
 
-      if (data) {
-        methods.reset({
-          name: data.data.name,
-          barcode: data.data.barcode,
-          description: data.data.description,
-          price: data.data.price,
-          expiryDate: data.data.expiryDate,
-        });
-        return data.data;
+      if (error) {
+        handleCheckAuthError(error, navigate);
+        throw error.value;
       }
+
+      methods.reset({
+        name: data.data.name,
+        barcode: data.data.barcode,
+        description: data.data.description,
+        price: data.data.price,
+      });
+      return data.data;
     },
   });
 
   //* Mutation
   const updateMutation = useMutation({
-    mutationFn: (params: UpdateProductParams) =>
-      server.api.v1.product({ id: id }).put(params),
+    mutationKey: [...productQueryKeys.update(id)],
+    mutationFn: async (params: UpdateProductParams) => {
+      const { error } = await server.api.v1.product({ id: id }).put(params);
+
+      if (error) {
+        handleCheckAuthError(error, navigate);
+        throw error.value;
+      }
+    },
   });
 
   //* Functions
@@ -72,7 +87,9 @@ function ProductDetail() {
       <div className="p-productDetail_form">
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)}>
-            <h3>Product detail</h3>
+            <div className="u-m-t-16">
+              <Heading>Product detail</Heading>
+            </div>
             <div className="u-m-t-16">
               <Controller
                 control={methods.control}
@@ -138,24 +155,6 @@ function ProductDetail() {
                     id="product-create-price"
                     label="Price"
                     {...field}
-                    error={error?.message}
-                  />
-                )}
-              />
-            </div>
-            <div className="u-m-t-8">
-              <Controller
-                control={methods.control}
-                name="expiryDate"
-                render={({
-                  field: { value, onChange },
-                  fieldState: { error },
-                }) => (
-                  <Datepicker
-                    id={"product-create-date"}
-                    label="Expiry date"
-                    value={value}
-                    handleChangeDate={onChange}
                     error={error?.message}
                   />
                 )}

@@ -1,0 +1,76 @@
+.o-collapse {
+    $root: &;
+
+    &-active {
+        #{$root} {
+            &_sub {
+                visibility: visible;
+                opacity: 1;
+            }
+
+            &_header-iconRight div:first-child {
+                transform: rotate(90deg);
+            }
+        }
+    }
+
+    &-startReport {
+        background: none;
+        #{$root} {
+            &_header {
+                padding: rem(14) 0;
+
+                &-title {
+                    margin-left: 0;
+                }
+            }
+        }
+    }
+
+    &_header {
+        display: flex;
+        align-items: center;
+        padding: rem(8) rem(16);
+        cursor: pointer;
+        background: $isabelline;
+
+        &-border {
+            border-radius: rem(4);
+        }
+
+        &-iconLeft {
+            width: 100%;
+            max-width: rem(28);
+        }
+
+        &-title {
+            flex: 1;
+        }
+
+        &-iconRight {
+            transition: $transition linear;
+            position: relative;
+
+            > div {
+                width: rem(15);
+                height: rem(1.5);
+                background-color: $la-salle-green;
+
+                &:first-child {
+                    position: absolute;
+                    transition: $transition linear;
+                }
+            }
+        }
+    }
+
+    &_sub {
+        visibility: hidden;
+        transition: $transition linear;
+        opacity: 0;
+    }
+
+    &_content {
+        padding-top: rem(16);
+    }
+}

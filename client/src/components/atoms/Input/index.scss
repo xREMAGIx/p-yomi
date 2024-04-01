@@ -3,12 +3,11 @@
   position: relative;
 
   &_label {
-    color: $raisin-black;
+    color: var(--text-color);
     margin-bottom: rem(8);
     @include font-base(12, 16);
 
     &-required {
-      color: $white;
       margin-left: rem(4);
     }
 
@@ -26,7 +25,7 @@
     background: $white;
     border: 1px solid $gainsboro;
     border-radius: rem(8);
-    color: $raisin-black;
+    color: $raisin_black;
     font: inherit;
     font-weight: 400;
     margin: 0;
@@ -37,7 +36,7 @@
     @include font-base(14, 22);
 
     &::placeholder {
-      color: $taupe-gray;
+      color: $taupe_gray;
       font-weight: 400;
       @include font-base(14, 22);
     }
@@ -102,7 +101,7 @@
   &-outline {
     #{$root}_input {
       background: transparent;
-      border: 1px solid var(--color-primary);
+      border: 1px solid var(--primary-color);
       border-radius: rem(2);
       color: $white;
       padding: rem(8) rem(12);
@@ -123,7 +122,7 @@
     #{$root}_input {
       background: $white;
       border-radius: rem(100);
-      color: $raisin-black;
+      color: $raisin_black;
       padding: rem(5) rem(12);
     }
   }

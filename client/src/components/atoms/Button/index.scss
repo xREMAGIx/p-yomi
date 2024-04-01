@@ -11,62 +11,52 @@
   position: relative;
   transition: all $transition linear;
   width: 100%;
-  @include font-base(14, 22);
+  border: 1px solid transparent;
+
+  @include font-base(16, 24);
+
+  @include mobile-down {
+    @include font-base(14, 22);
+  }
+
+  &:hover {
+    opacity: 0.75;
+  }
 
   &-primary {
-    background-color: var(--color-primary);
-    border: 1px solid var(--color-primary);
+    background-color: var(--primary-color);
+    border: 1px solid var(--primary-color);
     color: $white;
-
-    &:hover {
-      background-color: $white;
-      color: var(--color-primary);
-    }
   }
 
   &-secondary {
-    background-color: var(--color-secondary);
-    border: 1px solid var(--color-secondary);
+    background-color: var(--secondary-color);
+    border: 1px solid var(--secondary-color);
     color: $white;
-
-    &:hover {
-      background-color: $white;
-      color: var(--color-secondary);
-    }
   }
 
   &-transparent {
     background-color: $white;
     border-radius: 2px;
-    box-shadow: 0 2px 0 rgba(var(--color-primary), 0.016);
-    color: var(--color-primary);
+    box-shadow: 0 2px 0 rgba(var(--primary-color), 0.016);
+    color: var(--primary-color);
     padding: rem(7) rem(15);
-    @include font-base(16, 24);
-
-    @include mobile-down {
-      @include font-base(14, 22);
-    }
 
     &:hover {
-      background-color: var(--color-primary);
+      background-color: var(--primary-color);
       color: $white;
     }
   }
 
   &-outlinePrimary {
     background-color: $white;
-    border: 1px solid var(--color-primary);
-    box-shadow: 0 2px 0 rgba(var(--color-primary), 0.016);
-    color: var(--color-primary);
+    border: 1px solid var(--primary-color);
+    box-shadow: 0 2px 0 rgba(var(--primary-color), 0.016);
+    color: var(--primary-color);
     @include font-base(16, 24);
 
     @include mobile-down {
       @include font-base(14, 22);
-    }
-
-    &:hover {
-      background-color: var(--color-primary);
-      color: $white;
     }
   }
 
@@ -77,7 +67,7 @@
     color: $black085;
 
     &:hover {
-      background-color: $white-smoke;
+      background-color: $white_smoke;
     }
   }
 
@@ -101,24 +91,41 @@
     }
   }
 
+  &-icon {
+    border-radius: rem(40);
+    font-weight: 500;
+    padding: rem(4);
+    white-space: nowrap;
+
+    @include small-mobile {
+      padding: rem(4);
+    }
+
+    &-active,
+    &:hover {
+      background: linear-gradient(180deg, $white -266.46%, transparent 279.88%);
+      border: 1px solid $white06;
+    }
+  }
+
   &:disabled,
   &-loading {
     cursor: not-allowed;
     &#{$root}-primary {
-      background-color: rgba(var(--color-primary), 0.5);
-      border-color: rgba(var(--color-primary), 0.5);
+      background-color: rgba(var(--primary-color), 0.5);
+      border-color: rgba(var(--primary-color), 0.5);
       color: $white;
     }
 
     &#{$root}-secondary {
       background-color: rgba($white, 0.5);
       border-color: rgba($white, 0.5);
-      color: var(--color-primary);
+      color: var(--primary-color);
     }
 
     &#{$root}-outline {
-      background-color: rgba(var(--color-primary), 0.2);
-      border-color: rgba(var(--color-primary), 0.2);
+      background-color: rgba(var(--primary-color), 0.2);
+      border-color: rgba(var(--primary-color), 0.2);
     }
   }
 

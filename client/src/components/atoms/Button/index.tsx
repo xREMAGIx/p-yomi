@@ -3,7 +3,12 @@ import "./index.scss";
 import { mapModifiers } from "@client/libs/functions";
 import Icon from "@client/components/atoms/Icon";
 
-export type VariantButton = "primary" | "secondary" | "outlinePrimary";
+export type VariantButton =
+  | "primary"
+  | "secondary"
+  | "outlinePrimary"
+  | "transparent"
+  | "icon";
 export type StyleButton = "md" | "lg" | "inline";
 export type TextStyle = GeneralTextStyle;
 

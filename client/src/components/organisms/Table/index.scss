@@ -2,6 +2,7 @@
   $root: &;
   position: relative;
   overflow: auto;
+  box-shadow: rgba(var(--primary-color-alpha), 0.35) 0 rem(5) rem(15);
 
   &_header {
     position: sticky;
@@ -28,8 +29,8 @@
     #{$root}_header {
       background: linear-gradient(
         90deg,
-        var(--color-primary) calc((1366 - 819 - 126) / 1366 * 100%),
-        var(--color-secondary) calc((1366 - 126) / 1366 * 100%)
+        var(--primary-color) calc((1366 - 819 - 126) / 1366 * 100%),
+        var(--secondary-color) calc((1366 - 126) / 1366 * 100%)
       );
       background-attachment: fixed;
 
@@ -56,7 +57,7 @@
       position: absolute;
       bottom: -1px;
       height: 1px;
-      background-color: var(--color-primary);
+      background-color: var(--primary-color);
       left: 8px;
       right: 8px;
     }
@@ -89,6 +90,7 @@
       &:last-child {
         #{$root}_body_cell {
           border-bottom: 0;
+          min-width: rem(160);
         }
       }
     }
@@ -99,15 +101,6 @@
       &-center {
         text-align: center;
       }
-    }
-  }
-
-  &_header,
-  &_body {
-    &_cell {
-      // &-sm-x {
-      //   @include padding-x(8, 8);
-      // }
     }
   }
 
@@ -130,18 +123,18 @@
       left: 0;
     }
     #{$root}_body_cell:first-child {
-      background-color: $white-smoke;
+      background-color: $white_smoke;
     }
   }
 
   &-light {
     #{$root}_header_cell {
-      background-color: var(--color-primary);
+      background-color: var(--primary-color);
       color: $white;
     }
 
     #{$root}_body_cell {
-      border-bottom: 1px solid var(--color-primary);
+      border-bottom: 1px solid var(--primary-color);
     }
 
     @include scroll-bars(8, $gainsboro, transparent, 4, 2);
@@ -149,11 +142,11 @@
 
   &-dark {
     #{$root}_header_cell {
-      background-color: var(--color-primary);
+      background-color: var(--primary-color);
     }
 
     #{$root}_body_cell {
-      border-bottom: 1px solid var(--color-primary);
+      border-bottom: 1px solid var(--primary-color);
     }
 
     @include scroll-bars(8, $gainsboro, transparent, 4, 2);

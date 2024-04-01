@@ -1,12 +1,24 @@
+[data-theme="light"] {
+  --primary-color: #{$violet_blue};
+  --primary-color-alpha: #{$violet_blue-alpha};
+  --secondary-color: #{$sangria};
+  --text-color: #{$raisin_black};
+  --background-color: #{$white};
+}
+
+[data-theme="dark"] {
+  --primary-color: #{$iris};
+  --primary-color-alpha: #{$iris-alpha};
+  --secondary-color: #{$carmine};
+  --text-color: #{$baby_powder};
+  --background-color: #{$jet};
+}
+
 html,
 body {
   font-family: $font-sans;
   overflow-x: hidden;
-
-  --color-primary: #{$violetBlue};
-  --color-secondary: #{$sangria};
-  --background-color: #{$white};
-
+  margin: 0;
   background-color: var(--background-color);
 }
 

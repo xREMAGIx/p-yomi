@@ -7,7 +7,7 @@
   }
 
   &_label {
-    color: $raisin-black;
+    color: var(--text-color);
     margin-bottom: rem(8);
     @include font-base(12, 16);
 
@@ -31,6 +31,24 @@
       .react-date-picker__wrapper {
         border-color: $sinopia;
       }
+    }
+  }
+
+  .react-date-picker__inputGroup {
+    color: var(--text-color);
+  }
+
+  .react-date-picker__clear-button,
+  .react-date-picker__calendar-button {
+    svg {
+      stroke: var(--text-color);
+    }
+  }
+
+  .react-date-picker__button:enabled:hover .react-date-picker__button__icon,
+  .react-date-picker__button:enabled:focus .react-date-picker__button__icon {
+    svg {
+      stroke: var(--primary-color);
     }
   }
 }

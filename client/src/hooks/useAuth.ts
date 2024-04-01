@@ -11,6 +11,10 @@ export const useAuth = () => {
     if (!user) {
       const accessToken = localStorage.getItem(AUTHEN_TOKENS.ACCESS);
 
+      if (!accessToken) {
+        return false;
+      }
+
       const { data } = await server.api.v1.auth.profile.get({
         headers: {
           authorization: `Bearer ${accessToken}`,

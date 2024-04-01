@@ -3,8 +3,10 @@ import staticPlugin from "@elysiajs/static";
 import swagger from "@elysiajs/swagger";
 import { Elysia } from "elysia";
 import { authRoutes } from "./controllers/auth.controller";
-import { errorPlugin } from "./libs/plugins";
 import { productRoutes } from "./controllers/product.controller";
+import { warehouseRoutes } from "./controllers/warehouse.controller";
+import { errorPlugin } from "./libs/plugins";
+import { goodsReceiptRoutes } from "./controllers/goods-receipt.controller";
 
 const app = new Elysia({ name: "root" })
   .use(cors())
@@ -32,6 +34,8 @@ const app = new Elysia({ name: "root" })
   .use(errorPlugin)
   .use(authRoutes)
   .use(productRoutes)
+  .use(warehouseRoutes)
+  .use(goodsReceiptRoutes)
   .listen(3000);
 
 console.log(

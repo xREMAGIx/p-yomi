@@ -1,17 +1,12 @@
 .a-icon {
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
   display: block;
+  mask-size: contain;
+  mask-position: center;
+  mask-repeat: no-repeat;
 
-  &-14 {
-    height: rem(14);
-    width: rem(14);
-  }
-
-  &-15 {
-    height: rem(15);
-    width: rem(15);
+  &-12 {
+    height: rem(12);
+    width: rem(12);
   }
 
   &-16 {
@@ -39,19 +34,68 @@
     width: rem(34);
   }
 
+  background-color: var(--text-color);
+
+  &-soap {
+    background-color: $soap;
+  }
+
   &-loading {
     background-image: url("../../../assets/icons/ic_loading.svg");
   }
 
   &-search {
-    background-image: url("../../../assets/icons/ic_search.svg");
+    -webkit-mask-image: url("../../../assets/icons/ic_search.svg");
+    mask-image: url("../../../assets/icons/ic_search.svg");
   }
 
   &-arrowLeft {
-    background-image: url("../../../assets/icons/ic_arrow_left.svg");
+    -webkit-mask-image: url("../../../assets/icons/ic_arrow_left.svg");
+    mask-image: url("../../../assets/icons/ic_arrow_left.svg");
   }
 
   &-arrowRight {
-    background-image: url("../../../assets/icons/ic_arrow_right.svg");
+    -webkit-mask-image: url("../../../assets/icons/ic_arrow_right.svg");
+    mask-image: url("../../../assets/icons/ic_arrow_right.svg");
+  }
+
+  &-barcode {
+    -webkit-mask-image: url("../../../assets/icons/ic_barcode.svg");
+    mask-image: url("../../../assets/icons/ic_barcode.svg");
+  }
+
+  &-home {
+    -webkit-mask-image: url("../../../assets/icons/ic_home.svg");
+    mask-image: url("../../../assets/icons/ic_home.svg");
+  }
+
+  &-minimize {
+    -webkit-mask-image: url("../../../assets/icons/ic_minimize.svg");
+    mask-image: url("../../../assets/icons/ic_minimize.svg");
+  }
+
+  &-menu {
+    -webkit-mask-image: url("../../../assets/icons/ic_menu.svg");
+    mask-image: url("../../../assets/icons/ic_menu.svg");
+  }
+
+  &-warehouse {
+    -webkit-mask-image: url("../../../assets/icons/ic_warehouse.svg");
+    mask-image: url("../../../assets/icons/ic_warehouse.svg");
+  }
+
+  &-delete {
+    -webkit-mask-image: url("../../../assets/icons/ic_delete.svg");
+    mask-image: url("../../../assets/icons/ic_delete.svg");
+  }
+
+  &-close {
+    -webkit-mask-image: url("../../../assets/icons/ic_close.svg");
+    mask-image: url("../../../assets/icons/ic_close.svg");
+  }
+
+  &-packageImport {
+    -webkit-mask-image: url("../../../assets/icons/ic_package_import.svg");
+    mask-image: url("../../../assets/icons/ic_package_import.svg");
   }
 }
