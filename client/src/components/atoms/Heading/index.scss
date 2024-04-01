@@ -1,0 +1,53 @@
+.a-heading {
+  display: block;
+  margin: 0;
+  color: var(--text-color);
+
+  @include font-base(32, 48);
+  @include tablet-down {
+    @include font-base(24, 32);
+  }
+  @include mobile-down {
+    @include font-base(20, 30);
+  }
+
+  &-32x48 {
+    @include font-base(32, 48);
+    @include tablet-down {
+      @include font-base(24, 32);
+    }
+    @include mobile-down {
+      @include font-base(20, 30);
+    }
+  }
+
+  &-24x32 {
+    @include font-base(24, 32);
+    @include tablet-down {
+      @include font-base(20, 30);
+    }
+    @include mobile-down {
+      @include font-base(16, 24);
+    }
+  }
+
+  &-20x30 {
+    @include font-base(20, 30);
+    @include mobile-down {
+      @include font-base(16, 24);
+    }
+  }
+
+  &-primaryColor {
+    color: var(--primary-color);
+  }
+
+  &-secondaryColor {
+    color: var(--secondary-color);
+  }
+
+  @include style-font-family();
+  @include style-color();
+  @include style-font-weight();
+  @include style-general();
+}

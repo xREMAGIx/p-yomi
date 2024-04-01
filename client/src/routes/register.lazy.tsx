@@ -1,10 +1,12 @@
 import Button from "@client/components/atoms/Button";
+import Heading from "@client/components/atoms/Heading";
 import Input from "@client/components/atoms/Input";
+import Link from "@client/components/atoms/Link";
 import { FORM_VALIDATION } from "@client/libs/constants";
 import { server } from "@client/libs/server";
 import { RegisterParams } from "@server/models/auth.model";
 import { useMutation } from "@tanstack/react-query";
-import { Link, createLazyFileRoute } from "@tanstack/react-router";
+import { createLazyFileRoute } from "@tanstack/react-router";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
@@ -34,7 +36,8 @@ function Register() {
 
   //* Mutation
   const { isPending, mutate: registerMutation } = useMutation({
-    mutationFn: (params: RegisterParams) => server.api.v1.auth.register.post(params),
+    mutationFn: (params: RegisterParams) =>
+      server.api.v1.auth.register.post(params),
     onSuccess: (res) => {
       const { error } = res;
       if (error) throw error.value;
@@ -51,14 +54,14 @@ function Register() {
       username: form.username,
       email: form.email,
       password: form.password,
-    })
+    });
   };
 
   return (
-    <div className="p-2">
+    <div className="p-register u-p-16">
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
-          <h3>Register</h3>
+          <Heading>Register</Heading>
           <div className="u-m-t-16">
             <Controller
               control={methods.control}
@@ -156,9 +159,7 @@ function Register() {
         </form>
       </FormProvider>
       <div className="u-m-t-32">
-        <Link to="/login">
-          Login
-        </Link>
+        <Link to="/login">Login</Link>
       </div>
     </div>
   );

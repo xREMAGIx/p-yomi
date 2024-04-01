@@ -13,16 +13,20 @@ export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setUser: (state, action: PayloadAction<AuthData>) => {
+    setUser: (state, action: PayloadAction<AuthData | undefined>) => {
       state.user = action.payload;
     },
     setTokens: (_, action: PayloadAction<TokensData>) => {
       localStorage.setItem(AUTHEN_TOKENS.ACCESS, action.payload.access);
       localStorage.setItem(AUTHEN_TOKENS.REFRESH, action.payload.refresh);
     },
+    clearTokens: () => {
+      localStorage.removeItem(AUTHEN_TOKENS.ACCESS);
+      localStorage.removeItem(AUTHEN_TOKENS.REFRESH);
+    },
   },
 });
 
-export const { setUser, setTokens } = authSlice.actions;
+export const { setUser, setTokens, clearTokens } = authSlice.actions;
 
 export default authSlice.reducer;

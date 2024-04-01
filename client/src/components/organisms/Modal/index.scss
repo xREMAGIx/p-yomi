@@ -1,0 +1,219 @@
+.o-modal {
+  $root: &;
+  border: 0;
+  border-radius: rem(8);
+  height: 100%;
+  outline: 0;
+  position: fixed;
+  position: relative;
+  width: 100%;
+
+  &:focus {
+    outline: 0;
+  }
+
+  &_close {
+    background-color: transparent;
+    padding: 0;
+    position: absolute;
+    right: rem(28);
+    top: rem(28);
+    z-index: $z-1;
+    @include reset-button();
+
+    @include tablet-down {
+      right: rem(8);
+      top: rem(8);
+    }
+  }
+
+  &_main {
+    align-items: center;
+    display: flex;
+    height: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    overflow: hidden;
+    padding-left: rem(16);
+    padding-right: rem(16);
+    width: 100%;
+    @include tablet-down-lands {
+      overflow: auto;
+    }
+  }
+
+  &_wrapper {
+    background: var(--background-color);
+    box-shadow: 0 0 rem(24) rem(1) var(--primary-color);
+    display: flex;
+    flex-direction: column;
+    margin-left: auto;
+    margin-right: auto;
+    max-height: calc(100vh - #{rem(120)});
+    max-width: rem(740);
+    overflow: hidden;
+    padding-top: rem(40);
+    position: relative;
+    width: 100%;
+
+    @include tablet-down {
+      max-height: calc(100vh - #{rem(60)});
+    }
+
+    @include mobile-down {
+      max-height: calc(100vh - #{rem(48)});
+    }
+  }
+
+  &_layer {
+    left: 0;
+    pointer-events: none;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100%;
+
+    @include mobile-down {
+      background-size: 100%;
+      top: 36%;
+    }
+  }
+
+  &_body {
+    flex: 1;
+    margin-top: rem(20);
+    overflow-y: auto;
+    padding: 0 rem(64) rem(24);
+    @include scroll-bars(6, $gainsboro, $white-smoke, 0, 1);
+
+    @include tablet-down {
+      margin-top: rem(12);
+      padding: 0 rem(16) rem(16);
+    }
+
+    ul {
+      padding-left: rem(32);
+
+      @include mobile-down {
+        padding-left: rem(24);
+      }
+    }
+  }
+
+  &_header {
+    padding-left: rem(64);
+    padding-right: rem(64);
+
+    @include mobile-down {
+      padding-left: rem(16);
+      padding-right: rem(16);
+    }
+  }
+
+  // //* Modifier
+  &-videoModal {
+    #{$root}_main {
+      padding: 0;
+    }
+
+    #{$root}_wrapper {
+      background: none !important;
+      max-height: 100%;
+      max-width: 100%;
+      overflow-y: auto;
+      padding: rem(16);
+    }
+
+    #{$root}_header,
+    #{$root}_body {
+      padding: 0;
+    }
+
+    #{$root}_body {
+      margin-top: rem(38);
+      overflow-y: unset;
+
+      @include mobile-down {
+        margin-top: rem(24);
+      }
+    }
+
+    #{$root}_close {
+      background-color: $raisin-black;
+      border-radius: rem(100);
+      height: rem(32);
+      top: rem(74);
+      width: rem(32);
+      z-index: $z-2;
+
+      @include mobile-down {
+        height: rem(24);
+        top: rem(94);
+        width: rem(24);
+      }
+
+      .a-icon {
+        margin: auto;
+      }
+    }
+  }
+}
+
+.ReactModal__Overlay {
+  opacity: 0;
+  transform: translateX(-100px);
+  transition: all 500ms ease-in-out;
+}
+
+.ReactModal__Overlay--after-open {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.ReactModal__Overlay--before-close {
+  opacity: 0;
+  transform: translateX(-100px);
+}
+
+.ReactModal__Overlay {
+  background: rgba($black, 0.3);
+  inset: 0;
+  opacity: 0;
+  position: fixed;
+  transform: translateY(-100%);
+  transition: all 500ms ease-in-out;
+  z-index: $z-modal;
+
+  &::after {
+    background: rgba($black, 0.74);
+    content: "";
+    display: block;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: -1;
+  }
+
+  &--open {
+    overflow: hidden;
+    @include tablet-up {
+      padding-right: rem(7);
+    }
+  }
+
+  &--after-open {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  &--before-close {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+}
+
+.reactmodal-html-open {
+  overflow: hidden;
+}

@@ -1,12 +1,14 @@
 import Button from "@client/components/atoms/Button";
+import Heading from "@client/components/atoms/Heading";
 import Input from "@client/components/atoms/Input";
+import Link from "@client/components/atoms/Link";
 import { FORM_VALIDATION } from "@client/libs/constants";
 import { server } from "@client/libs/server";
 import { setTokens, setUser } from "@client/redux/features/auth";
 import { useAppDispatch } from "@client/redux/hooks";
 import { LoginParams } from "@server/models/auth.model";
 import { useMutation } from "@tanstack/react-query";
-import { Link, createLazyFileRoute, useNavigate } from "@tanstack/react-router";
+import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
@@ -57,10 +59,10 @@ function Login() {
   };
 
   return (
-    <div className="p-2">
+    <div className="p-login u-p-16">
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
-          <h3>Login</h3>
+          <Heading>Login</Heading>
           <div className="u-m-t-16">
             <Controller
               control={methods.control}
@@ -115,9 +117,7 @@ function Login() {
         </form>
       </FormProvider>
       <div className="u-m-t-32">
-        <Link to="/register">
-          Register
-        </Link>
+        <Link to="/register">Register</Link>
       </div>
     </div>
   );

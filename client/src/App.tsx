@@ -1,8 +1,8 @@
 import { RouterProvider, createRouter } from "@tanstack/react-router";
+import toast, { Toaster } from "react-hot-toast";
 import { Provider } from "react-redux";
 import { useAuth } from "./hooks/useAuth";
 import { store } from "./redux/store";
-import toast, { Toaster } from "react-hot-toast";
 
 // Import the generated route tree
 import {
@@ -29,7 +29,9 @@ declare module "@tanstack/react-router" {
 // Create a client
 const queryClient = new QueryClient({
   queryCache: new QueryCache({
-    onError: (error) => toast.error(`Something went wrong: ${error.message}`),
+    onError: (error) => {
+      toast.error(`Something went wrong: ${error.message}`);
+    },
   }),
   mutationCache: new MutationCache({
     onError: (error) => {

@@ -1,5 +1,5 @@
-import Button from "@client/components/atoms/Button";
-import Input from "@client/components/atoms/Input";
+import Heading from "@client/components/atoms/Heading";
+import Card from "@client/components/molecules/Card";
 import { createLazyFileRoute } from "@tanstack/react-router";
 
 export const Route = createLazyFileRoute("/_authenticated/")({
@@ -8,10 +8,15 @@ export const Route = createLazyFileRoute("/_authenticated/")({
 
 function Index() {
   return (
-    <div className="p-2">
-      <h3>Welcome Home!</h3>
-      <Button>test</Button>
-      <Input id="test" label="Test"></Input>
+    <div className="p-home">
+      <Heading>Welcome Home!</Heading>
+      <div className="p-home_statictis u-m-t-32">
+        <Card>
+          <Heading type="h5" modifiers={["20x30"]}>
+            Product
+          </Heading>
+        </Card>
+      </div>
     </div>
   );
 }

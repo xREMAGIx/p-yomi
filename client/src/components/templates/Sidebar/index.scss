@@ -1,0 +1,71 @@
+.t-sidebar {
+  $root: &;
+  position: relative;
+  height: 100%;
+  width: rem(240);
+  transition: all $transition-fast linear;
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  &_background {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: var(--primary-color);
+    opacity: 0.8;
+  }
+
+  &_content {
+    position: relative;
+    z-index: 1;
+  }
+
+  &_header {
+    position: relative;
+    padding: 0 rem(32);
+  }
+
+  &_mini_icon {
+    position: absolute;
+    left: rem(8);
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  &_menu_item {
+    padding: rem(8);
+    display: flex;
+    align-items: center;
+    &:hover {
+      background-color: $white02;
+    }
+  }
+
+  &_menu_link-active {
+    #{$root}_menu_item {
+      background-color: $white02;
+    }
+  }
+
+  &_menu_title {
+    white-space: nowrap;
+    @include text-overflow(1);
+  }
+
+  &_heading,
+  &_menu_title {
+    transition: all $transition-fast linear;
+  }
+
+  &-minimized {
+    width: rem(48);
+
+    #{$root}_heading,
+    #{$root}_menu_title {
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+}

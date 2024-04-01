@@ -22,8 +22,8 @@
 
 @mixin scroll-bars(
   $size: 12,
-  $thumb-color: var(--color-primary),
-  $track-color: $white-smoke,
+  $thumb-color: var(--primary-color),
+  $track-color: $white_smoke,
   $border-radius-thumb: 5,
   $border-thumb: 2
 ) {
@@ -172,7 +172,8 @@ $font-family: (
 
 $colors-design: (
   "white": $white,
-  "raisinBlack": $raisin-black,
+  "raisinBlack": $raisin_black,
+  "soap": $soap,
 );
 
 @mixin style-color {
@@ -233,5 +234,65 @@ $sides: (top, bottom, left, right); // Leave this variable alone
   .u-p-y-#{$space} {
     padding-top: #{$space}px;
     padding-bottom: #{$space}px;
+  }
+}
+
+.u-d-flex {
+  display: flex;
+}
+
+.u-flex-1 {
+  flex: 1;
+}
+
+.u-flex-jc {
+  &-start {
+    justify-content: flex-start;
+  }
+
+  &-end {
+    justify-content: flex-end;
+  }
+
+  &-center {
+    justify-content: center;
+  }
+
+  &-between {
+    justify-content: space-between;
+  }
+
+  &-around {
+    justify-content: space-around;
+  }
+
+  &-evenly {
+    justify-content: space-evenly;
+  }
+
+  &-stretch {
+    justify-content: stretch;
+  }
+}
+
+.u-flex-ai {
+  &-start {
+    align-items: flex-start;
+  }
+
+  &-end {
+    align-items: flex-end;
+  }
+
+  &-center {
+    align-items: center;
+  }
+
+  &-baseline {
+    align-items: space-between;
+  }
+
+  &-stretch {
+    align-items: stretch;
   }
 }

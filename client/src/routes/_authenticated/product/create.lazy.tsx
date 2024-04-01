@@ -1,12 +1,19 @@
 import Button from "@client/components/atoms/Button";
+import Heading from "@client/components/atoms/Heading";
 import Input from "@client/components/atoms/Input";
-import Datepicker from "@client/components/molecules/DatePicker";
-import { FORM_VALIDATION } from "@client/libs/constants";
+import { FORM_VALIDATION, TOAST_SUCCESS_MESSAGE } from "@client/libs/constants";
+import { handleCheckAuthError } from "@client/libs/error";
+import { productQueryKeys } from "@client/libs/query";
 import { server } from "@client/libs/server";
 import { CreateProductParams } from "@server/models/product.model";
 import { useMutation } from "@tanstack/react-query";
-import { createLazyFileRoute, useRouter } from "@tanstack/react-router";
+import {
+  createLazyFileRoute,
+  useNavigate,
+  useRouter,
+} from "@tanstack/react-router";
 import { Controller, FormProvider, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 
 export const Route = createLazyFileRoute("/_authenticated/product/create")({
   component: ProductCreate,
@@ -15,6 +22,7 @@ export const Route = createLazyFileRoute("/_authenticated/product/create")({
 function ProductCreate() {
   //* Hooks
   const router = useRouter();
+  const navigate = useNavigate();
 
   //* Hook-form
   const methods = useForm<CreateProductParams>({
@@ -22,17 +30,23 @@ function ProductCreate() {
       description: "",
       barcode: "",
       price: 0,
-      expiryDate: null,
       name: "",
     },
   });
 
   //* Mutation
   const createMutation = useMutation({
-    mutationFn: (params: CreateProductParams) =>
-      server.api.v1.product.index.post(params),
-    onSuccess: () => {
+    mutationKey: [...productQueryKeys.create()],
+    mutationFn: async (params: CreateProductParams) => {
+      const { error } = await server.api.v1.product.index.post(params);
+
+      if (error) {
+        handleCheckAuthError(error, navigate);
+        throw error.value;
+      }
+
       methods.reset();
+      toast.success(TOAST_SUCCESS_MESSAGE.CREATE);
     },
   });
 
@@ -55,7 +69,9 @@ function ProductCreate() {
       <div className="p-productCreate_form">
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)}>
-            <h3>Create product</h3>
+            <div className="u-m-t-16">
+              <Heading>Create product</Heading>
+            </div>
             <div className="u-m-t-16">
               <Controller
                 control={methods.control}
@@ -121,24 +137,6 @@ function ProductCreate() {
                     id="product-create-price"
                     label="Price"
                     {...field}
-                    error={error?.message}
-                  />
-                )}
-              />
-            </div>
-            <div className="u-m-t-8">
-              <Controller
-                control={methods.control}
-                name="expiryDate"
-                render={({
-                  field: { value, onChange },
-                  fieldState: { error },
-                }) => (
-                  <Datepicker
-                    id={"product-create-date"}
-                    label="Expiry date"
-                    value={value}
-                    handleChangeDate={onChange}
                     error={error?.message}
                   />
                 )}

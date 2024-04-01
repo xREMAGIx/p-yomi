@@ -19,7 +19,6 @@ export const DATE_TIME_FORMAT = {
   DATE_TIME: "DD/MM/YYYY HH:mm",
 };
 
-export const QUERY_KEYS = {
-  PRODUCT_LIST: ["products", "list"],
-  PRODUCT_DETAIL: ["products", "detail"],
+export const TOAST_SUCCESS_MESSAGE = {
+  CREATE: "Create success!",
 };

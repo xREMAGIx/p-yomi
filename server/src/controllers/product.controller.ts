@@ -4,12 +4,12 @@ import {
   authenticatePlugin,
   databasePlugin,
   idValidatePlugin,
-  queryPaginationPlugin,
 } from "../libs/plugins";
 import {
   createProductParamSchema,
   detailProductDataSchema,
   listProductDataSchema,
+  listProductQuerySchema,
   productModel,
   updateProductParamSchema,
 } from "../models/product.model";
@@ -51,6 +51,11 @@ export const productRoutes = new Elysia({
           detail: {
             summary: "Create Product",
           },
+          // transform: ({ body }) => {
+          //   if (body.expiryDate) {
+          //     body.expiryDate = new Date(body.expiryDate);
+          //   }
+          // },
         }
       )
 
@@ -83,8 +88,8 @@ export const productRoutes = new Elysia({
             "/:id",
             async ({ idParams, body, service }) => {
               const data = await service.update({
-                id: idParams,
                 ...body,
+                id: idParams,
               });
 
               return {
@@ -97,6 +102,11 @@ export const productRoutes = new Elysia({
               detail: {
                 summary: "Update Product",
               },
+              // transform: ({ body }) => {
+              //   if (body.expiryDate) {
+              //     body.expiryDate = new Date(body.expiryDate);
+              //   }
+              // },
             }
           )
           //* Delete
@@ -117,11 +127,10 @@ export const productRoutes = new Elysia({
       )
 
       //* List
-      .use(queryPaginationPlugin)
       .get(
         "/",
         async ({
-          query: { sortBy = "desc", limit = 10, page = 1 },
+          query: { sortBy = "desc", limit = 10, page = 1, ...rest },
           service,
         }) => {
           if (sortBy !== "asc" && sortBy !== "desc") {
@@ -132,9 +141,11 @@ export const productRoutes = new Elysia({
             sortBy: sortBy,
             limit: Number(limit),
             page: Number(page),
+            ...rest,
           });
         },
         {
+          query: listProductQuerySchema,
           response: listProductDataSchema,
           detail: {
             summary: "Get Product List",

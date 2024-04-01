@@ -1,10 +1,10 @@
-import { asc, desc, eq, sql } from "drizzle-orm";
+import { and, asc, desc, eq, like, sql } from "drizzle-orm";
 import { DBType } from "../config/database";
 import { productTable } from "../db-schema";
-import { QueryPaginationParams } from "../models/base";
 import {
   CreateProductParams,
   GetDetailProductParams,
+  GetListProductParams,
   UpdateProductParams,
 } from "../models/product.model";
 
@@ -15,17 +15,25 @@ export default class ProductService {
     this.db = db;
   }
 
-  async getList(params: QueryPaginationParams) {
-    const { sortBy, limit = 10, page = 1 } = params;
+  async getList(params: GetListProductParams) {
+    const { sortBy, limit = 10, page = 1, barcode, name } = params;
 
-    const productList = await this.db.query.productTable.findMany({
-      limit: limit,
-      offset: limit * (page - 1),
-      orderBy:
+    const productList = await this.db
+      .select()
+      .from(productTable)
+      .where(
+        and(
+          barcode ? like(productTable.barcode, barcode) : undefined,
+          name ? like(productTable.name, name) : undefined
+        )
+      )
+      .limit(limit)
+      .offset(limit * (page - 1))
+      .orderBy(
         sortBy === "asc"
-          ? [asc(productTable.createdAt)]
-          : [desc(productTable.createdAt)],
-    });
+          ? asc(productTable.createdAt)
+          : desc(productTable.createdAt)
+      );
 
     const totalQueryResult = await this.db.execute(sql<{ count: string }>`
         SELECT count(*) FROM ${productTable};

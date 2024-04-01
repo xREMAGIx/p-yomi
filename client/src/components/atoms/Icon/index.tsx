@@ -7,17 +7,30 @@ const iconList = {
   search: "search",
   arrowLeft: "arrowLeft",
   arrowRight: "arrowRight",
+  barcode: "barcode",
+  home: "home",
+  minimize: "minimize",
+  menu: "menu",
+  warehouse: "warehouse",
+  delete: "delete",
+  close: "close",
+  packageImport: "packageImport",
 };
 
 export type IconName = keyof typeof iconList;
 
-export type IconSize = "14" | "15" | "16" | "20" | "24" | "34" | "38";
+export type IconSize = "12" | "16" | "20" | "24" | "34" | "38";
 interface IconProps {
   iconName: IconName;
   size?: IconSize;
+  color?: Color;
 }
-const Icon: React.FC<IconProps> = ({ iconName, size }) => (
-  <i className={mapModifiers("a-icon", iconName, size)} />
+const Icon: React.FC<IconProps> = ({ iconName, size, color }) => (
+  <div
+    role="img"
+    aria-label={iconName}
+    className={mapModifiers("a-icon", iconName, size, color)}
+  />
 );
 
 Icon.defaultProps = {

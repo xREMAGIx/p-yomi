@@ -1,3 +1,26 @@
-type GeneralTextStyle = "bold" | "italic";
+type GeneralTextStyle =
+  | "bold"
+  | "italic"
+  | "uppercase"
+  | "capitalize"
+  | "underline"
+  | "center"
+  | "justify"
+  | "left"
+  | "right"
+  | "lineThrough";
 
-type FontWeightStyle = "100";
+type FontWeightStyle =
+  | "100"
+  | "200"
+  | "300"
+  | "400"
+  | "500"
+  | "600"
+  | "700"
+  | "800"
+  | "900";
+
+type TextSizes = "16x24";
+
+type Color = "white" | "raisinBlack" | "soap";
