@@ -24,7 +24,8 @@
     "react-hot-toast": "^2.4.1",
     "react-modal": "^3.16.1",
     "react-paginate": "^8.2.0",
-    "react-redux": "^9.1.0"
+    "react-redux": "^9.1.0",
+    "react-select": "^5.8.0"
   },
   "devDependencies": {
     "@tanstack/router-vite-plugin": "^1.22.8",

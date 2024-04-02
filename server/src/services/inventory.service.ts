@@ -1,4 +1,4 @@
-import { asc, desc, eq, sql } from "drizzle-orm";
+import { asc, count, desc, eq, sql } from "drizzle-orm";
 import { DBType } from "../config/database";
 import { inventoryTable } from "../db-schema";
 import { QueryPaginationParams } from "../models/base";
@@ -6,6 +6,7 @@ import {
   CreateInventoryParams,
   GetDetailInventoryParams,
   UpdateInventoryParams,
+  UpdateStockInventoryParams,
 } from "../models/inventory.model";
 
 export default class InventoryService {
@@ -13,6 +14,14 @@ export default class InventoryService {
 
   constructor(db: DBType) {
     this.db = db;
+  }
+
+  async getTotal() {
+    const records = await this.db.select().from(inventoryTable);
+
+    if (!records.length) return 0;
+
+    return records.reduce((prev, curr) => prev + curr.quantityAvailable, 0);
   }
 
   async getList(params: QueryPaginationParams) {
@@ -83,5 +92,40 @@ export default class InventoryService {
       .returning({ id: inventoryTable.id });
 
     return results[0];
+  }
+
+  async updateStock(params: UpdateStockInventoryParams) {
+    const { warehouseId, products } = params;
+
+    const existedRecords = await this.db
+      .select()
+      .from(inventoryTable)
+      .where(eq(inventoryTable.warehouseId, warehouseId));
+
+    await Promise.all(
+      products.map(async (product) => {
+        const existedIdx = existedRecords.findIndex(
+          (ele) => ele.productId === product.productId
+        );
+
+        if (existedIdx === -1) {
+          await this.db.insert(inventoryTable).values({
+            warehouseId: warehouseId,
+            productId: product.productId,
+            quantityAvailable: product.quantity,
+          });
+          return;
+        }
+
+        await this.db
+          .update(inventoryTable)
+          .set({
+            quantityAvailable:
+              existedRecords[existedIdx].quantityAvailable +
+              (product.quantity ?? 0),
+          })
+          .where(eq(inventoryTable.id, existedRecords[existedIdx].id));
+      })
+    );
   }
 }

@@ -2,8 +2,8 @@ import { Elysia, t } from "elysia";
 import { InvalidContentError } from "../libs/error";
 import {
   authenticatePlugin,
-  databasePlugin,
   idValidatePlugin,
+  servicesPlugin,
 } from "../libs/plugins";
 import {
   createProductParamSchema,
@@ -13,7 +13,6 @@ import {
   productModel,
   updateProductParamSchema,
 } from "../models/product.model";
-import ProductService from "../services/product.service";
 
 export const productRoutes = new Elysia({
   name: "product",
@@ -27,19 +26,14 @@ export const productRoutes = new Elysia({
   },
   (app) =>
     app
-      .use(databasePlugin)
-      .derive(({ db }) => {
-        return {
-          service: new ProductService(db),
-        };
-      })
+      .use(servicesPlugin)
       .use(productModel)
       .use(authenticatePlugin)
       //* Create
       .post(
         "/",
-        async ({ body, userId, service }) => {
-          const data = await service.create({ ...body });
+        async ({ body, userId, productService }) => {
+          const data = await productService.create({ ...body });
 
           return {
             data: data,
@@ -65,8 +59,8 @@ export const productRoutes = new Elysia({
           //* Detail
           .get(
             "/:id",
-            async ({ idParams, error, service }) => {
-              const data = await service.getDetail({ id: idParams });
+            async ({ idParams, error, productService }) => {
+              const data = await productService.getDetail({ id: idParams });
 
               if (!data) {
                 throw error(404, "Not Found UwU");
@@ -86,8 +80,8 @@ export const productRoutes = new Elysia({
           //* Update
           .put(
             "/:id",
-            async ({ idParams, body, service }) => {
-              const data = await service.update({
+            async ({ idParams, body, productService }) => {
+              const data = await productService.update({
                 ...body,
                 id: idParams,
               });
@@ -112,8 +106,8 @@ export const productRoutes = new Elysia({
           //* Delete
           .delete(
             "/:id",
-            ({ idParams, service }) => {
-              return service.delete(idParams);
+            ({ idParams, productService }) => {
+              return productService.delete(idParams);
             },
             {
               response: t.Object({
@@ -131,13 +125,13 @@ export const productRoutes = new Elysia({
         "/",
         async ({
           query: { sortBy = "desc", limit = 10, page = 1, ...rest },
-          service,
+          productService,
         }) => {
           if (sortBy !== "asc" && sortBy !== "desc") {
             throw new InvalidContentError("Sortby not valid!");
           }
 
-          return await service.getList({
+          return await productService.getList({
             sortBy: sortBy,
             limit: Number(limit),
             page: Number(page),

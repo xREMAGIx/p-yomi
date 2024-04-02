@@ -93,7 +93,7 @@ function WarehouseList() {
         <Table
           header={
             <TableHeader>
-              <TableRow>
+              <TableRow isHead>
                 {headerData.map((ele) => (
                   <TableCell key={ele.id} isHead>
                     <span>{ele.title}</span>

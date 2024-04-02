@@ -1,0 +1,27 @@
+.m-select {
+  $root: &;
+  position: relative;
+
+  &_label {
+    color: var(--text-color);
+    margin-bottom: rem(8);
+    @include font-base(12, 16);
+
+    &-required {
+      margin-left: rem(4);
+    }
+
+    &-error {
+      color: $sinopia;
+    }
+  }
+
+  &_input {
+    margin-bottom: rem(4);
+  }
+
+  &_message-error {
+    color: $sinopia;
+    @include font-base(12, 16);
+  }
+}

@@ -2,9 +2,9 @@ import { Elysia, t } from "elysia";
 import { InvalidContentError } from "../libs/error";
 import {
   authenticatePlugin,
-  databasePlugin,
   idValidatePlugin,
   queryPaginationPlugin,
+  servicesPlugin,
 } from "../libs/plugins";
 import {
   createWarehouseParamSchema,
@@ -13,7 +13,6 @@ import {
   updateWarehouseParamSchema,
   warehouseModel,
 } from "../models/warehouse.model";
-import WarehouseService from "../services/warehouse.service";
 
 export const warehouseRoutes = new Elysia({
   name: "warehouse",
@@ -27,19 +26,14 @@ export const warehouseRoutes = new Elysia({
   },
   (app) =>
     app
-      .use(databasePlugin)
-      .derive(({ db }) => {
-        return {
-          service: new WarehouseService(db),
-        };
-      })
+      .use(servicesPlugin)
       .use(warehouseModel)
       .use(authenticatePlugin)
       //* Create
       .post(
         "/",
-        async ({ body, service }) => {
-          const data = await service.create({ ...body });
+        async ({ body, warehouseService }) => {
+          const data = await warehouseService.create({ ...body });
 
           return {
             data: data,
@@ -60,8 +54,8 @@ export const warehouseRoutes = new Elysia({
           //* Detail
           .get(
             "/:id",
-            async ({ idParams, error, service }) => {
-              const data = await service.getDetail({ id: idParams });
+            async ({ idParams, error, warehouseService }) => {
+              const data = await warehouseService.getDetail({ id: idParams });
 
               if (!data) {
                 throw error(404, "Not Found UwU");
@@ -81,8 +75,8 @@ export const warehouseRoutes = new Elysia({
           //* Update
           .put(
             "/:id",
-            async ({ idParams, body, service }) => {
-              const data = await service.update({
+            async ({ idParams, body, warehouseService }) => {
+              const data = await warehouseService.update({
                 ...body,
                 id: idParams,
               });
@@ -102,8 +96,8 @@ export const warehouseRoutes = new Elysia({
           //* Delete
           .delete(
             "/:id",
-            ({ idParams, service }) => {
-              return service.delete(idParams);
+            ({ idParams, warehouseService }) => {
+              return warehouseService.delete(idParams);
             },
             {
               response: t.Object({
@@ -122,13 +116,13 @@ export const warehouseRoutes = new Elysia({
         "/",
         async ({
           query: { sortBy = "desc", limit = 10, page = 1 },
-          service,
+          warehouseService,
         }) => {
           if (sortBy !== "asc" && sortBy !== "desc") {
             throw new InvalidContentError("Sortby not valid!");
           }
 
-          return await service.getList({
+          return await warehouseService.getList({
             sortBy: sortBy,
             limit: Number(limit),
             page: Number(page),

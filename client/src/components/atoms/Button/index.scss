@@ -111,6 +111,7 @@
   &:disabled,
   &-loading {
     cursor: not-allowed;
+    opacity: 0.5;
     &#{$root}-primary {
       background-color: rgba(var(--primary-color), 0.5);
       border-color: rgba(var(--primary-color), 0.5);

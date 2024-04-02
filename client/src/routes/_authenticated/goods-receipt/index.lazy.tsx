@@ -21,9 +21,9 @@ export const Route = createLazyFileRoute("/_authenticated/goods-receipt/")({
 
 const headerData = [
   {
-    id: "name",
-    keyValue: "name",
-    title: "Name",
+    id: "warehouse",
+    keyValue: "warehouse",
+    title: "Warehouse",
   },
   {
     id: "createdAt",
@@ -54,7 +54,7 @@ function GoodsReceiptList() {
   const { data } = useQuery({
     queryKey: [...goodsReceiptQueryKeys.list({ page: pagination.page })],
     queryFn: async () => {
-      const { data, error } = await server.api.v1.goodsReceipt.index.get({
+      const { data, error } = await server.api.v1["goods-receipt"].index.get({
         query: {
           limit: pagination.limit,
           page: pagination.page,
@@ -92,7 +92,7 @@ function GoodsReceiptList() {
         <Table
           header={
             <TableHeader>
-              <TableRow>
+              <TableRow isHead>
                 {headerData.map((ele) => (
                   <TableCell key={ele.id} isHead>
                     <span>{ele.title}</span>
@@ -106,16 +106,24 @@ function GoodsReceiptList() {
             <TableRow key={`row-${ele.id}`}>
               {headerData.map((col) => {
                 const keyVal = col.keyValue as keyof typeof ele;
-                const data = ele[keyVal];
+                const element = ele[keyVal];
+                if (keyVal === "warehouse") {
+                  return (
+                    <TableCell key={`${ele.id}-${col.keyValue}`}>
+                      <Text type="span">{ele[keyVal]?.name}</Text>
+                    </TableCell>
+                  );
+                }
+
                 if (
                   keyVal === "createdAt" ||
                   keyVal === "updatedAt" ||
-                  data instanceof Date
+                  element instanceof Date
                 ) {
                   return (
                     <TableCell key={`${ele.id}-${col.keyValue}`}>
                       <Text type="span">
-                        {dayjs(data).format(DATE_TIME_FORMAT.DATE_TIME)}
+                        {dayjs(ele[keyVal]).format(DATE_TIME_FORMAT.DATE_TIME)}
                       </Text>
                     </TableCell>
                   );
@@ -123,7 +131,7 @@ function GoodsReceiptList() {
 
                 return (
                   <TableCell key={`${ele.id}-${col.keyValue}`}>
-                    <Text type="span">{data}</Text>
+                    <Text type="span">{ele[keyVal]}</Text>
                   </TableCell>
                 );
               })}

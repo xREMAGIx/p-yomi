@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import { Elysia } from "elysia";
 import {
   authenticatePlugin,
-  databasePlugin,
+  servicesPlugin,
   tokenPlugin,
 } from "../libs/plugins";
 import {
@@ -13,7 +13,6 @@ import {
   registerDataSchema,
   registerParamsSchema,
 } from "../models/auth.model";
-import AuthService from "../services/auth.service";
 
 export const authRoutes = new Elysia({
   name: "auth",
@@ -26,21 +25,16 @@ export const authRoutes = new Elysia({
   },
   (app) =>
     app
-      .use(databasePlugin)
-      .derive(({ db }) => {
-        return {
-          service: new AuthService(db),
-        };
-      })
+      .use(servicesPlugin)
       .use(authModel)
       .use(tokenPlugin)
       //* Login
       .post(
         "/login",
-        async ({ body, accessJwt, refreshJwt, service }) => {
+        async ({ body, accessJwt, refreshJwt, authService }) => {
           const { email, password } = body;
 
-          const result = await service.login({
+          const result = await authService.login({
             email,
             password,
           });
@@ -78,9 +72,9 @@ export const authRoutes = new Elysia({
       //* Register
       .post(
         "/register",
-        async ({ body, service }) => {
+        async ({ body, authService }) => {
           const { username, email, password } = body;
-          const result = await service.register({
+          const result = await authService.register({
             username,
             email,
             password,
@@ -103,8 +97,8 @@ export const authRoutes = new Elysia({
       //* Profile
       .get(
         "/profile",
-        async ({ userId, service }) => {
-          const result = await service.getProfile({
+        async ({ userId, authService }) => {
+          const result = await authService.getProfile({
             userId: userId,
           });
 

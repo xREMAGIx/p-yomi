@@ -3,6 +3,7 @@ import React from "react";
 import "./index.scss";
 
 interface TableRowProps extends React.TableHTMLAttributes<HTMLTableRowElement> {
+  isSelected?: boolean;
   isHead?: boolean;
 }
 
@@ -32,10 +33,17 @@ interface TableHeaderProps {
 
 export const TableRow: React.FC<TableRowProps> = ({
   isHead,
+  isSelected,
   children,
   ...props
 }) => (
-  <tr className={isHead ? "o-table_header_row" : "o-table_body_row"} {...props}>
+  <tr
+    className={mapModifiers(
+      isHead ? "o-table_header_row" : "o-table_body_row",
+      isSelected && "selected"
+    )}
+    {...props}
+  >
     {children}
   </tr>
 );
