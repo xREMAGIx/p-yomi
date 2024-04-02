@@ -235,14 +235,28 @@ $sides: (top, bottom, left, right); // Leave this variable alone
     padding-top: #{$space}px;
     padding-bottom: #{$space}px;
   }
+
+  .u-gap-#{$space} {
+    gap: #{$space}px;
+  }
 }
 
 .u-d-flex {
   display: flex;
 }
 
-.u-flex-1 {
-  flex: 1;
+.u-flex {
+  &-wrap {
+    flex-wrap: wrap;
+  }
+
+  &-nowrap {
+    flex-wrap: nowrap;
+  }
+
+  &-1 {
+    flex: 1;
+  }
 }
 
 .u-flex-jc {

@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, like, sql } from "drizzle-orm";
+import { and, asc, count, desc, eq, like, sql } from "drizzle-orm";
 import { DBType } from "../config/database";
 import { productTable } from "../db-schema";
 import {
@@ -15,6 +15,12 @@ export default class ProductService {
     this.db = db;
   }
 
+  async getTotal() {
+    const result = await this.db.select({ count: count() }).from(productTable);
+
+    return result[0].count;
+  }
+
   async getList(params: GetListProductParams) {
     const { sortBy, limit = 10, page = 1, barcode, name } = params;
 
@@ -23,7 +29,7 @@ export default class ProductService {
       .from(productTable)
       .where(
         and(
-          barcode ? like(productTable.barcode, barcode) : undefined,
+          barcode ? like(productTable.barcode, `%${barcode}%`) : undefined,
           name ? like(productTable.name, name) : undefined
         )
       )
@@ -35,10 +41,17 @@ export default class ProductService {
           : desc(productTable.createdAt)
       );
 
-    const totalQueryResult = await this.db.execute(sql<{ count: string }>`
-        SELECT count(*) FROM ${productTable};
-    `);
-    const total = Number(totalQueryResult.rows[0].count);
+    const totalQueryResult = await this.db
+      .select({ count: count() })
+      .from(productTable)
+      .where(
+        and(
+          barcode ? like(productTable.barcode, `%${barcode}%`) : undefined,
+          name ? like(productTable.name, name) : undefined
+        )
+      );
+
+    const total = Number(totalQueryResult?.[0]?.count);
     const totalPages = Math.ceil(total / limit);
 
     return {

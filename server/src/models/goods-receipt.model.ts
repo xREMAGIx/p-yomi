@@ -2,6 +2,8 @@ import { createInsertSchema, createSelectSchema } from "drizzle-typebox";
 import Elysia, { Static, t } from "elysia";
 import { goodsReceiptDetailTable, goodsReceiptTable } from "../db-schema";
 import { metaPaginationSchema } from "./base";
+import { baseSelectProductSchema } from "./product.model";
+import { baseSelectWarehouseSchema } from "./warehouse.model";
 
 export const baseSelectGoodsReceiptSchema =
   createSelectSchema(goodsReceiptTable);
@@ -17,39 +19,71 @@ export const baseInsertGoodsReceiptDetailSchema = createInsertSchema(
   goodsReceiptDetailTable
 );
 
-export const goodsReceiptDetailDataSchema = t.Omit(
-  baseSelectGoodsReceiptDetailSchema,
-  ["goodsReceiptId"]
-);
+export const goodsReceiptProductDataSchema = t.Composite([
+  t.Omit(baseSelectGoodsReceiptDetailSchema, [
+    "id",
+    "createdAt",
+    "updatedAt",
+    "goodsReceiptId",
+    "productId",
+  ]),
+  baseSelectProductSchema,
+]);
 
-export const goodsReceiptDataSchema = t.Composite([
-  baseSelectGoodsReceiptSchema,
+export const selectGoodsReceiptSchema = t.Composite([
+  t.Omit(baseSelectGoodsReceiptSchema, ["warehouseId"]),
   t.Object({
-    products: t.Array(goodsReceiptDetailDataSchema),
+    warehouse: t.Nullable(baseSelectWarehouseSchema),
   }),
 ]);
 
-export const listGoodsReceiptDataSchema = t.Object({
-  data: t.Array(baseSelectGoodsReceiptSchema),
-  meta: metaPaginationSchema,
-});
-
-export const detailGoodsReceiptDataSchema = t.Object({
+export const goodsReceiptDataSchema = t.Object({
   data: baseSelectGoodsReceiptSchema,
 });
 
-export const createGoodsReceiptParamSchema = t.Omit(
-  baseInsertGoodsReceiptSchema,
-  ["id", "createdAt", "updatedAt"]
-);
+export const listGoodsReceiptDataSchema = t.Object({
+  data: t.Array(selectGoodsReceiptSchema),
+  meta: metaPaginationSchema,
+});
+
+export const goodsReceiptDetailDataSchema = t.Composite([
+  selectGoodsReceiptSchema,
+  t.Object({
+    products: t.Array(goodsReceiptProductDataSchema),
+  }),
+]);
+
+export const detailGoodsReceiptDataSchema = t.Object({
+  data: goodsReceiptDetailDataSchema,
+});
+
+export const createGoodsReceiptParamSchema = t.Composite([
+  t.Omit(baseInsertGoodsReceiptSchema, ["id", "createdAt", "updatedAt"]),
+  t.Object({
+    products: t.Array(
+      t.Omit(baseInsertGoodsReceiptDetailSchema, [
+        "id",
+        "createdAt",
+        "updatedAt",
+        "goodsReceiptId",
+      ])
+    ),
+  }),
+]);
 
 export const updateGoodsReceiptParamSchema = t.Omit(
   baseInsertGoodsReceiptSchema,
   ["id", "createdAt", "updatedAt"]
 );
 
-export type GoodsReceiptData = Static<typeof baseSelectGoodsReceiptSchema>;
+export type GoodsReceiptData = Static<typeof selectGoodsReceiptSchema>;
 export type GoodsReceiptListData = Static<typeof listGoodsReceiptDataSchema>;
+export type GoodsReceiptProductData = Static<
+  typeof goodsReceiptProductDataSchema
+>;
+export type GoodsReceiptDetailData = Static<
+  typeof goodsReceiptDetailDataSchema
+>;
 
 export type GetDetailGoodsReceiptParams = {
   id: number;
@@ -68,5 +102,5 @@ export type UpdateGoodsReceiptParams = Static<
 export const goodsReceiptModel = new Elysia({
   name: "goodsReceipt-model",
 }).model({
-  "goodsReceipt.data": goodsReceiptDataSchema,
+  "goodsReceipt.data": detailGoodsReceiptDataSchema,
 });

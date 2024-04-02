@@ -47,4 +47,12 @@ export const goodsReceiptQueryKeys = {
   deletes: () => [...goodsReceiptQueryKeys.all, "delete"] as const,
   delete: (id: string | number) =>
     [...goodsReceiptQueryKeys.deletes(), id] as const,
+  products: () => [...goodsReceiptQueryKeys.all, "product"] as const,
+  searchProduct: () => [...goodsReceiptQueryKeys.products(), "search"] as const,
+};
+
+export const dashboardQueryKeys = {
+  all: ["dashboard"] as const,
+  product: () => [...goodsReceiptQueryKeys.all, "product"] as const,
+  inventory: () => [...goodsReceiptQueryKeys.all, "inventory"] as const,
 };

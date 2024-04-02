@@ -28,6 +28,13 @@ export const updateInventoryParamSchema = t.Omit(baseInsertInventorySchema, [
   "updatedAt",
 ]);
 
+export const updateStockInventoryParamSchema = t.Object({
+  warehouseId: t.Numeric(),
+  products: t.Array(
+    t.Object({ quantity: t.Optional(t.Number()), productId: t.Numeric() })
+  ),
+});
+
 export type InventoryData = Static<typeof baseSelectInventorySchema>;
 export type InventoryListData = Static<typeof listInventoryDataSchema>;
 
@@ -41,6 +48,10 @@ export type UpdateInventoryParams = Static<
 > & {
   id: number;
 };
+
+export type UpdateStockInventoryParams = Static<
+  typeof updateStockInventoryParamSchema
+>;
 
 //* Model
 export const inventoryModel = new Elysia({ name: "inventory-model" }).model({

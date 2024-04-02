@@ -2,44 +2,40 @@ import { Elysia, t } from "elysia";
 import { InvalidContentError } from "../libs/error";
 import {
   authenticatePlugin,
-  databasePlugin,
   idValidatePlugin,
   queryPaginationPlugin,
+  servicesPlugin,
 } from "../libs/plugins";
 import {
   createGoodsReceiptParamSchema,
   detailGoodsReceiptDataSchema,
+  goodsReceiptDataSchema,
   goodsReceiptModel,
   listGoodsReceiptDataSchema,
   updateGoodsReceiptParamSchema,
 } from "../models/goods-receipt.model";
-import GoodsReceiptService from "../services/goods-receipt.service";
 
 export const goodsReceiptRoutes = new Elysia({
   name: "goodsReceipt",
 }).group(
-  `api/v1/goodsReceipt`,
+  `api/v1/goods-receipt`,
   {
     detail: {
-      tags: ["GoodsReceipt"],
+      tags: ["Goods Receipt"],
       security: [{ JwtAuth: [] }],
     },
   },
   (app) =>
     app
-      .use(databasePlugin)
-      .derive(({ db }) => {
-        return {
-          service: new GoodsReceiptService(db),
-        };
-      })
+      .use(servicesPlugin)
       .use(goodsReceiptModel)
       .use(authenticatePlugin)
       //* Create
       .post(
         "/",
-        async ({ body, service }) => {
-          const data = await service.create({ ...body });
+        async ({ body, goodsReceiptService, inventoryService }) => {
+          const data = await goodsReceiptService.create({ ...body });
+          await inventoryService.updateStock({ ...body });
 
           return {
             data: data,
@@ -47,9 +43,9 @@ export const goodsReceiptRoutes = new Elysia({
         },
         {
           body: createGoodsReceiptParamSchema,
-          response: detailGoodsReceiptDataSchema,
+          response: goodsReceiptDataSchema,
           detail: {
-            summary: "Create GoodsReceipt",
+            summary: "Create Goods Receipt",
           },
         }
       )
@@ -60,29 +56,31 @@ export const goodsReceiptRoutes = new Elysia({
           //* Detail
           .get(
             "/:id",
-            async ({ idParams, error, service }) => {
-              const data = await service.getDetail({ id: idParams });
+            async ({ idParams, error, goodsReceiptService }) => {
+              const { goodsReceipt } = await goodsReceiptService.getDetail({
+                id: idParams,
+              });
 
-              if (!data) {
+              if (!goodsReceipt) {
                 throw error(404, "Not Found UwU");
               }
 
               return {
-                data,
+                data: goodsReceipt,
               };
             },
             {
               response: detailGoodsReceiptDataSchema,
               detail: {
-                summary: "Get GoodsReceipt Detail",
+                summary: "Get Goods Receipt Detail",
               },
             }
           )
           //* Update
           .put(
             "/:id",
-            async ({ idParams, body, service }) => {
-              const data = await service.update({
+            async ({ idParams, body, goodsReceiptService }) => {
+              const data = await goodsReceiptService.update({
                 ...body,
                 id: idParams,
               });
@@ -93,24 +91,24 @@ export const goodsReceiptRoutes = new Elysia({
             },
             {
               body: updateGoodsReceiptParamSchema,
-              response: detailGoodsReceiptDataSchema,
+              response: goodsReceiptDataSchema,
               detail: {
-                summary: "Update GoodsReceipt",
+                summary: "Update Goods Receipt",
               },
             }
           )
           //* Delete
           .delete(
             "/:id",
-            ({ idParams, service }) => {
-              return service.delete(idParams);
+            ({ idParams, goodsReceiptService }) => {
+              return goodsReceiptService.delete(idParams);
             },
             {
               response: t.Object({
                 id: t.Number(),
               }),
               detail: {
-                summary: "Delete GoodsReceipt",
+                summary: "Delete Goods Receipt",
               },
             }
           )
@@ -122,13 +120,13 @@ export const goodsReceiptRoutes = new Elysia({
         "/",
         async ({
           query: { sortBy = "desc", limit = 10, page = 1 },
-          service,
+          goodsReceiptService,
         }) => {
           if (sortBy !== "asc" && sortBy !== "desc") {
             throw new InvalidContentError("Sortby not valid!");
           }
 
-          return await service.getList({
+          return await goodsReceiptService.getList({
             sortBy: sortBy,
             limit: Number(limit),
             page: Number(page),
@@ -137,7 +135,7 @@ export const goodsReceiptRoutes = new Elysia({
         {
           response: listGoodsReceiptDataSchema,
           detail: {
-            summary: "Get GoodsReceipt List",
+            summary: "Get Goods Receipt List",
           },
         }
       )

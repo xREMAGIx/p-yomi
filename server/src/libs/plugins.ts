@@ -3,6 +3,11 @@ import jwt from "@elysiajs/jwt";
 import { Elysia, t } from "elysia";
 import { db } from "../config/database";
 import { queryPaginationModel } from "../models/base";
+import AuthService from "../services/auth.service";
+import GoodsReceiptService from "../services/goods-receipt.service";
+import InventoryService from "../services/inventory.service";
+import ProductService from "../services/product.service";
+import WarehouseService from "../services/warehouse.service";
 import * as CustomError from "./error";
 
 export const tokenPlugin = new Elysia({ name: "token-plugin" })
@@ -80,11 +85,6 @@ export const queryPaginationPlugin = new Elysia({ name: "query-pagination" })
     query: "pagination.query",
   });
 
-export const databasePlugin = new Elysia({ name: "connect-db" }).decorate(
-  "db",
-  db
-);
-
 export const idValidatePlugin = new Elysia({
   name: "id-validate",
 })
@@ -103,4 +103,21 @@ export const idValidatePlugin = new Elysia({
     if (!id || +id < 1) {
       throw new CustomError.InvalidParamError("Invalid id");
     }
+  });
+
+export const databasePlugin = new Elysia({ name: "connect-db" }).decorate(
+  "db",
+  db
+);
+
+export const servicesPlugin = new Elysia({ name: "services-plugin" })
+  .use(databasePlugin)
+  .derive({ as: "scoped" }, ({ db }) => {
+    return {
+      authService: new AuthService(db),
+      productService: new ProductService(db),
+      warehouseService: new WarehouseService(db),
+      inventoryService: new InventoryService(db),
+      goodsReceiptService: new GoodsReceiptService(db),
+    };
   });
