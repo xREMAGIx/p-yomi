@@ -52,7 +52,7 @@ function WarehouseList() {
   });
 
   //* Query
-  const { data } = useQuery({
+  const { data, isFetching: isLoadingList } = useQuery({
     queryKey: [...warehouseQueryKeys.list({ page: pagination.page })],
     queryFn: async () => {
       const { data, error } = await server.api.v1.warehouse.index.get({
@@ -91,6 +91,7 @@ function WarehouseList() {
 
       <div className="p-warehouseList_table u-m-t-32">
         <Table
+          isLoading={isLoadingList}
           header={
             <TableHeader>
               <TableRow isHead>

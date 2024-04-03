@@ -71,10 +71,19 @@ export const createGoodsReceiptParamSchema = t.Composite([
   }),
 ]);
 
-export const updateGoodsReceiptParamSchema = t.Omit(
-  baseInsertGoodsReceiptSchema,
-  ["id", "createdAt", "updatedAt"]
-);
+export const updateGoodsReceiptParamSchema = t.Composite([
+  t.Omit(baseInsertGoodsReceiptSchema, ["id", "createdAt", "updatedAt"]),
+  t.Object({
+    products: t.Array(
+      t.Omit(baseInsertGoodsReceiptDetailSchema, [
+        "id",
+        "createdAt",
+        "updatedAt",
+        "goodsReceiptId",
+      ])
+    ),
+  }),
+]);
 
 export type GoodsReceiptData = Static<typeof selectGoodsReceiptSchema>;
 export type GoodsReceiptListData = Static<typeof listGoodsReceiptDataSchema>;
@@ -92,6 +101,7 @@ export type GetDetailGoodsReceiptParams = {
 export type CreateGoodsReceiptParams = Static<
   typeof createGoodsReceiptParamSchema
 >;
+
 export type UpdateGoodsReceiptParams = Static<
   typeof updateGoodsReceiptParamSchema
 > & {

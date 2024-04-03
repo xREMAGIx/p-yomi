@@ -1,7 +1,8 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-typebox";
 import Elysia, { Static, t } from "elysia";
 import { inventoryTable } from "../db-schema";
-import { metaPaginationSchema } from "./base";
+import { metaPaginationSchema, queryPaginationSchema } from "./base";
+import { baseSelectProductSchema } from "./product.model";
 
 export const baseSelectInventorySchema = createSelectSchema(inventoryTable);
 
@@ -28,10 +29,52 @@ export const updateInventoryParamSchema = t.Omit(baseInsertInventorySchema, [
   "updatedAt",
 ]);
 
+export const createStockInventoryParamSchema = t.Object({
+  warehouseId: t.Numeric(),
+  products: t.Array(
+    t.Object({ quantity: t.Optional(t.Number()), productId: t.Numeric() })
+  ),
+});
+
 export const updateStockInventoryParamSchema = t.Object({
   warehouseId: t.Numeric(),
   products: t.Array(
     t.Object({ quantity: t.Optional(t.Number()), productId: t.Numeric() })
+  ),
+});
+
+export const deleteStockInventoryParamSchema = t.Object({
+  warehouseId: t.Numeric(),
+  products: t.Array(
+    t.Object({ quantity: t.Optional(t.Number()), productId: t.Numeric() })
+  ),
+});
+
+export const getStockInWarehouseParamSchema = t.Composite([
+  queryPaginationSchema,
+  t.Object({
+    warehouseId: t.Numeric(),
+  }),
+]);
+
+export const getStockInWarehouseDataSchema = t.Object({
+  data: t.Array(
+    t.Composite([
+      baseSelectInventorySchema,
+      t.Object({ product: t.Nullable(baseSelectProductSchema) }),
+    ])
+  ),
+  meta: metaPaginationSchema,
+});
+
+export const updateInventoryConfigParamSchema = t.Object({
+  configs: t.Array(
+    t.Pick(baseSelectInventorySchema, [
+      "id",
+      "minimumStockLevel",
+      "maximumStockLevel",
+      "reorderPoint",
+    ])
   ),
 });
 
@@ -49,8 +92,28 @@ export type UpdateInventoryParams = Static<
   id: number;
 };
 
+export type CreateStockInventoryParams = Static<
+  typeof createStockInventoryParamSchema
+>;
+
 export type UpdateStockInventoryParams = Static<
   typeof updateStockInventoryParamSchema
+>;
+
+export type DeleteStockInventoryParams = Static<
+  typeof deleteStockInventoryParamSchema
+>;
+
+export type GetStockInWarehouseParams = Static<
+  typeof getStockInWarehouseParamSchema
+>;
+
+export type GetStockInWarehouseData = Static<
+  typeof getStockInWarehouseDataSchema
+>;
+
+export type UpdateInventoryConfigParams = Static<
+  typeof updateInventoryConfigParamSchema
 >;
 
 //* Model

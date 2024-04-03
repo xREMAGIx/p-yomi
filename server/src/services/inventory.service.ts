@@ -1,11 +1,12 @@
 import { asc, count, desc, eq, sql } from "drizzle-orm";
 import { DBType } from "../config/database";
-import { inventoryTable } from "../db-schema";
-import { QueryPaginationParams } from "../models/base";
+import { inventoryTable, productTable } from "../db-schema";
+import { InvalidContentError } from "../libs/error";
 import {
-  CreateInventoryParams,
-  GetDetailInventoryParams,
-  UpdateInventoryParams,
+  CreateStockInventoryParams,
+  DeleteStockInventoryParams,
+  GetStockInWarehouseParams,
+  UpdateInventoryConfigParams,
   UpdateStockInventoryParams,
 } from "../models/inventory.model";
 
@@ -24,74 +25,39 @@ export default class InventoryService {
     return records.reduce((prev, curr) => prev + curr.quantityAvailable, 0);
   }
 
-  async getList(params: QueryPaginationParams) {
-    const { sortBy, limit = 10, page = 1 } = params;
+  async createStock(params: CreateStockInventoryParams) {
+    const { warehouseId, products } = params;
 
-    const inventoryList = await this.db.query.inventoryTable.findMany({
-      limit: limit,
-      offset: limit * (page - 1),
-      orderBy:
-        sortBy === "asc"
-          ? [asc(inventoryTable.createdAt)]
-          : [desc(inventoryTable.createdAt)],
-    });
+    const existedRecords = await this.db
+      .select()
+      .from(inventoryTable)
+      .where(eq(inventoryTable.warehouseId, warehouseId));
 
-    const totalQueryResult = await this.db.execute(sql<{ count: string }>`
-        SELECT count(*) FROM ${inventoryTable};
-    `);
-    const total = Number(totalQueryResult.rows[0].count);
-    const totalPages = Math.ceil(total / limit);
+    await Promise.all(
+      products.map(async (product) => {
+        const existedIdx = existedRecords.findIndex(
+          (ele) => ele.productId === product.productId
+        );
 
-    return {
-      data: inventoryList,
-      meta: {
-        limit: limit,
-        page: page,
-        total: total,
-        totalPages: totalPages,
-      },
-    };
-  }
+        if (existedIdx === -1) {
+          await this.db.insert(inventoryTable).values({
+            warehouseId: warehouseId,
+            productId: product.productId,
+            quantityAvailable: product.quantity,
+          });
+          return;
+        }
 
-  async getDetail(params: GetDetailInventoryParams) {
-    const { id } = params;
-
-    return await this.db.query.inventoryTable.findFirst({
-      where: eq(inventoryTable.id, id),
-    });
-  }
-
-  async create(params: CreateInventoryParams) {
-    const results = await this.db
-      .insert(inventoryTable)
-      .values(params)
-      .returning();
-
-    return results[0];
-  }
-
-  async update(params: UpdateInventoryParams) {
-    const { id, ...rest } = params;
-
-    const results = await this.db
-      .update(inventoryTable)
-      .set({
-        ...rest,
-        updatedAt: sql`now()`,
+        await this.db
+          .update(inventoryTable)
+          .set({
+            quantityAvailable:
+              existedRecords[existedIdx].quantityAvailable +
+              (product.quantity ?? 0),
+          })
+          .where(eq(inventoryTable.id, existedRecords[existedIdx].id));
       })
-      .where(eq(inventoryTable.id, id))
-      .returning();
-
-    return results[0];
-  }
-
-  async delete(id: number) {
-    const results = await this.db
-      .delete(inventoryTable)
-      .where(eq(inventoryTable.id, id))
-      .returning({ id: inventoryTable.id });
-
-    return results[0];
+    );
   }
 
   async updateStock(params: UpdateStockInventoryParams) {
@@ -123,8 +89,96 @@ export default class InventoryService {
             quantityAvailable:
               existedRecords[existedIdx].quantityAvailable +
               (product.quantity ?? 0),
+            updatedAt: sql`now()`,
           })
           .where(eq(inventoryTable.id, existedRecords[existedIdx].id));
+      })
+    );
+  }
+
+  async deleteStock(params: DeleteStockInventoryParams) {
+    const { warehouseId, products } = params;
+
+    const existedRecords = await this.db
+      .select()
+      .from(inventoryTable)
+      .where(eq(inventoryTable.warehouseId, warehouseId));
+
+    await Promise.all(
+      products.map(async (product) => {
+        const existedIdx = existedRecords.findIndex(
+          (ele) => ele.productId === product.productId
+        );
+
+        if (existedIdx === -1) {
+          throw new InvalidContentError("Invalid product!");
+        }
+
+        await this.db
+          .update(inventoryTable)
+          .set({
+            quantityAvailable:
+              existedRecords[existedIdx].quantityAvailable -
+              (product.quantity ?? 0),
+          })
+          .where(eq(inventoryTable.id, existedRecords[existedIdx].id));
+      })
+    );
+  }
+
+  async getStockInWarehouse(params: GetStockInWarehouseParams) {
+    const { warehouseId, sortBy, limit = 10, page = 1 } = params;
+
+    const records = await this.db
+      .select()
+      .from(inventoryTable)
+      .where(eq(inventoryTable.warehouseId, warehouseId))
+      .limit(limit)
+      .offset(limit * (page - 1))
+      .orderBy(
+        sortBy === "asc"
+          ? asc(inventoryTable.createdAt)
+          : desc(inventoryTable.createdAt)
+      )
+      .leftJoin(productTable, eq(inventoryTable.productId, productTable.id));
+
+    const totalQueryResult = await this.db
+      .select({ count: count() })
+      .from(inventoryTable)
+      .where(eq(inventoryTable.warehouseId, warehouseId));
+
+    const total = Number(totalQueryResult?.[0]?.count);
+    const totalPages = Math.ceil(total / limit);
+
+    const results = records.map((ele) => ({
+      ...ele.inventory,
+      product: ele.product,
+    }));
+
+    return {
+      data: results,
+      meta: {
+        limit: limit,
+        page: page,
+        total: total,
+        totalPages: totalPages,
+      },
+    };
+  }
+
+  async updateConfig(params: UpdateInventoryConfigParams) {
+    const { configs } = params;
+
+    await Promise.all(
+      configs.map(async (config) => {
+        await this.db
+          .update(inventoryTable)
+          .set({
+            minimumStockLevel: config.minimumStockLevel,
+            maximumStockLevel: config.maximumStockLevel,
+            reorderPoint: config.reorderPoint,
+          })
+          .where(eq(inventoryTable.id, config.id));
       })
     );
   }

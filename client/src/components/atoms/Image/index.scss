@@ -1,0 +1,33 @@
+.a-image {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  img {
+    display: none;
+  }
+
+  &-inherit {
+    background-size: inherit;
+  }
+
+  &-initial {
+    background-size: initial;
+  }
+
+  &-contain {
+    background-size: contain;
+  }
+
+  &-1x1 {
+    @include aspect-ratio(1, 1);
+  }
+
+  &-4x3 {
+    @include aspect-ratio(4, 3);
+  }
+
+  &-16x9 {
+    @include aspect-ratio(16, 9);
+  }
+}

@@ -16,6 +16,7 @@ const iconList = {
   close: "close",
   packageImport: "packageImport",
   plus: "plus",
+  customer: "customer",
 };
 
 export type IconName = keyof typeof iconList;

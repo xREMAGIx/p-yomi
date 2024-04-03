@@ -21,4 +21,5 @@ export const DATE_TIME_FORMAT = {
 
 export const TOAST_SUCCESS_MESSAGE = {
   CREATE: "Create success!",
+  UPDATE: "Update success!",
 };

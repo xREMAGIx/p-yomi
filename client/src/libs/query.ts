@@ -10,7 +10,7 @@ export const productQueryKeys = {
   updates: () => [...productQueryKeys.all, "update"] as const,
   update: (id: string | number) => [...productQueryKeys.updates(), id] as const,
   deletes: () => [...productQueryKeys.all, "delete"] as const,
-  delete: (id: string | number) => [...productQueryKeys.deletes(), id] as const,
+  delete: () => [...productQueryKeys.deletes()] as const,
 };
 
 export const warehouseQueryKeys = {
@@ -21,6 +21,8 @@ export const warehouseQueryKeys = {
   details: () => [...warehouseQueryKeys.all, "detail"] as const,
   detail: (id: string | number) =>
     [...warehouseQueryKeys.details(), id] as const,
+  inventory: (id: string | number) =>
+    [...warehouseQueryKeys.details(), "inventory", id] as const,
   creates: () => [...warehouseQueryKeys.all, "create"] as const,
   create: () => [...warehouseQueryKeys.creates()] as const,
   updates: () => [...warehouseQueryKeys.all, "update"] as const,
@@ -45,8 +47,7 @@ export const goodsReceiptQueryKeys = {
   update: (id: string | number) =>
     [...goodsReceiptQueryKeys.updates(), id] as const,
   deletes: () => [...goodsReceiptQueryKeys.all, "delete"] as const,
-  delete: (id: string | number) =>
-    [...goodsReceiptQueryKeys.deletes(), id] as const,
+  delete: () => [...goodsReceiptQueryKeys.deletes()] as const,
   products: () => [...goodsReceiptQueryKeys.all, "product"] as const,
   searchProduct: () => [...goodsReceiptQueryKeys.products(), "search"] as const,
 };
@@ -55,4 +56,27 @@ export const dashboardQueryKeys = {
   all: ["dashboard"] as const,
   product: () => [...goodsReceiptQueryKeys.all, "product"] as const,
   inventory: () => [...goodsReceiptQueryKeys.all, "inventory"] as const,
+};
+
+export const inventoryQueryKeys = {
+  all: ["dashboard"] as const,
+  config: () => [...inventoryQueryKeys.all, "config"] as const,
+  updateConfig: () => [...inventoryQueryKeys.config(), "update"] as const,
+};
+
+export const customerQueryKeys = {
+  all: ["customer"] as const,
+  lists: () => [...customerQueryKeys.all, "list"] as const,
+  list: ({ page }: { page: number }) =>
+    [...customerQueryKeys.lists(), { page }] as const,
+  details: () => [...customerQueryKeys.all, "detail"] as const,
+  detail: (id: string | number) =>
+    [...customerQueryKeys.details(), id] as const,
+  creates: () => [...customerQueryKeys.all, "create"] as const,
+  create: () => [...customerQueryKeys.creates()] as const,
+  updates: () => [...customerQueryKeys.all, "update"] as const,
+  update: (id: string | number) =>
+    [...customerQueryKeys.updates(), id] as const,
+  deletes: () => [...customerQueryKeys.all, "delete"] as const,
+  delete: () => [...customerQueryKeys.deletes()] as const,
 };

@@ -12,7 +12,7 @@
   &::before {
     content: "";
     display: block;
-    padding-bottom: ($height / $width) * 100%;
+    padding-bottom: calc($height / $width) * 100%;
   }
 }
 
@@ -239,6 +239,10 @@ $sides: (top, bottom, left, right); // Leave this variable alone
   .u-gap-#{$space} {
     gap: #{$space}px;
   }
+}
+
+.u-position-relative {
+  position: relative;
 }
 
 .u-d-flex {

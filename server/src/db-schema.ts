@@ -37,6 +37,8 @@ export const orderTable = pgTable("order", {
     .defaultNow()
     .notNull(),
   total: integer("total").default(0).notNull(),
+  customerId: integer("customer_id").references(() => customerTable.id),
+  status: integer("status").notNull(),
 });
 
 export const orderDetailTable = pgTable("order_detail", {
@@ -46,6 +48,9 @@ export const orderDetailTable = pgTable("order_detail", {
     .notNull(),
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .defaultNow()
+    .notNull(),
+  orderId: integer("order_id")
+    .references(() => orderTable.id)
     .notNull(),
   productId: integer("product_id")
     .references(() => productTable.id)
@@ -122,4 +127,19 @@ export const goodsIssueTable = pgTable("goods_issue", {
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .defaultNow()
     .notNull(),
+});
+
+export const customerTable = pgTable("user", {
+  id: serial("id").primaryKey(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  name: text("name").notNull(),
+  phone: text("phone").notNull(),
+  address: text("address"),
+  email: text("email"),
+  dateOfBirth: timestamp("date_of_birth", { withTimezone: true }),
 });
