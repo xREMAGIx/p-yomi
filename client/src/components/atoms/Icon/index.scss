@@ -41,7 +41,8 @@
   }
 
   &-loading {
-    background-image: url("../../../assets/icons/ic_loading.svg");
+    -webkit-mask-image: url("../../../assets/icons/ic_loading.svg");
+    mask-image: url("../../../assets/icons/ic_loading.svg");
   }
 
   &-search {
@@ -102,5 +103,10 @@
   &-plus {
     -webkit-mask-image: url("../../../assets/icons/ic_plus.svg");
     mask-image: url("../../../assets/icons/ic_plus.svg");
+  }
+
+  &-customer {
+    -webkit-mask-image: url("../../../assets/icons/ic_customer.svg");
+    mask-image: url("../../../assets/icons/ic_customer.svg");
   }
 }

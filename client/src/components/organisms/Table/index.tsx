@@ -1,6 +1,7 @@
 import { mapModifiers } from "@client/libs/functions";
 import React from "react";
 import "./index.scss";
+import LoadingOverlay from "@client/components/molecules/LoadingOverlay";
 
 interface TableRowProps extends React.TableHTMLAttributes<HTMLTableRowElement> {
   isSelected?: boolean;
@@ -19,7 +20,7 @@ interface TableCellProps
 type TableModifiers = "primary" | "firstColSticky";
 
 interface TableProps {
-  theme?: "light" | "dark";
+  isLoading?: boolean;
   classModifiers?: string;
   modifiers?: TableModifiers | TableModifiers[];
   header?: React.ReactNode;
@@ -72,7 +73,7 @@ export const TableHeader: React.FC<TableHeaderProps> = ({ children }) => (
 );
 
 const Table: React.FC<TableProps> = ({
-  theme,
+  isLoading,
   classModifiers,
   header,
   children,
@@ -82,12 +83,12 @@ const Table: React.FC<TableProps> = ({
   <div
     className={mapModifiers(
       "o-table",
-      theme,
       classModifiers,
       modifiers,
       spacing && "spacing"
     )}
   >
+    {isLoading && <LoadingOverlay isLoading={isLoading} />}
     <table className="o-table_wrap">
       {header}
       <tbody>{children}</tbody>
@@ -97,7 +98,6 @@ const Table: React.FC<TableProps> = ({
 
 Table.defaultProps = {
   classModifiers: "",
-  theme: "light",
   header: undefined,
   modifiers: undefined,
   spacing: undefined,

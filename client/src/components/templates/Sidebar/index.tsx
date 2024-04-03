@@ -39,6 +39,11 @@ const sidebarMenu: {
     title: "Goods Receipt",
     icon: "packageImport",
   },
+  {
+    path: "/customer",
+    title: "Customer",
+    icon: "customer",
+  },
 ];
 
 const Sidebar: React.FC<SidebarProps> = () => {

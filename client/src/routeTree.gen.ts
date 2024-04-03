@@ -29,6 +29,9 @@ const AuthenticatedProductIndexLazyImport = createFileRoute(
 const AuthenticatedGoodsReceiptIndexLazyImport = createFileRoute(
   '/_authenticated/goods-receipt/',
 )()
+const AuthenticatedCustomerIndexLazyImport = createFileRoute(
+  '/_authenticated/customer/',
+)()
 const AuthenticatedWarehouseCreateLazyImport = createFileRoute(
   '/_authenticated/warehouse/create',
 )()
@@ -43,6 +46,15 @@ const AuthenticatedProductIdLazyImport = createFileRoute(
 )()
 const AuthenticatedGoodsReceiptCreateLazyImport = createFileRoute(
   '/_authenticated/goods-receipt/create',
+)()
+const AuthenticatedGoodsReceiptIdLazyImport = createFileRoute(
+  '/_authenticated/goods-receipt/$id',
+)()
+const AuthenticatedCustomerCreateLazyImport = createFileRoute(
+  '/_authenticated/customer/create',
+)()
+const AuthenticatedCustomerIdLazyImport = createFileRoute(
+  '/_authenticated/customer/$id',
 )()
 
 // Create/Update Routes
@@ -95,6 +107,14 @@ const AuthenticatedGoodsReceiptIndexLazyRoute =
     ),
   )
 
+const AuthenticatedCustomerIndexLazyRoute =
+  AuthenticatedCustomerIndexLazyImport.update({
+    path: '/customer/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any).lazy(() =>
+    import('./routes/_authenticated/customer/index.lazy').then((d) => d.Route),
+  )
+
 const AuthenticatedWarehouseCreateLazyRoute =
   AuthenticatedWarehouseCreateLazyImport.update({
     path: '/warehouse/create',
@@ -140,6 +160,32 @@ const AuthenticatedGoodsReceiptCreateLazyRoute =
     ),
   )
 
+const AuthenticatedGoodsReceiptIdLazyRoute =
+  AuthenticatedGoodsReceiptIdLazyImport.update({
+    path: '/goods-receipt/$id',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any).lazy(() =>
+    import('./routes/_authenticated/goods-receipt/$id.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+
+const AuthenticatedCustomerCreateLazyRoute =
+  AuthenticatedCustomerCreateLazyImport.update({
+    path: '/customer/create',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any).lazy(() =>
+    import('./routes/_authenticated/customer/create.lazy').then((d) => d.Route),
+  )
+
+const AuthenticatedCustomerIdLazyRoute =
+  AuthenticatedCustomerIdLazyImport.update({
+    path: '/customer/$id',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any).lazy(() =>
+    import('./routes/_authenticated/customer/$id.lazy').then((d) => d.Route),
+  )
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -158,6 +204,18 @@ declare module '@tanstack/react-router' {
     }
     '/_authenticated/': {
       preLoaderRoute: typeof AuthenticatedIndexLazyImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/customer/$id': {
+      preLoaderRoute: typeof AuthenticatedCustomerIdLazyImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/customer/create': {
+      preLoaderRoute: typeof AuthenticatedCustomerCreateLazyImport
+      parentRoute: typeof AuthenticatedImport
+    }
+    '/_authenticated/goods-receipt/$id': {
+      preLoaderRoute: typeof AuthenticatedGoodsReceiptIdLazyImport
       parentRoute: typeof AuthenticatedImport
     }
     '/_authenticated/goods-receipt/create': {
@@ -180,6 +238,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedWarehouseCreateLazyImport
       parentRoute: typeof AuthenticatedImport
     }
+    '/_authenticated/customer/': {
+      preLoaderRoute: typeof AuthenticatedCustomerIndexLazyImport
+      parentRoute: typeof AuthenticatedImport
+    }
     '/_authenticated/goods-receipt/': {
       preLoaderRoute: typeof AuthenticatedGoodsReceiptIndexLazyImport
       parentRoute: typeof AuthenticatedImport
@@ -200,11 +262,15 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren([
   AuthenticatedRoute.addChildren([
     AuthenticatedIndexLazyRoute,
+    AuthenticatedCustomerIdLazyRoute,
+    AuthenticatedCustomerCreateLazyRoute,
+    AuthenticatedGoodsReceiptIdLazyRoute,
     AuthenticatedGoodsReceiptCreateLazyRoute,
     AuthenticatedProductIdLazyRoute,
     AuthenticatedProductCreateLazyRoute,
     AuthenticatedWarehouseIdLazyRoute,
     AuthenticatedWarehouseCreateLazyRoute,
+    AuthenticatedCustomerIndexLazyRoute,
     AuthenticatedGoodsReceiptIndexLazyRoute,
     AuthenticatedProductIndexLazyRoute,
     AuthenticatedWarehouseIndexLazyRoute,

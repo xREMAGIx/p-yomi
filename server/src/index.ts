@@ -8,6 +8,8 @@ import { goodsReceiptRoutes } from "./controllers/goods-receipt.controller";
 import { productRoutes } from "./controllers/product.controller";
 import { warehouseRoutes } from "./controllers/warehouse.controller";
 import { errorPlugin } from "./libs/plugins";
+import { inventoryRoutes } from "./controllers/inventory.controller";
+import { customerRoutes } from "./controllers/customer.controller";
 
 const app = new Elysia({ name: "root" })
   .use(
@@ -33,11 +35,17 @@ const app = new Elysia({ name: "root" })
   .use(cors())
   .use(staticPlugin())
   .use(errorPlugin)
+  //! Only used for testing delay
+  .onBeforeHandle(async () => {
+    await new Promise((r) => setTimeout(r, 300));
+  })
   .use(authRoutes)
   .use(dashboardRoutes)
   .use(productRoutes)
   .use(warehouseRoutes)
   .use(goodsReceiptRoutes)
+  .use(inventoryRoutes)
+  .use(customerRoutes)
   .listen(3000);
 
 console.log(

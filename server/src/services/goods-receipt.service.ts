@@ -1,4 +1,4 @@
-import { asc, desc, eq, sql } from "drizzle-orm";
+import { and, asc, desc, eq, sql } from "drizzle-orm";
 import { DBType } from "../config/database";
 import {
   goodsReceiptDetailTable,
@@ -156,26 +156,108 @@ export default class GoodsReceiptService {
   }
 
   async update(params: UpdateGoodsReceiptParams) {
-    const { id, ...rest } = params;
+    const { id, warehouseId, products } = params;
 
-    const results = await this.db
+    await this.db
       .update(goodsReceiptTable)
       .set({
-        ...rest,
         updatedAt: sql`now()`,
       })
-      .where(eq(goodsReceiptTable.id, id))
-      .returning();
+      .where(eq(goodsReceiptTable.id, id));
 
-    return results[0];
+    const existedRecords = await this.db
+      .select()
+      .from(goodsReceiptDetailTable)
+      .where(eq(goodsReceiptDetailTable.goodsReceiptId, id));
+
+    const modifiedProducts = await Promise.all(
+      products.map(async (product) => {
+        const existedIdx = existedRecords.findIndex(
+          (ele) => ele.productId === product.productId
+        );
+
+        //* If not exist -> Add
+        if (existedIdx === -1) {
+          await this.db.insert(goodsReceiptDetailTable).values({
+            goodsReceiptId: id,
+            productId: product.productId,
+            quantity: product.quantity ?? 0,
+          });
+          return product;
+        }
+
+        //* If exist -> update
+        await this.db
+          .update(goodsReceiptDetailTable)
+          .set({
+            quantity: product.quantity,
+            updatedAt: sql`now()`,
+          })
+          .where(
+            and(
+              eq(goodsReceiptDetailTable.goodsReceiptId, id),
+              eq(goodsReceiptDetailTable.productId, product.productId)
+            )
+          );
+
+        //* Check if any product has been delete -> update
+        if (existedRecords.length > products.length) {
+          const deletedProduct = existedRecords.filter(
+            (ele) => ele.productId !== product.productId
+          );
+
+          await Promise.all(
+            deletedProduct.map(async (ele) => {
+              await this.db
+                .delete(goodsReceiptDetailTable)
+                .where(
+                  and(
+                    eq(goodsReceiptDetailTable.goodsReceiptId, id),
+                    eq(goodsReceiptDetailTable.productId, ele.productId)
+                  )
+                );
+            })
+          );
+
+          return {
+            productId: product.productId,
+            quantity: -existedRecords[existedIdx].quantity,
+          };
+        }
+
+        return {
+          productId: product.productId,
+          quantity:
+            (product.quantity ?? 0) - existedRecords[existedIdx].quantity,
+        };
+      })
+    );
+
+    return {
+      warehouseId,
+      modifiedProducts,
+    };
   }
 
   async delete(id: number) {
-    const results = await this.db
+    const deleteDetailResults = await this.db
+      .delete(goodsReceiptDetailTable)
+      .where(eq(goodsReceiptDetailTable.goodsReceiptId, id))
+      .returning();
+
+    const deleteResults = await this.db
       .delete(goodsReceiptTable)
       .where(eq(goodsReceiptTable.id, id))
-      .returning({ id: goodsReceiptTable.id });
+      .returning();
 
-    return results[0];
+    const products = deleteDetailResults.map((ele) => ({
+      productId: ele.productId,
+      quantity: ele.quantity,
+    }));
+
+    return {
+      warehouseId: deleteResults[0].warehouseId,
+      products,
+    };
   }
 }

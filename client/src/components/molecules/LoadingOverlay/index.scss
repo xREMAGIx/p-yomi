@@ -1,0 +1,33 @@
+.m-loadingOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: $white01;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+
+  &_loading {
+    width: rem(64);
+    height: rem(64);
+  }
+
+  &-outer-16 {
+    top: rem(-16);
+    left: rem(-16);
+    right: rem(-16);
+    bottom: rem(-16);
+  }
+
+  &-noBackground {
+    background-color: transparent;
+  }
+
+  &-relative {
+    position: relative;
+    width: 100%;
+  }
+}

@@ -9,6 +9,7 @@ import InventoryService from "../services/inventory.service";
 import ProductService from "../services/product.service";
 import WarehouseService from "../services/warehouse.service";
 import * as CustomError from "./error";
+import CustomerService from "../services/customer.service";
 
 export const tokenPlugin = new Elysia({ name: "token-plugin" })
   .use(
@@ -119,5 +120,6 @@ export const servicesPlugin = new Elysia({ name: "services-plugin" })
       warehouseService: new WarehouseService(db),
       inventoryService: new InventoryService(db),
       goodsReceiptService: new GoodsReceiptService(db),
+      customerService: new CustomerService(db),
     };
   });

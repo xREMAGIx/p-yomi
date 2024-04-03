@@ -35,7 +35,7 @@ export const goodsReceiptRoutes = new Elysia({
         "/",
         async ({ body, goodsReceiptService, inventoryService }) => {
           const data = await goodsReceiptService.create({ ...body });
-          await inventoryService.updateStock({ ...body });
+          await inventoryService.createStock({ ...body });
 
           return {
             data: data,
@@ -79,19 +79,29 @@ export const goodsReceiptRoutes = new Elysia({
           //* Update
           .put(
             "/:id",
-            async ({ idParams, body, goodsReceiptService }) => {
-              const data = await goodsReceiptService.update({
-                ...body,
-                id: idParams,
+            async ({
+              idParams,
+              body,
+              goodsReceiptService,
+              inventoryService,
+            }) => {
+              const { warehouseId, modifiedProducts } =
+                await goodsReceiptService.update({
+                  ...body,
+                  id: idParams,
+                });
+              await inventoryService.updateStock({
+                warehouseId: warehouseId,
+                products: modifiedProducts,
               });
 
-              return {
-                data,
-              };
+              return { id: idParams };
             },
             {
               body: updateGoodsReceiptParamSchema,
-              response: goodsReceiptDataSchema,
+              response: t.Object({
+                id: t.Numeric(),
+              }),
               detail: {
                 summary: "Update Goods Receipt",
               },
@@ -100,12 +110,17 @@ export const goodsReceiptRoutes = new Elysia({
           //* Delete
           .delete(
             "/:id",
-            ({ idParams, goodsReceiptService }) => {
-              return goodsReceiptService.delete(idParams);
+            async ({ idParams, goodsReceiptService, inventoryService }) => {
+              const { warehouseId, products } =
+                await goodsReceiptService.delete(idParams);
+
+              await inventoryService.deleteStock({ warehouseId, products });
+
+              return { id: idParams };
             },
             {
               response: t.Object({
-                id: t.Number(),
+                id: t.Numeric(),
               }),
               detail: {
                 summary: "Delete Goods Receipt",

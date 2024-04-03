@@ -14,15 +14,15 @@ import {
 } from "@client/components/pages/common/DeleteModal";
 import { DATE_TIME_FORMAT, DEFAULT_PAGINATION } from "@client/libs/constants";
 import { handleCheckAuthError } from "@client/libs/error";
-import { productQueryKeys } from "@client/libs/query";
+import { customerQueryKeys } from "@client/libs/query";
 import { server } from "@client/libs/server";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
 import dayjs from "dayjs";
 import { useRef, useState } from "react";
 
-export const Route = createLazyFileRoute("/_authenticated/product/")({
-  component: ProductList,
+export const Route = createLazyFileRoute("/_authenticated/customer/")({
+  component: CustomerList,
 });
 
 const headerData = [
@@ -32,19 +32,24 @@ const headerData = [
     title: "Name",
   },
   {
-    id: "description",
-    keyValue: "description",
-    title: "Description",
+    id: "phone",
+    keyValue: "phone",
+    title: "Phone",
   },
   {
-    id: "barcode",
-    keyValue: "barcode",
-    title: "Barcode",
+    id: "email",
+    keyValue: "email",
+    title: "Email",
   },
   {
-    id: "price",
-    keyValue: "price",
-    title: "Price",
+    id: "dateOfBirth",
+    keyValue: "dateOfBirth",
+    title: "Date of birth",
+  },
+  {
+    id: "address",
+    keyValue: "address",
+    title: "Address",
   },
   {
     id: "createdAt",
@@ -61,9 +66,9 @@ const headerData = [
     keyValue: "action",
     title: "Action",
   },
-];
+] as const;
 
-function ProductList() {
+function CustomerList() {
   //* Hooks
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -81,9 +86,9 @@ function ProductList() {
 
   //* Query
   const { data, isFetching: isLoadingList } = useQuery({
-    queryKey: productQueryKeys.list({ page: pagination.page }),
+    queryKey: customerQueryKeys.list({ page: pagination.page }),
     queryFn: async () => {
-      const { data, error } = await server.api.v1.product.index.get({
+      const { data, error } = await server.api.v1.customer.index.get({
         query: {
           limit: pagination.limit,
           page: pagination.page,
@@ -105,16 +110,18 @@ function ProductList() {
 
   //* Mutation
   const { mutate: deleteMutate, isPending } = useMutation({
-    mutationKey: productQueryKeys.delete(),
+    mutationKey: customerQueryKeys.delete(),
     mutationFn: async (params: { id: number }) => {
-      const { error } = await server.api.v1.product({ id: params.id }).delete();
+      const { error } = await server.api.v1
+        .customer({ id: params.id })
+        .delete();
 
       if (error) {
         handleCheckAuthError(error, navigate);
         throw error.value;
       }
 
-      queryClient.invalidateQueries({ queryKey: productQueryKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: customerQueryKeys.lists() });
 
       deleteModalRef.current?.handleClose();
     },
@@ -134,15 +141,15 @@ function ProductList() {
   };
 
   return (
-    <div className="p-productList">
+    <div className="p-customerList">
       <Button
         modifiers={["inline"]}
-        onClick={() => navigate({ to: "/product/create" })}
+        onClick={() => navigate({ to: "/customer/create" })}
       >
         Create
       </Button>
 
-      <div className="p-productList_table u-m-t-32">
+      <div className="p-customerList_table u-m-t-32">
         <Table
           isLoading={isLoadingList}
           header={
@@ -161,17 +168,16 @@ function ProductList() {
             <TableRow key={`row-${ele.id}`}>
               {headerData.map((col) => {
                 const keyVal = col.keyValue as keyof typeof ele;
-                const data = ele[keyVal];
 
                 if (
                   keyVal === "createdAt" ||
                   keyVal === "updatedAt" ||
-                  data instanceof Date
+                  keyVal === "dateOfBirth"
                 ) {
                   return (
                     <TableCell key={`${ele.id}-${col.keyValue}`}>
                       <Text type="span">
-                        {dayjs(data).format(DATE_TIME_FORMAT.DATE_TIME)}
+                        {dayjs(ele[keyVal]).format(DATE_TIME_FORMAT.DATE_TIME)}
                       </Text>
                     </TableCell>
                   );
@@ -181,10 +187,10 @@ function ProductList() {
                   return (
                     <TableCell key={`${ele.id}-${col.keyValue}`}>
                       <Link
-                        to="/product/$id"
+                        to="/customer/$id"
                         params={{ id: ele.id.toString() }}
                       >
-                        {data}
+                        {ele[keyVal]}
                       </Link>
                     </TableCell>
                   );
@@ -206,7 +212,7 @@ function ProductList() {
 
                 return (
                   <TableCell key={`${ele.id}-${col.keyValue}`}>
-                    <Text type="span">{data}</Text>
+                    <Text type="span">{ele[keyVal]}</Text>
                   </TableCell>
                 );
               })}
@@ -221,7 +227,7 @@ function ProductList() {
           />
         </div>
       </div>
-      <div className="p-productList_deleteModal">
+      <div className="p-customerList_deleteModal">
         <DeleteModal
           ref={deleteModalRef}
           isLoading={isPending}
