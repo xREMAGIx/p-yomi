@@ -25,6 +25,11 @@ const sidebarMenu: {
     icon: "home",
   },
   {
+    path: "/order",
+    title: "Order",
+    icon: "receipt",
+  },
+  {
     path: "/product",
     title: "Product",
     icon: "barcode",

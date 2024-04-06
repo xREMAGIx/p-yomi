@@ -38,6 +38,33 @@ export const updateProductParamSchema = t.Composite([
   }),
 ]);
 
+export const listProductWithInventoryQuerySchema = t.Composite([
+  queryPaginationSchema,
+  t.Object({
+    barcode: t.Optional(t.String()),
+    name: t.Optional(t.String()),
+  }),
+]);
+
+export const productWithInventoryDataSchema = t.Composite([
+  baseSelectProductSchema,
+  t.Object({
+    totalAvailable: t.Number(),
+    inventory: t.Array(
+      t.Object({
+        quantityAvailable: t.Number(),
+        warehouseId: t.Numeric(),
+        warehouseName: t.String(),
+      })
+    ),
+  }),
+]);
+
+export const listProductWithInventoryDataSchema = t.Object({
+  data: t.Array(productWithInventoryDataSchema),
+  meta: metaPaginationSchema,
+});
+
 export type ProductData = Static<typeof baseSelectProductSchema>;
 export type ProductListData = Static<typeof listProductDataSchema>;
 
@@ -51,6 +78,18 @@ export type CreateProductParams = Static<typeof createProductParamSchema>;
 export type UpdateProductParams = Static<typeof updateProductParamSchema> & {
   id: number;
 };
+
+export type GetListProductWithInventoryParams = Static<
+  typeof listProductWithInventoryQuerySchema
+>;
+
+export type ProductWithInventoryData = Static<
+  typeof productWithInventoryDataSchema
+>;
+
+export type GetListProductWithInventoryData = Static<
+  typeof listProductWithInventoryDataSchema
+>;
 
 //* Model
 export const productModel = new Elysia({ name: "product-model" }).model({

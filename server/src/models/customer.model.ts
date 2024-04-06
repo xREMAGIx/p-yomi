@@ -11,6 +11,7 @@ export const listCustomerQuerySchema = t.Composite([
   queryPaginationSchema,
   t.Object({
     name: t.Optional(t.String()),
+    phone: t.Optional(t.String()),
   }),
 ]);
 
@@ -23,18 +24,16 @@ export const detailCustomerDataSchema = t.Object({
   data: baseSelectCustomerSchema,
 });
 
-export const createCustomerParamSchema = t.Composite([
-  t.Omit(baseInsertCustomerSchema, ["id", "createdAt", "updatedAt", "price"]),
-  t.Object({
-    price: t.Optional(t.Numeric()),
-  }),
+export const createCustomerParamSchema = t.Omit(baseInsertCustomerSchema, [
+  "id",
+  "createdAt",
+  "updatedAt",
 ]);
 
-export const updateCustomerParamSchema = t.Composite([
-  t.Omit(baseInsertCustomerSchema, ["id", "createdAt", "updatedAt", "price"]),
-  t.Object({
-    price: t.Optional(t.Numeric()),
-  }),
+export const updateCustomerParamSchema = t.Omit(baseInsertCustomerSchema, [
+  "id",
+  "createdAt",
+  "updatedAt",
 ]);
 
 export type CustomerData = Static<typeof baseSelectCustomerSchema>;

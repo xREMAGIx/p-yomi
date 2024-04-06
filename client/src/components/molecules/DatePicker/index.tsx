@@ -11,7 +11,7 @@ export type RangeDateTypes = {
 
 interface DatePickerProps {
   id: string;
-  handleChangeDate: (date?: Date) => void;
+  handleChangeDate: (date: Date | null) => void;
   label?: string;
   error?: string;
   required?: boolean;
@@ -52,7 +52,7 @@ const Datepicker: React.FC<DatePickerProps> = ({
             value={value}
             onChange={(val) => {
               if (!Array.isArray(val)) {
-                if (val) handleChangeDate(val);
+                handleChangeDate(val);
               }
             }}
             format="dd/MM/y"

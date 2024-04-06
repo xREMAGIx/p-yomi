@@ -80,3 +80,20 @@ export const customerQueryKeys = {
   deletes: () => [...customerQueryKeys.all, "delete"] as const,
   delete: () => [...customerQueryKeys.deletes()] as const,
 };
+
+export const orderQueryKeys = {
+  all: ["order"] as const,
+  lists: () => [...orderQueryKeys.all, "list"] as const,
+  list: ({ page }: { page: number }) =>
+    [...orderQueryKeys.lists(), { page }] as const,
+  details: () => [...orderQueryKeys.all, "detail"] as const,
+  detail: (id: string | number) => [...orderQueryKeys.details(), id] as const,
+  creates: () => [...orderQueryKeys.all, "create"] as const,
+  create: () => [...orderQueryKeys.creates()] as const,
+  updates: () => [...orderQueryKeys.all, "update"] as const,
+  update: (id: string | number) => [...orderQueryKeys.updates(), id] as const,
+  deletes: () => [...orderQueryKeys.all, "delete"] as const,
+  delete: () => [...orderQueryKeys.deletes()] as const,
+  products: () => [...orderQueryKeys.all, "product"] as const,
+  searchProduct: () => [...orderQueryKeys.products(), "search"] as const,
+};

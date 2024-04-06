@@ -1,0 +1,45 @@
+.a-text-area {
+  &_label {
+    color: $white;
+    margin-bottom: rem(8);
+    @include font-base(12, 16);
+
+    &-required {
+      color: $white;
+      margin-left: rem(4);
+    }
+
+    &-error {
+      color: $sinopia;
+    }
+  }
+
+  &_errorMessage {
+    color: $white;
+    margin-top: rem(4);
+    @include font-base(12, 18);
+  }
+
+  &_inputele {
+    border: 1px solid $gainsboro;
+    border-radius: rem(8);
+    color: $raisin-black;
+    font: inherit;
+    font-weight: 400;
+    margin: 0;
+    outline: none;
+    padding: rem(5) rem(12);
+    resize: none;
+    transition: all $transition linear;
+    width: 100%;
+    @include font-base(14, 22);
+
+    &::placeholder {
+      color: $taupe-gray;
+    }
+
+    &-error {
+      border-color: $sinopia;
+    }
+  }
+}

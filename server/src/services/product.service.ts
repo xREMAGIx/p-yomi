@@ -1,10 +1,12 @@
 import { and, asc, count, desc, eq, like, sql } from "drizzle-orm";
 import { DBType } from "../config/database";
-import { productTable } from "../db-schema";
+import { inventoryTable, productTable, warehouseTable } from "../db-schema";
 import {
   CreateProductParams,
   GetDetailProductParams,
   GetListProductParams,
+  GetListProductWithInventoryParams,
+  ProductWithInventoryData,
   UpdateProductParams,
 } from "../models/product.model";
 
@@ -104,5 +106,92 @@ export default class ProductService {
       .returning({ id: productTable.id });
 
     return results[0];
+  }
+
+  async getListWithInventory(params: GetListProductWithInventoryParams) {
+    const { sortBy, limit = 10, page = 1, barcode, name } = params;
+
+    const records = await this.db
+      .select()
+      .from(productTable)
+      .where(
+        and(
+          barcode ? like(productTable.barcode, `%${barcode}%`) : undefined,
+          name ? like(productTable.name, name) : undefined
+        )
+      )
+      .limit(limit)
+      .offset(limit * (page - 1))
+      .orderBy(
+        sortBy === "asc"
+          ? asc(productTable.createdAt)
+          : desc(productTable.createdAt)
+      )
+      .leftJoin(inventoryTable, eq(inventoryTable.productId, productTable.id))
+      .leftJoin(
+        warehouseTable,
+        eq(warehouseTable.id, inventoryTable.warehouseId)
+      );
+
+    const results = records.reduce((prev: ProductWithInventoryData[], curr) => {
+      const { product, inventory, warehouse } = curr;
+
+      const existedRecordIdx = prev.findIndex((ele) => ele.id === product.id);
+
+      if (existedRecordIdx > -1) {
+        const modifyList = [...prev];
+        modifyList[existedRecordIdx] = {
+          ...modifyList[existedRecordIdx],
+          totalAvailable: modifyList[existedRecordIdx].totalAvailable ?? 0,
+          inventory: [
+            ...modifyList[existedRecordIdx].inventory,
+            {
+              quantityAvailable: inventory?.quantityAvailable ?? 0,
+              warehouseId: inventory?.warehouseId ?? -1,
+              warehouseName: warehouse?.name ?? "",
+            },
+          ],
+        };
+        return modifyList;
+      }
+
+      return [
+        ...prev,
+        {
+          ...product,
+          totalAvailable: inventory?.quantityAvailable ?? 0,
+          inventory: [
+            {
+              quantityAvailable: inventory?.quantityAvailable ?? 0,
+              warehouseId: inventory?.warehouseId ?? -1,
+              warehouseName: warehouse?.name ?? "",
+            },
+          ],
+        },
+      ];
+    }, []);
+
+    const totalQueryResult = await this.db
+      .select({ count: count() })
+      .from(productTable)
+      .where(
+        and(
+          barcode ? like(productTable.barcode, `%${barcode}%`) : undefined,
+          name ? like(productTable.name, name) : undefined
+        )
+      );
+
+    const total = Number(totalQueryResult?.[0]?.count);
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      data: results,
+      meta: {
+        limit: limit,
+        page: page,
+        total: total,
+        totalPages: totalPages,
+      },
+    };
   }
 }

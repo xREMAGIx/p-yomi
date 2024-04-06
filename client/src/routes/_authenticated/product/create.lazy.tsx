@@ -36,7 +36,7 @@ function ProductCreate() {
 
   //* Mutation
   const createMutation = useMutation({
-    mutationKey: [...productQueryKeys.create()],
+    mutationKey: productQueryKeys.create(),
     mutationFn: async (params: CreateProductParams) => {
       const { error } = await server.api.v1.product.index.post(params);
 
