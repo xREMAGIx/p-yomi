@@ -37,6 +37,7 @@
     padding-left: rem(16);
     padding-right: rem(16);
     width: 100%;
+
     @include tablet-down-lands {
       overflow: auto;
     }
@@ -157,6 +158,12 @@
       }
     }
   }
+
+  &-noMaxWidth {
+    #{$root}_wrapper {
+      max-width: unset;
+    }
+  }
 }
 
 .ReactModal__Overlay {
@@ -198,6 +205,7 @@
 
   &--open {
     overflow: hidden;
+
     @include tablet-up {
       padding-right: rem(7);
     }

@@ -3,6 +3,32 @@ import Elysia, { Static, t } from "elysia";
 import { paymentTable } from "../db-schema";
 import { metaPaginationSchema, queryPaginationSchema } from "./base";
 
+export enum PaymentStatus {
+  UNPAID = "unpaid",
+  PAID = "paid",
+  PARTIAL = "partial",
+  CANCEL = "cancel",
+  REFUND = "refund",
+}
+
+export enum PaymentStatusCode {
+  UNPAID = 0,
+  PAID = 1,
+  PARTIAL = 2,
+  CANCEL = 3,
+  REFUND = 4,
+}
+
+export enum PaymentMethod {
+  CASH = "cash",
+  CREDIT = "credit",
+}
+
+export enum PaymentMethodCode {
+  CASH = 0,
+  CREDIT = 1,
+}
+
 export const baseSelectPaymentSchema = createSelectSchema(paymentTable);
 
 export const baseInsertPaymentSchema = createInsertSchema(paymentTable);

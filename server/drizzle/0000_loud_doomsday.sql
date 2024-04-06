@@ -59,6 +59,9 @@ CREATE TABLE IF NOT EXISTS "order" (
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"total" integer DEFAULT 0 NOT NULL,
 	"paid" integer DEFAULT 0 NOT NULL,
+	"due" integer DEFAULT 0 NOT NULL,
+	"discount" integer DEFAULT 0 NOT NULL,
+	"warehouse_id" integer NOT NULL,
 	"customer_id" integer,
 	"customer_name" text NOT NULL,
 	"customer_phone" text NOT NULL,
@@ -143,6 +146,12 @@ END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "order_detail" ADD CONSTRAINT "order_detail_product_id_product_id_fk" FOREIGN KEY ("product_id") REFERENCES "product"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "order" ADD CONSTRAINT "order_warehouse_id_warehouse_id_fk" FOREIGN KEY ("warehouse_id") REFERENCES "warehouse"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

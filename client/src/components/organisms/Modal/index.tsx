@@ -9,7 +9,7 @@ interface Props {
   handleClose?: () => void;
   className?: string;
   iconName?: IconName;
-  modifier?: "default" | "videoModal";
+  modifier?: ("default" | "videoModal" | "noMaxWidth")[];
   headerComponent?: React.ReactNode;
   footerComponent?: React.ReactNode;
   children?: React.ReactNode;
@@ -34,6 +34,7 @@ const Modal: React.FC<Props> = ({
     ariaHideApp={false}
     portalClassName={mapModifiers("o-modal_portal", isOpen && "open")}
     htmlOpenClassName="reactmodal-html-open"
+    shouldCloseOnEsc
   >
     <div className="o-modal_main">
       <div className="o-modal_wrapper">
@@ -58,7 +59,7 @@ Modal.defaultProps = {
   handleClose: undefined,
   className: undefined,
   iconName: "close",
-  modifier: "default",
+  modifier: ["default"],
   headerComponent: undefined,
   footerComponent: undefined,
 };

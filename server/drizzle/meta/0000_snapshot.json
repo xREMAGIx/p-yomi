@@ -1,5 +1,5 @@
 {
-  "id": "08a6ca9f-4d0e-4aae-80e3-277084895c84",
+  "id": "4dc477cf-2c42-4c0f-9d01-fcbe5646c9e9",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -437,6 +437,26 @@
           "notNull": true,
           "default": 0
         },
+        "due": {
+          "name": "due",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "discount": {
+          "name": "discount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "warehouse_id": {
+          "name": "warehouse_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
         "customer_id": {
           "name": "customer_id",
           "type": "integer",
@@ -482,6 +502,19 @@
       },
       "indexes": {},
       "foreignKeys": {
+        "order_warehouse_id_warehouse_id_fk": {
+          "name": "order_warehouse_id_warehouse_id_fk",
+          "tableFrom": "order",
+          "tableTo": "warehouse",
+          "columnsFrom": [
+            "warehouse_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
         "order_customer_id_customer_id_fk": {
           "name": "order_customer_id_customer_id_fk",
           "tableFrom": "order",

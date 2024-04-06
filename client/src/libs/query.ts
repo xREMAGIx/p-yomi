@@ -96,4 +96,6 @@ export const orderQueryKeys = {
   delete: () => [...orderQueryKeys.deletes()] as const,
   products: () => [...orderQueryKeys.all, "product"] as const,
   searchProduct: () => [...orderQueryKeys.products(), "search"] as const,
+  customers: () => [...orderQueryKeys.all, "customer"] as const,
+  searchCustomer: () => [...orderQueryKeys.customers(), "customer"] as const,
 };

@@ -35,6 +35,7 @@ const InputRef: React.ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
     onFocus,
     onChange,
     required,
+    ...props
   },
   ref
 ) => (
@@ -56,6 +57,7 @@ const InputRef: React.ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
     )}
     <div className="a-input_wrap">
       <input
+        {...props}
         className="a-input_input"
         type={type}
         ref={ref}

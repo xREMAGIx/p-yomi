@@ -1,5 +1,4 @@
 import Button from "@client/components/atoms/Button";
-import Heading from "@client/components/atoms/Heading";
 import Icon from "@client/components/atoms/Icon";
 import Input from "@client/components/atoms/Input";
 import Text from "@client/components/atoms/Text";
@@ -20,10 +19,9 @@ import {
 } from "@server/models/product.model";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
-import { forwardRef, useImperativeHandle, useMemo, useRef } from "react";
+import { forwardRef, useImperativeHandle, useRef } from "react";
 import {
   Controller,
-  FormProvider,
   useFieldArray,
   useForm,
   useFormContext,
@@ -79,9 +77,6 @@ interface SearchForm {
 }
 
 interface OrderForm {
-  customerId: number | null;
-  customerName: string;
-  customerPhone: string;
   warehouse: {
     value: number;
     label: string;
@@ -96,6 +91,7 @@ interface OrderForm {
   })[];
   total: number;
   paid: number;
+  discount: number;
   note: string;
 }
 
@@ -123,7 +119,7 @@ export const ProductTable = forwardRef<ProductTableRef, ProductTableProps>(
 
     //* Hook-form
     const searchMethods = useForm<SearchForm>();
-    const orderMethods = useForm<OrderForm>();
+    const orderMethods = useFormContext<OrderForm>();
     const {
       fields,
       append: fieldAppend,
@@ -207,196 +203,189 @@ export const ProductTable = forwardRef<ProductTableRef, ProductTableProps>(
     return (
       <div className="c-order_productTable">
         <div className="c-order_productTable_search u-m-t-16">
-          <FormProvider {...searchMethods}>
-            <form onSubmit={searchMethods.handleSubmit(onSearch)}>
-              <div className="u-d-flex u-flex-ai-start">
-                <div className="u-flex-1">
-                  <Controller
-                    control={searchMethods.control}
-                    name="search"
-                    defaultValue={""}
-                    render={({ field, fieldState: { error } }) => (
-                      <Input
-                        id="order-product-search"
-                        label="Product search"
-                        {...field}
-                        error={error?.message}
-                      />
-                    )}
-                  />
-                </div>
-                <div className="u-m-l-8 u-m-t-24">
-                  <Button
-                    isLoading={isLoadingSearch}
-                    type="submit"
-                    modifiers={["inline"]}
-                  >
-                    Search
-                  </Button>
-                </div>
+          <form onSubmit={searchMethods.handleSubmit(onSearch)}>
+            <div className="u-d-flex u-flex-ai-start">
+              <div className="u-flex-1">
+                <Controller
+                  control={searchMethods.control}
+                  name="search"
+                  defaultValue={""}
+                  render={({ field, fieldState: { error } }) => (
+                    <Input
+                      id="order-product-search"
+                      label="Product search"
+                      {...field}
+                      error={error?.message}
+                    />
+                  )}
+                />
               </div>
-            </form>
-          </FormProvider>
+              <div className="u-m-l-8 u-m-t-24">
+                <Button
+                  isLoading={isLoadingSearch}
+                  type="submit"
+                  modifiers={["inline"]}
+                >
+                  Search
+                </Button>
+              </div>
+            </div>
+          </form>
         </div>
         <div className="c-order_productTable_table u-m-t-32">
-          <FormProvider {...orderMethods}>
-            <Table
-              header={
-                <TableHeader>
-                  <TableRow isHead>
-                    {headerData.map((ele) => (
-                      <TableCell key={ele.id} isHead>
-                        <span>{ele.title}</span>
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                </TableHeader>
-              }
-            >
-              {fields?.map((field, index) => (
-                <TableRow key={`row-${field.id}`}>
-                  {headerData.map((col) => {
-                    const keyVal = col.keyValue;
+          <Table
+            header={
+              <TableHeader>
+                <TableRow isHead>
+                  {headerData.map((ele) => (
+                    <TableCell key={ele.id} isHead>
+                      <span>{ele.title}</span>
+                    </TableCell>
+                  ))}
+                </TableRow>
+              </TableHeader>
+            }
+          >
+            {fields?.map((field, index) => (
+              <TableRow key={`row-${field.id}`}>
+                {headerData.map((col) => {
+                  const keyVal = col.keyValue;
 
-                    if (keyVal === "available") {
-                      const inventoryData = field.inventory.reduce(
-                        (
-                          prev: {
-                            currentWarehouse: number;
-                            total: number;
-                          },
-                          curr
-                        ) => {
-                          return {
-                            currentWarehouse:
-                              field.inventory.find(
-                                (ele) => ele.warehouseId === selectedWarehouseId
-                              )?.quantityAvailable ?? -1,
-                            total: prev.total + curr.quantityAvailable,
-                          };
+                  if (keyVal === "available") {
+                    const inventoryData = field.inventory.reduce(
+                      (
+                        prev: {
+                          currentWarehouse: number;
+                          total: number;
                         },
-                        {
-                          currentWarehouse: -1,
-                          total: 0,
-                        }
-                      );
-
-                      return (
-                        <TableCell key={`${field.id}-${keyVal}`}>
-                          <Text type="span">
-                            {inventoryData.currentWarehouse}/
-                            {inventoryData.total}
-                          </Text>
-                        </TableCell>
-                      );
-                    }
-
-                    if (keyVal === "price" || keyVal === "discount") {
-                      return (
-                        <TableCell key={`${field.id}-${keyVal}`}>
-                          <Controller
-                            control={orderMethods.control}
-                            name={`products.${index}.${keyVal}`}
-                            defaultValue={0}
-                            rules={{
-                              required: FORM_VALIDATION.REQUIRED,
-                            }}
-                            render={({
-                              field: { ref, value, onBlur, onChange },
-                              fieldState: { error },
-                            }) => (
-                              <Input
-                                id={`order-product-table-${col.keyValue}`}
-                                type="number"
-                                ref={ref}
-                                value={value ?? 0}
-                                onBlur={onBlur}
-                                onChange={(e) =>
-                                  onChange(
-                                    e.target.value ? Number(e.target.value) : ""
-                                  )
-                                }
-                                error={error?.message}
-                              />
-                            )}
-                          />
-                        </TableCell>
-                      );
-                    }
-
-                    if (keyVal === "quantity") {
-                      return (
-                        <TableCell key={`${field.id}-${col.keyValue}`}>
-                          <Controller
-                            control={orderMethods.control}
-                            name={`products.${index}.quantity`}
-                            defaultValue={1}
-                            rules={{
-                              required: FORM_VALIDATION.REQUIRED,
-                            }}
-                            render={({
-                              field: { ref, value, onBlur, onChange },
-                              fieldState: { error },
-                            }) => (
-                              <Input
-                                id="order-product-table-quantity"
-                                type="number"
-                                ref={ref}
-                                value={value}
-                                onBlur={onBlur}
-                                onChange={(e) =>
-                                  onChange(
-                                    e.target.value ? Number(e.target.value) : ""
-                                  )
-                                }
-                                error={error?.message}
-                              />
-                            )}
-                          />
-                        </TableCell>
-                      );
-                    }
-
-                    if (keyVal === "total") {
-                      return (
-                        <TotalTableCell
-                          key={`${field.id}-${col.keyValue}`}
-                          fieldIdx={index}
-                        />
-                      );
-                    }
-
-                    if (keyVal === "action") {
-                      return (
-                        <TableCell key={`${field.id}-${col.keyValue}`}>
-                          <Button
-                            variant="icon"
-                            modifiers={["inline"]}
-                            onClick={() => fieldRemove(index)}
-                          >
-                            <Icon iconName="close" />
-                          </Button>
-                        </TableCell>
-                      );
-                    }
+                        curr
+                      ) => {
+                        return {
+                          currentWarehouse:
+                            field.inventory.find(
+                              (ele) => ele.warehouseId === selectedWarehouseId
+                            )?.quantityAvailable ?? -1,
+                          total: prev.total + curr.quantityAvailable,
+                        };
+                      },
+                      {
+                        currentWarehouse: -1,
+                        total: 0,
+                      }
+                    );
 
                     return (
-                      <TableCell key={`${field.id}-${col.keyValue}`}>
-                        <Text type="span">{field[keyVal]}</Text>
+                      <TableCell key={`${field.id}-${keyVal}`}>
+                        <Text type="span">
+                          {inventoryData.currentWarehouse}/{inventoryData.total}
+                        </Text>
                       </TableCell>
                     );
-                  })}
-                </TableRow>
-              ))}
-            </Table>
-            <div className="u-m-t-16 u-d-flex u-flex-jc-end">
-              <TotalOrder />
-            </div>
-          </FormProvider>
+                  }
+
+                  if (keyVal === "price" || keyVal === "discount") {
+                    return (
+                      <TableCell key={`${field.id}-${keyVal}`}>
+                        <Controller
+                          control={orderMethods.control}
+                          name={`products.${index}.${keyVal}`}
+                          defaultValue={0}
+                          rules={{
+                            required: FORM_VALIDATION.REQUIRED,
+                          }}
+                          render={({
+                            field: { ref, value, onBlur, onChange },
+                            fieldState: { error },
+                          }) => (
+                            <Input
+                              id={`order-product-table-${col.keyValue}`}
+                              type="number"
+                              ref={ref}
+                              value={value ?? 0}
+                              onBlur={onBlur}
+                              onChange={(e) =>
+                                onChange(
+                                  e.target.value ? Number(e.target.value) : ""
+                                )
+                              }
+                              error={error?.message}
+                            />
+                          )}
+                        />
+                      </TableCell>
+                    );
+                  }
+
+                  if (keyVal === "quantity") {
+                    return (
+                      <TableCell key={`${field.id}-${col.keyValue}`}>
+                        <Controller
+                          control={orderMethods.control}
+                          name={`products.${index}.quantity`}
+                          defaultValue={1}
+                          rules={{
+                            required: FORM_VALIDATION.REQUIRED,
+                          }}
+                          render={({
+                            field: { ref, value, onBlur, onChange },
+                            fieldState: { error },
+                          }) => (
+                            <Input
+                              id="order-product-table-quantity"
+                              type="number"
+                              ref={ref}
+                              value={value}
+                              onBlur={onBlur}
+                              onChange={(e) =>
+                                onChange(
+                                  e.target.value ? Number(e.target.value) : ""
+                                )
+                              }
+                              error={error?.message}
+                            />
+                          )}
+                        />
+                      </TableCell>
+                    );
+                  }
+
+                  if (keyVal === "total") {
+                    return (
+                      <TotalTableCell
+                        key={`${field.id}-${col.keyValue}`}
+                        fieldIdx={index}
+                      />
+                    );
+                  }
+
+                  if (keyVal === "action") {
+                    return (
+                      <TableCell key={`${field.id}-${col.keyValue}`}>
+                        <Button
+                          variant="icon"
+                          modifiers={["inline"]}
+                          onClick={() => fieldRemove(index)}
+                        >
+                          <Icon iconName="close" />
+                        </Button>
+                      </TableCell>
+                    );
+                  }
+
+                  return (
+                    <TableCell key={`${field.id}-${col.keyValue}`}>
+                      <Text type="span">{field[keyVal]}</Text>
+                    </TableCell>
+                  );
+                })}
+              </TableRow>
+            ))}
+          </Table>
         </div>
         <div className="c-order_productTable_modal">
           <ProductModal
             ref={productModalRef}
+            selectedWarehouseId={selectedWarehouseId}
             handleAddProduct={handleAddProduct}
           />
         </div>
@@ -425,69 +414,5 @@ const TotalTableCell: React.FC<TotalTableCellProps> = ({ fieldIdx }) => {
     <TableCell>
       <Text type="span">{commafy(price * quantity)}</Text>
     </TableCell>
-  );
-};
-
-const TotalOrder: React.FC = () => {
-  //* Hook-form
-  const methods = useFormContext<OrderForm>();
-  const products = useWatch({
-    control: methods.control,
-    name: `products`,
-  });
-
-  //* Memos
-  const total = useMemo(() => {
-    const res = (products ?? []).reduce((prev, curr) => {
-      return prev + curr.quantity * curr.price;
-    }, 0);
-    methods.setValue("paid", res);
-    return res;
-  }, [products, methods]);
-
-  return (
-    <div className="u-m-t-24">
-      <Controller
-        control={methods.control}
-        name={`paid`}
-        defaultValue={0}
-        rules={{
-          required: FORM_VALIDATION.REQUIRED,
-        }}
-        render={({
-          field: { ref, value, onBlur, onChange },
-          fieldState: { error },
-        }) => (
-          <>
-            <Heading type="h4" modifiers={["24x32"]}>
-              Total: {commafy(total)}
-            </Heading>
-            <div className="u-d-flex u-m-t-16">
-              <div className="u-m-r-8">
-                <Heading type="h6" modifiers={["20x30"]}>
-                  Paid:{" "}
-                </Heading>
-              </div>
-              <Input
-                id="order-product-table-paid"
-                type="number"
-                ref={ref}
-                value={value}
-                onBlur={onBlur}
-                onChange={(e) =>
-                  onChange(e.target.value ? Number(e.target.value) : "")
-                }
-                error={error?.message}
-              />
-            </div>
-            <div className="u-m-t-16">
-              <Heading type="h6" modifiers={["20x30"]}>
-                Remain: {commafy(total - value)}
-              </Heading>
-            </div>
-          </>
-        )}
-      />
-    </div>
   );
 };

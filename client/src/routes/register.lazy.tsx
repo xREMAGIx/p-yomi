@@ -158,7 +158,7 @@ function Register() {
           </div>
         </form>
       </FormProvider>
-      <div className="u-m-t-32">
+      <div className="u-m-t-32 u-d-flex u-flex-jc-center">
         <Link to="/login">Login</Link>
       </div>
     </div>
