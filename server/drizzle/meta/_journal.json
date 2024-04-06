@@ -5,43 +5,8 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1711349732624,
-      "tag": "0000_tough_blacklash",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1711427004512,
-      "tag": "0001_slim_colonel_america",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1711938202053,
-      "tag": "0002_far_snowbird",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "5",
-      "when": 1711941009835,
-      "tag": "0003_eminent_wolfsbane",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "5",
-      "when": 1711944669130,
-      "tag": "0004_ambitious_mentallo",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "5",
-      "when": 1712031432888,
-      "tag": "0005_damp_blade",
+      "when": 1712215768754,
+      "tag": "0000_long_ender_wiggin",
       "breakpoints": true
     }
   ]

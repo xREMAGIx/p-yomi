@@ -10,6 +10,7 @@ import {
   detailProductDataSchema,
   listProductDataSchema,
   listProductQuerySchema,
+  listProductWithInventoryDataSchema,
   productModel,
   updateProductParamSchema,
 } from "../models/product.model";
@@ -141,6 +142,32 @@ export const productRoutes = new Elysia({
         {
           query: listProductQuerySchema,
           response: listProductDataSchema,
+          detail: {
+            summary: "Get Product List",
+          },
+        }
+      )
+
+      .get(
+        "/with-inventory",
+        async ({
+          query: { sortBy = "desc", limit = 10, page = 1, ...rest },
+          productService,
+        }) => {
+          if (sortBy !== "asc" && sortBy !== "desc") {
+            throw new InvalidContentError("Sortby not valid!");
+          }
+
+          return await productService.getListWithInventory({
+            sortBy: sortBy,
+            limit: Number(limit),
+            page: Number(page),
+            ...rest,
+          });
+        },
+        {
+          query: listProductQuerySchema,
+          response: listProductWithInventoryDataSchema,
           detail: {
             summary: "Get Product List",
           },

@@ -11,6 +11,7 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
+import { DEFAULT_QUERY_OPTION } from "./libs/constants";
 import { routeTree } from "./routeTree.gen";
 
 // Create a new router instance
@@ -38,6 +39,11 @@ const queryClient = new QueryClient({
       toast.error(`Error: ${error.message}`);
     },
   }),
+  defaultOptions: {
+    queries: {
+      ...DEFAULT_QUERY_OPTION,
+    },
+  },
 });
 
 function App() {

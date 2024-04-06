@@ -2,7 +2,7 @@ import Button from "@client/components/atoms/Button";
 import Heading from "@client/components/atoms/Heading";
 import Input from "@client/components/atoms/Input";
 import Link from "@client/components/atoms/Link";
-import { FORM_VALIDATION } from "@client/libs/constants";
+import { FORM_VALIDATION, REGEX } from "@client/libs/constants";
 import { server } from "@client/libs/server";
 import { setTokens, setUser } from "@client/redux/features/auth";
 import { useAppDispatch } from "@client/redux/hooks";
@@ -71,9 +71,7 @@ function Login() {
                 required: FORM_VALIDATION.REQUIRED,
                 validate: {
                   isEmail: (value) => {
-                    const reg = new RegExp(
-                      "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$"
-                    );
+                    const reg = new RegExp(REGEX.EMAIL);
                     if (!reg.test(value)) {
                       return FORM_VALIDATION.EMAIL_INVALID;
                     }

@@ -45,6 +45,11 @@ export const customerRoutes = new Elysia({
           detail: {
             summary: "Create Customer",
           },
+          transform: ({ body }) => {
+            if (body.dateOfBirth) {
+              body.dateOfBirth = new Date(body.dateOfBirth);
+            }
+          },
         }
       )
 
@@ -90,6 +95,11 @@ export const customerRoutes = new Elysia({
               response: detailCustomerDataSchema,
               detail: {
                 summary: "Update Customer",
+              },
+              transform: ({ body }) => {
+                if (body.dateOfBirth) {
+                  body.dateOfBirth = new Date(body.dateOfBirth);
+                }
               },
             }
           )

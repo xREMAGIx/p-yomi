@@ -167,15 +167,21 @@ function CustomerList() {
           {data?.map((ele) => (
             <TableRow key={`row-${ele.id}`}>
               {headerData.map((col) => {
-                const keyVal = col.keyValue as keyof typeof ele;
+                const keyVal = col.keyValue;
 
-                if (
-                  keyVal === "createdAt" ||
-                  keyVal === "updatedAt" ||
-                  keyVal === "dateOfBirth"
-                ) {
+                if (keyVal === "dateOfBirth") {
                   return (
-                    <TableCell key={`${ele.id}-${col.keyValue}`}>
+                    <TableCell key={`${ele.id}-${keyVal}`}>
+                      <Text type="span">
+                        {dayjs(ele[keyVal]).format(DATE_TIME_FORMAT.DATE)}
+                      </Text>
+                    </TableCell>
+                  );
+                }
+
+                if (keyVal === "createdAt" || keyVal === "updatedAt") {
+                  return (
+                    <TableCell key={`${ele.id}-${keyVal}`}>
                       <Text type="span">
                         {dayjs(ele[keyVal]).format(DATE_TIME_FORMAT.DATE_TIME)}
                       </Text>
@@ -185,7 +191,7 @@ function CustomerList() {
 
                 if (keyVal === "name") {
                   return (
-                    <TableCell key={`${ele.id}-${col.keyValue}`}>
+                    <TableCell key={`${ele.id}-${keyVal}`}>
                       <Link
                         to="/customer/$id"
                         params={{ id: ele.id.toString() }}
@@ -196,9 +202,9 @@ function CustomerList() {
                   );
                 }
 
-                if (col.keyValue === "action") {
+                if (keyVal === "action") {
                   return (
-                    <TableCell key={`${ele.id}-${col.keyValue}`}>
+                    <TableCell key={`${ele.id}-${keyVal}`}>
                       <Button
                         variant="icon"
                         modifiers={["inline"]}
@@ -211,7 +217,7 @@ function CustomerList() {
                 }
 
                 return (
-                  <TableCell key={`${ele.id}-${col.keyValue}`}>
+                  <TableCell key={`${ele.id}-${keyVal}`}>
                     <Text type="span">{ele[keyVal]}</Text>
                   </TableCell>
                 );

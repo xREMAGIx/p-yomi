@@ -108,6 +108,22 @@ export const warehouseRoutes = new Elysia({
               },
             }
           )
+
+          //* Query products
+          .delete(
+            "/:id/product",
+            ({ idParams, warehouseService }) => {
+              return warehouseService.delete(idParams);
+            },
+            {
+              response: t.Object({
+                id: t.Number(),
+              }),
+              detail: {
+                summary: "Delete Warehouse",
+              },
+            }
+          )
       )
 
       //* List
