@@ -8,21 +8,22 @@
     overflow: hidden;
     border-radius: rem(500);
     border: rem(1) solid $gainsboro;
-    color: $white;
+    color: var(--text-color);
     font-weight: 700;
     @include font-base(14, 20);
     padding: rem(4) rem(6) rem(4) rem(30);
     background: $white02;
     text-align: center;
     transition: all $transition linear;
+    min-width: rem(48);
 
     &::after {
-      content: '';
+      content: "";
       position: absolute;
       width: rem(24);
       height: rem(24);
       border-radius: rem(16);
-      background-color: $white;
+      background-color: $soap;
       top: 50%;
       transform: translateY(-50%);
       left: rem(2);
@@ -37,15 +38,15 @@
     overflow: hidden;
     border-radius: rem(500);
     border: rem(1) solid $gainsboro;
-    color: $white;
     height: rem(28);
     padding: rem(4) rem(6) rem(4) rem(30);
     background: $white02;
     text-align: center;
     transition: all $transition linear;
+    min-width: rem(48);
 
     &::after {
-      content: '';
+      content: "";
       position: absolute;
       width: rem(24);
       height: rem(24);
@@ -64,6 +65,16 @@
 
   &-isChecked {
     #{$root}_label {
+      background: var(--primary-color);
+      padding: rem(4) rem(30) rem(4) rem(6);
+
+      &::after {
+        left: 100%;
+        transform: translate(calc(-100% - 2px), -50%);
+      }
+    }
+
+    #{$root}_display {
       background: var(--primary-color);
       padding: rem(4) rem(30) rem(4) rem(6);
 

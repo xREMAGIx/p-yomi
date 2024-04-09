@@ -1,0 +1,35 @@
+{
+  "action": {
+    "create": "Create",
+    "back": "Back"
+  },
+  "app": {
+    "login": "Login"
+  },
+  "menu": {
+    "customer": "Customer",
+    "dashboard": "Dashboard",
+    "goodsReceipt": "Goods Receipt",
+    "order": "Order",
+    "product": "Product",
+    "warehouse": "Warehouse"
+  },
+  "product": {
+    "barcode": "Barcode",
+    "description": "Description",
+    "name": "Name",
+    "price": "Price"
+  },
+  "table": {
+    "action": "Action",
+    "barcode": "Barcode",
+    "createdAt": "Created at",
+    "description": "Description",
+    "name": "Name",
+    "price": "Price",
+    "updatedAt": "Updated at"
+  },
+  "title": {
+    "createProduct": "Create Product"
+  }
+}

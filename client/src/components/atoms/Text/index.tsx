@@ -6,6 +6,7 @@ import "./index.scss";
 export type TextStyle = (
   | GeneralTextStyle
   | TextSizes
+  | Color
   | "inline"
   | "primaryColor"
   | "secondaryColor"

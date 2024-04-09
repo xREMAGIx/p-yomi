@@ -174,12 +174,13 @@ $colors-design: (
   "white": $white,
   "raisinBlack": $raisin_black,
   "soap": $soap,
+  "babyPowder": $baby_powder,
 );
 
 $tag-colors-design: (
   "mayGreen": $may-green,
   "coral": $coral,
-  "radicalRed": $radical-red,
+  "radicalRed": $radical_red,
 );
 
 @mixin style-color {

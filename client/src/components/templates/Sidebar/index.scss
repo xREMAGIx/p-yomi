@@ -12,9 +12,12 @@
     top: 0;
     right: 0;
     bottom: 0;
-    left: 0;
-    background-color: var(--primary-color);
-    opacity: 0.8;
+    width: 1px;
+    background: linear-gradient(
+      180deg,
+      var(--primary-color) 40%,
+      var(--secondary-color) 70%
+    );
   }
 
   &_content {
@@ -45,7 +48,7 @@
 
   &_menu_link-active {
     #{$root}_menu_item {
-      background-color: $white02;
+      background-color: rgba(var(--primary-color-alpha), 0.4);
     }
   }
 

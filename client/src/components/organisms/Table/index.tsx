@@ -3,6 +3,8 @@ import React from "react";
 import "./index.scss";
 import LoadingOverlay from "@client/components/molecules/LoadingOverlay";
 
+export type TableTextAlign = "left" | "right" | "center";
+
 interface TableRowProps extends React.TableHTMLAttributes<HTMLTableRowElement> {
   isSelected?: boolean;
   isHead?: boolean;
@@ -13,16 +15,15 @@ interface TableCellProps
   isHead?: boolean;
   colSpan?: number;
   rowSpan?: number;
-  customPaddingY?: "smaller-y" | "sm-y";
-  customPaddingX?: "sm-x";
   classModify?: string;
+  textAlign?: TableTextAlign;
 }
 type TableModifiers = "primary" | "firstColSticky";
 
 interface TableProps {
   isLoading?: boolean;
   classModifiers?: string;
-  modifiers?: TableModifiers | TableModifiers[];
+  modifiers?: TableModifiers[];
   header?: React.ReactNode;
   spacing?: boolean;
   children?: React.ReactNode;
@@ -52,16 +53,15 @@ export const TableRow: React.FC<TableRowProps> = ({
 export const TableCell: React.FC<TableCellProps> = ({
   isHead,
   children,
-  customPaddingY,
-  customPaddingX,
   classModify,
+  textAlign = "left",
   ...props
 }) => {
   const Element = isHead ? "th" : "td";
   return (
     <Element
       {...props}
-      className={`${mapModifiers(isHead ? "o-table_header_cell" : "o-table_body_cell", customPaddingY, customPaddingX, props.onClick && "cursor")} ${classModify || ""}`}
+      className={`${mapModifiers(isHead ? "o-table_header_cell" : "o-table_body_cell", `align-${textAlign}`, props.onClick && "cursor")} ${classModify || ""}`}
     >
       {children}
     </Element>
@@ -111,6 +111,7 @@ TableCell.defaultProps = {
   isHead: undefined,
   colSpan: undefined,
   rowSpan: undefined,
+  textAlign: "left",
 };
 
 export default Table;

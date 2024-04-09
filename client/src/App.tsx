@@ -13,6 +13,8 @@ import {
 } from "@tanstack/react-query";
 import { DEFAULT_QUERY_OPTION } from "./libs/constants";
 import { routeTree } from "./routeTree.gen";
+import { Translations } from "./libs/translation";
+import { TRANSLATIONS_MAPPING } from "./locales";
 
 // Create a new router instance
 const router = createRouter({
@@ -51,8 +53,14 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} context={{ authentication }} />
-      <Toaster />
+      <Translations
+        defaultLocale="en"
+        initLocale="en"
+        translationsMap={TRANSLATIONS_MAPPING}
+      >
+        <RouterProvider router={router} context={{ authentication }} />
+        <Toaster />
+      </Translations>
     </QueryClientProvider>
   );
 }

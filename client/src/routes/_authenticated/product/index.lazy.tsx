@@ -1,107 +1,31 @@
 import Button from "@client/components/atoms/Button";
-import Icon from "@client/components/atoms/Icon";
-import Link from "@client/components/atoms/Link";
-import Text from "@client/components/atoms/Text";
-import Pagination from "@client/components/molecules/Pagination";
-import Table, {
-  TableCell,
-  TableHeader,
-  TableRow,
-} from "@client/components/organisms/Table";
 import {
   DeleteModal,
   DeleteModalRef,
 } from "@client/components/pages/common/DeleteModal";
-import { DATE_TIME_FORMAT, DEFAULT_PAGINATION } from "@client/libs/constants";
+import { ProductTable } from "@client/components/pages/product/ProductTable";
 import { handleCheckAuthError } from "@client/libs/error";
 import { productQueryKeys } from "@client/libs/query";
 import { server } from "@client/libs/server";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "@client/libs/translation";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
-import dayjs from "dayjs";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 
 export const Route = createLazyFileRoute("/_authenticated/product/")({
   component: ProductList,
 });
 
-const headerData = [
-  {
-    id: "name",
-    keyValue: "name",
-    title: "Name",
-  },
-  {
-    id: "description",
-    keyValue: "description",
-    title: "Description",
-  },
-  {
-    id: "barcode",
-    keyValue: "barcode",
-    title: "Barcode",
-  },
-  {
-    id: "price",
-    keyValue: "price",
-    title: "Price",
-  },
-  {
-    id: "createdAt",
-    keyValue: "createdAt",
-    title: "Created at",
-  },
-  {
-    id: "updatedAt",
-    keyValue: "updatedAt",
-    title: "Updated at",
-  },
-  {
-    id: "action",
-    keyValue: "action",
-    title: "Action",
-  },
-];
-
 function ProductList() {
   //* Hooks
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   //* States
-  const [pagination, setPagination] = useState({
-    limit: DEFAULT_PAGINATION.LIMIT,
-    page: DEFAULT_PAGINATION.PAGE,
-    total: 0,
-    totalPages: 1,
-  });
 
   //* Refs
   const deleteModalRef = useRef<DeleteModalRef>(null);
-
-  //* Query
-  const { data, isFetching: isLoadingList } = useQuery({
-    queryKey: productQueryKeys.list({ page: pagination.page }),
-    queryFn: async () => {
-      const { data, error } = await server.api.v1.product.index.get({
-        query: {
-          limit: pagination.limit,
-          page: pagination.page,
-        },
-      });
-
-      if (error) {
-        handleCheckAuthError(error, navigate);
-        throw error.value;
-      }
-
-      setPagination({
-        ...data.meta,
-      });
-
-      return data.data;
-    },
-  });
 
   //* Mutation
   const { mutate: deleteMutate, isPending } = useMutation({
@@ -121,10 +45,6 @@ function ProductList() {
   });
 
   //* Functions
-  const handleChangePage = (page: number) => {
-    setPagination((prev) => ({ ...prev, page: page }));
-  };
-
   const handleDelete = (props: { id: number }) => {
     deleteMutate({ id: props.id });
   };
@@ -139,87 +59,10 @@ function ProductList() {
         modifiers={["inline"]}
         onClick={() => navigate({ to: "/product/create" })}
       >
-        Create
+        {t("action.create")}
       </Button>
-
       <div className="p-productList_table u-m-t-32">
-        <Table
-          isLoading={isLoadingList}
-          header={
-            <TableHeader>
-              <TableRow isHead>
-                {headerData.map((ele) => (
-                  <TableCell key={ele.id} isHead>
-                    <span>{ele.title}</span>
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHeader>
-          }
-        >
-          {data?.map((ele) => (
-            <TableRow key={`row-${ele.id}`}>
-              {headerData.map((col) => {
-                const keyVal = col.keyValue as keyof typeof ele;
-                const data = ele[keyVal];
-
-                if (
-                  keyVal === "createdAt" ||
-                  keyVal === "updatedAt" ||
-                  data instanceof Date
-                ) {
-                  return (
-                    <TableCell key={`${ele.id}-${col.keyValue}`}>
-                      <Text type="span">
-                        {dayjs(data).format(DATE_TIME_FORMAT.DATE_TIME)}
-                      </Text>
-                    </TableCell>
-                  );
-                }
-
-                if (keyVal === "name") {
-                  return (
-                    <TableCell key={`${ele.id}-${col.keyValue}`}>
-                      <Link
-                        to="/product/$id"
-                        params={{ id: ele.id.toString() }}
-                      >
-                        {data}
-                      </Link>
-                    </TableCell>
-                  );
-                }
-
-                if (col.keyValue === "action") {
-                  return (
-                    <TableCell key={`${ele.id}-${col.keyValue}`}>
-                      <Button
-                        variant="icon"
-                        modifiers={["inline"]}
-                        onClick={() => handleOpenAskDelete({ id: ele.id })}
-                      >
-                        <Icon iconName="delete" />
-                      </Button>
-                    </TableCell>
-                  );
-                }
-
-                return (
-                  <TableCell key={`${ele.id}-${col.keyValue}`}>
-                    <Text type="span">{data}</Text>
-                  </TableCell>
-                );
-              })}
-            </TableRow>
-          ))}
-        </Table>
-        <div className="u-m-t-32">
-          <Pagination
-            currentPage={pagination.page}
-            totalPage={pagination.totalPages}
-            getPageNumber={handleChangePage}
-          />
-        </div>
+        <ProductTable handleDelete={handleOpenAskDelete} />
       </div>
       <div className="p-productList_deleteModal">
         <DeleteModal
