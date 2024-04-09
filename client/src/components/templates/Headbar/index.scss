@@ -1,0 +1,17 @@
+.t-headbar {
+  position: relative;
+  padding: rem(8) rem(16);
+
+  &_background {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      var(--primary-color) 40%,
+      var(--tertiary-color) 70%
+    );
+  }
+}

@@ -25,4 +25,4 @@ type TextSizes = "16x24";
 
 type Ratio = "1x1" | "4x3" | "16x9";
 
-type Color = "white" | "raisinBlack" | "soap";
+type Color = "white" | "raisinBlack" | "soap" | "babyPowder";

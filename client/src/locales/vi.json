@@ -1,0 +1,35 @@
+{
+  "action": {
+    "create": "Tạo mới",
+    "back": "Trở về"
+  },
+  "app": {
+    "login": "Đăng nhập"
+  },
+  "menu": {
+    "customer": "Khách hàng",
+    "dashboard": "Bảng điều khiển",
+    "goodsReceipt": "Đơn nhập hàng",
+    "order": "Đơn bán hàng",
+    "product": "Sản phẩm",
+    "warehouse": "Kho hàng"
+  },
+  "product": {
+    "barcode": "Mã vạch",
+    "description": "Mô tả",
+    "name": "Tên",
+    "price": "Giá"
+  },
+  "table": {
+    "action": "Thao tác",
+    "barcode": "Mã vạch",
+    "createdAt": "Tạo lúc",
+    "description": "Mô tả",
+    "name": "Tên",
+    "price": "Giá",
+    "updatedAt": "Cập nhật lúc"
+  },
+  "title": {
+    "createProduct": "Tạo sản phẩm"
+  }
+}

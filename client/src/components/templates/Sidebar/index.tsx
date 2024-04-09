@@ -7,6 +7,7 @@ import { mapModifiers } from "@client/libs/functions";
 import { RegisteredRouter, ToPathOption } from "@tanstack/react-router";
 import React, { useState } from "react";
 import "./index.scss";
+import { useTranslation } from "@client/libs/translation";
 
 type RT = RegisteredRouter["routeTree"];
 
@@ -16,42 +17,45 @@ const sidebarMenu: {
   //TODO: Check later
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   path: ToPathOption<RT, "/", any>;
-  title: string;
+  titleCode: string;
   icon: IconName;
 }[] = [
   {
     path: "/",
-    title: "Home",
+    titleCode: "dashboard",
     icon: "home",
   },
   {
     path: "/order",
-    title: "Order",
+    titleCode: "order",
     icon: "receipt",
   },
   {
     path: "/product",
-    title: "Product",
+    titleCode: "product",
     icon: "barcode",
   },
   {
     path: "/warehouse",
-    title: "Warehouse",
+    titleCode: "warehouse",
     icon: "warehouse",
   },
   {
     path: "/goods-receipt",
-    title: "Goods Receipt",
+    titleCode: "goodsReceipt",
     icon: "packageImport",
   },
   {
     path: "/customer",
-    title: "Customer",
+    titleCode: "customer",
     icon: "customer",
   },
 ];
 
 const Sidebar: React.FC<SidebarProps> = () => {
+  //* Hooks
+  const { t } = useTranslation();
+
   //* States
   const [isMinimized, setIsMinimized] = useState(false);
 
@@ -93,7 +97,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
                   <Icon iconName={ele.icon} size="24" color="soap" />
                 </div>
                 <div className="t-sidebar_menu_title">
-                  <Text>{ele.title}</Text>
+                  <Text>{t(`menu.${ele.titleCode}`)}</Text>
                 </div>
               </div>
             </Link>
