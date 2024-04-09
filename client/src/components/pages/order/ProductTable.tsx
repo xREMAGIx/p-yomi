@@ -7,7 +7,11 @@ import Table, {
   TableHeader,
   TableRow,
 } from "@client/components/organisms/Table";
-import { DEFAULT_PAGINATION, FORM_VALIDATION } from "@client/libs/constants";
+import {
+  DEFAULT_PAGINATION,
+  FORM_VALIDATION,
+  TOAST_ERROR_MESSAGE,
+} from "@client/libs/constants";
 import { handleCheckAuthError } from "@client/libs/error";
 import { commafy } from "@client/libs/functions";
 import { orderQueryKeys } from "@client/libs/query";
@@ -28,6 +32,7 @@ import {
   useWatch,
 } from "react-hook-form";
 import { ProductModal, ProductModalRef } from "./ProductModal";
+import toast from "react-hot-toast";
 
 const headerData = [
   {
@@ -153,12 +158,21 @@ export const ProductTable = forwardRef<ProductTableRef, ProductTableProps>(
 
         searchMethods.reset();
 
-        if (data.data.length === 1) {
+        if (!data.data.length) {
+          toast.error(TOAST_ERROR_MESSAGE.PRODUCT_NOT_FOUND);
+          return;
+        }
+
+        if (
+          data.data.length === 1 &&
+          (data.data[0].barcode === params.barcode ||
+            data.data[0].name === params.name)
+        ) {
           handleAddProduct(data.data[0]);
           return;
         }
 
-        if (data.data.length > 1) {
+        if (data.data.length > 0) {
           productModalRef.current?.handleListProduct(data.data);
           productModalRef.current?.handleOpen();
         }
@@ -173,6 +187,7 @@ export const ProductTable = forwardRef<ProductTableRef, ProductTableProps>(
         page: pagination.current.page,
         limit: pagination.current.limit,
         barcode: form.search,
+        name: form.search,
       });
     };
 

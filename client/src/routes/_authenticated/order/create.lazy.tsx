@@ -12,6 +12,7 @@ import {
   DEFAULT_PAGINATION,
   FORM_VALIDATION,
   TOAST_ERROR_MESSAGE,
+  TOAST_SUCCESS_MESSAGE,
 } from "@client/libs/constants";
 import { handleCheckAuthError } from "@client/libs/error";
 import { commafy } from "@client/libs/functions";
@@ -21,7 +22,10 @@ import {
   CustomerData,
   GetListCustomerParams,
 } from "@server/models/customer.model";
-import { OrderProductData } from "@server/models/order.model";
+import {
+  CreateOrderParams,
+  OrderProductData,
+} from "@server/models/order.model";
 import { PaymentMethod, PaymentMethodCode } from "@server/models/payment.model";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
@@ -47,7 +51,7 @@ interface OrderForm {
   warehouse: {
     value: number;
     label: string;
-  };
+  } | null;
   products: (Omit<OrderProductData, "id"> & {
     productId: number;
     inventory: {
@@ -58,6 +62,7 @@ interface OrderForm {
   })[];
   total: number;
   paid: number;
+  due: number;
   discount: number;
   note: string;
   paymentMethod: {
@@ -88,8 +93,20 @@ function OrderCreate() {
   });
 
   //* Hook-form
-  const customerMethods = useForm<CustomerForm>();
-  const orderMethods = useForm<OrderForm>();
+  const customerMethods = useForm<CustomerForm>({
+    defaultValues: {
+      customerId: null,
+      customerName: "",
+      customerPhone: "",
+      customerAddress: "",
+    },
+  });
+  const orderMethods = useForm<OrderForm>({
+    defaultValues: {
+      warehouse: null,
+      products: [],
+    },
+  });
   const selectedWarehouseId = useWatch({
     control: orderMethods.control,
     name: "warehouse.value",
@@ -147,10 +164,30 @@ function OrderCreate() {
       },
     });
 
+  const { isPending: isLoadingCreateOrder, mutate: createOrderMutate } =
+    useMutation({
+      mutationKey: orderQueryKeys.create(),
+      mutationFn: async (params: CreateOrderParams) => {
+        const { error } = await server.api.v1.order.index.post(params);
+
+        if (error) {
+          handleCheckAuthError(error, navigate);
+          throw error.value;
+        }
+
+        customerMethods.reset();
+        orderMethods.reset();
+        toast.success(TOAST_SUCCESS_MESSAGE.CREATE);
+      },
+    });
+
   //* Function
   const onSearchUser = (form: CustomerForm) => {
+    if (!form.customerName && !form.customerPhone) return;
+
     customerSearchMutate({
       name: form.customerName,
+      phone: form.customerPhone,
     });
   };
 
@@ -160,6 +197,37 @@ function OrderCreate() {
       customerName: customer.name,
       customerPhone: customer.phone,
       customerAddress: customer.address ?? "",
+    });
+  };
+
+  const handleSubmit = async () => {
+    const isValidCustomer = await customerMethods.trigger();
+
+    if (!isValidCustomer) return;
+
+    orderMethods.handleSubmit(handleCreate)();
+  };
+
+  const handleCreate = (form: OrderForm) => {
+    const { paymentMethod, products, warehouse, ...rest } = form;
+    const customer = customerMethods.getValues();
+
+    if (!warehouse) {
+      toast.error("Please select warehouse!");
+      return;
+    }
+
+    createOrderMutate({
+      ...rest,
+      ...customer,
+      products: products.map((ele) => ({
+        productId: ele.productId,
+        quantity: ele.quantity,
+      })),
+      warehouseId: warehouse.value,
+      payment: {
+        type: paymentMethod.value,
+      },
     });
   };
 
@@ -173,7 +241,13 @@ function OrderCreate() {
         >
           Back
         </Button>
-        <Button modifiers={["inline"]}>Create</Button>
+        <Button
+          modifiers={["inline"]}
+          isLoading={isLoadingCreateOrder}
+          onClick={handleSubmit}
+        >
+          Create
+        </Button>
       </div>
       <div className="u-m-t-16">
         <Heading>Create Order</Heading>
@@ -262,6 +336,7 @@ function OrderCreate() {
             <Controller
               control={orderMethods.control}
               name="warehouse"
+              defaultValue={null}
               rules={{
                 required: FORM_VALIDATION.REQUIRED,
               }}
@@ -347,6 +422,10 @@ const TotalOrder: React.FC = () => {
     return sum - (discount ?? 0);
   }, [sum, discount]);
 
+  const due = useMemo(() => {
+    return total - paid;
+  }, [paid, total]);
+
   const payingMethods = useMemo(() => {
     return Object.keys(PaymentMethod).map((key) => ({
       label: PaymentMethod[key as keyof typeof PaymentMethod],
@@ -356,8 +435,13 @@ const TotalOrder: React.FC = () => {
 
   //* Effect
   useEffect(() => {
+    methods.setValue("total", total);
     methods.setValue("paid", total);
   }, [total, methods]);
+
+  useEffect(() => {
+    methods.setValue("due", due);
+  }, [methods, due]);
 
   return (
     <div className="u-m-t-24">
@@ -462,7 +546,7 @@ const TotalOrder: React.FC = () => {
       </div>
       <div className="u-m-t-16">
         <Heading type="h6" modifiers={["20x30"]}>
-          Due: {commafy(total - paid)}
+          Due: {commafy(due)}
         </Heading>
       </div>
     </div>

@@ -182,4 +182,40 @@ export default class InventoryService {
       })
     );
   }
+
+  async useStock(params: UpdateStockInventoryParams) {
+    const { warehouseId, products } = params;
+
+    const existedRecords = await this.db
+      .select()
+      .from(inventoryTable)
+      .where(eq(inventoryTable.warehouseId, warehouseId));
+
+    await Promise.all(
+      products.map(async (product) => {
+        const existedIdx = existedRecords.findIndex(
+          (ele) => ele.productId === product.productId
+        );
+
+        if (existedIdx === -1) {
+          await this.db.insert(inventoryTable).values({
+            warehouseId: warehouseId,
+            productId: product.productId,
+            quantityAvailable: product.quantity,
+          });
+          return;
+        }
+
+        await this.db
+          .update(inventoryTable)
+          .set({
+            quantityAvailable:
+              existedRecords[existedIdx].quantityAvailable -
+              (product.quantity ?? 0),
+            updatedAt: sql`now()`,
+          })
+          .where(eq(inventoryTable.id, existedRecords[existedIdx].id));
+      })
+    );
+  }
 }

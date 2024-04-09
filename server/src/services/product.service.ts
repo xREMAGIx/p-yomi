@@ -1,4 +1,4 @@
-import { and, asc, count, desc, eq, like, sql } from "drizzle-orm";
+import { asc, count, desc, eq, like, or, sql } from "drizzle-orm";
 import { DBType } from "../config/database";
 import { inventoryTable, productTable, warehouseTable } from "../db-schema";
 import {
@@ -30,9 +30,9 @@ export default class ProductService {
       .select()
       .from(productTable)
       .where(
-        and(
+        or(
           barcode ? like(productTable.barcode, `%${barcode}%`) : undefined,
-          name ? like(productTable.name, name) : undefined
+          name ? like(productTable.name, `%${name}%`) : undefined
         )
       )
       .limit(limit)
@@ -47,9 +47,9 @@ export default class ProductService {
       .select({ count: count() })
       .from(productTable)
       .where(
-        and(
+        or(
           barcode ? like(productTable.barcode, `%${barcode}%`) : undefined,
-          name ? like(productTable.name, name) : undefined
+          name ? like(productTable.name, `%${name}%`) : undefined
         )
       );
 
@@ -115,9 +115,9 @@ export default class ProductService {
       .select()
       .from(productTable)
       .where(
-        and(
+        or(
           barcode ? like(productTable.barcode, `%${barcode}%`) : undefined,
-          name ? like(productTable.name, name) : undefined
+          name ? like(productTable.name, `%${name}%`) : undefined
         )
       )
       .limit(limit)
@@ -175,9 +175,9 @@ export default class ProductService {
       .select({ count: count() })
       .from(productTable)
       .where(
-        and(
+        or(
           barcode ? like(productTable.barcode, `%${barcode}%`) : undefined,
-          name ? like(productTable.name, name) : undefined
+          name ? like(productTable.name, `%${name}%`) : undefined
         )
       );
 

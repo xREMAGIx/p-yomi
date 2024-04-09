@@ -36,8 +36,7 @@ export const baseInsertPaymentSchema = createInsertSchema(paymentTable);
 export const listPaymentQuerySchema = t.Composite([
   queryPaginationSchema,
   t.Object({
-    barcode: t.Optional(t.String()),
-    name: t.Optional(t.String()),
+    status: t.Optional(t.Number()),
   }),
 ]);
 
