@@ -176,10 +176,37 @@ $colors-design: (
   "soap": $soap,
 );
 
+$tag-colors-design: (
+  "mayGreen": $may-green,
+  "coral": $coral,
+  "radicalRed": $radical-red,
+);
+
 @mixin style-color {
   @each $name, $color in $colors-design {
     &-#{$name} {
       color: $color;
+    }
+  }
+}
+
+@mixin style-tag-color {
+  @each $name, $color in $tag-colors-design {
+    &-#{$name} {
+      color: $color;
+      position: relative;
+      z-index: 1;
+
+      &::before {
+        content: "";
+        position: absolute;
+        z-index: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background-color: rgba($color, 0.2);
+      }
     }
   }
 }

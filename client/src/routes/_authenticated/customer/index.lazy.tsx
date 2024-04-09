@@ -173,7 +173,9 @@ function CustomerList() {
                   return (
                     <TableCell key={`${ele.id}-${keyVal}`}>
                       <Text type="span">
-                        {dayjs(ele[keyVal]).format(DATE_TIME_FORMAT.DATE)}
+                        {ele[keyVal]
+                          ? dayjs(ele[keyVal]).format(DATE_TIME_FORMAT.DATE)
+                          : null}
                       </Text>
                     </TableCell>
                   );

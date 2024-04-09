@@ -1,0 +1,18 @@
+.a-tag {
+  margin: 0;
+  transition: all $transition linear;
+  padding: rem(4) rem(12);
+  display: inline-block;
+  border-radius: rem(24);
+  overflow: hidden;
+  font-weight: 700;
+
+  @include font-base(14, 22);
+  @include mobile-down {
+    @include font-base(12, 18);
+  }
+
+  @include style-tag-color();
+  @include style-font-weight();
+  @include style-general();
+}

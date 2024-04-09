@@ -20,11 +20,6 @@ export const DATE_TIME_FORMAT = {
   DATE_TIME: "DD/MM/YYYY HH:mm",
 };
 
-export const TOAST_SUCCESS_MESSAGE = {
-  CREATE: "Create success!",
-  UPDATE: "Update success!",
-};
-
 export const DEFAULT_QUERY_OPTION = {
   retry: 0,
   refetchOnMount: true,
@@ -35,4 +30,16 @@ export const DEFAULT_QUERY_OPTION = {
 export const REGEX = {
   EMAIL: "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$",
   PHONE: "(84|0[3|5|7|8|9])+([0-9]{8})\\b",
+};
+
+export const TOAST_SUCCESS_MESSAGE = {
+  CREATE: "Create success!",
+  UPDATE: "Update success!",
+};
+
+export const TOAST_ERROR_MESSAGE = {
+  CREATE: "Create error!",
+  UPDATE: "Update error!",
+  CUSTOMER_NOT_FOUND: "Not found any customer with this name or phone!",
+  PRODUCT_NOT_FOUND: "Not found any customer with this name or phone!",
 };

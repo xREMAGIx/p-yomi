@@ -1,6 +1,6 @@
 {
-  "id": "4dc477cf-2c42-4c0f-9d01-fcbe5646c9e9",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "5dc91562-59f2-4895-a07a-40fe5acf341a",
+  "prevId": "4dc477cf-2c42-4c0f-9d01-fcbe5646c9e9",
   "version": "5",
   "dialect": "pg",
   "tables": {
@@ -409,6 +409,12 @@
           "primaryKey": true,
           "notNull": true
         },
+        "code": {
+          "name": "code",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp with time zone",
@@ -542,6 +548,12 @@
           "primaryKey": true,
           "notNull": true
         },
+        "code": {
+          "name": "code",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp with time zone",
@@ -580,6 +592,12 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": true
+        },
+        "note": {
+          "name": "note",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},

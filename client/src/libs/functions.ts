@@ -24,3 +24,36 @@ export function commafy(num: number) {
   }
   return str.join(".");
 }
+
+type Descripted<T> = {
+  [K in keyof T]: {
+    readonly id: T[K];
+    readonly description: string;
+  }
+}[keyof T]
+
+/**
+* Helper to produce an array of enum descriptors.
+* @param enumeration Enumeration object.
+* @param separatorRegex Regex that would catch the separator in your enum key.
+*/
+export function enumToDescriptedArray<T extends object>(enumeration: T, separatorRegex: RegExp = /_/g): Descripted<T>[] {
+  return (Object.keys(enumeration) as Array<keyof T>)
+    .filter(key => isNaN(Number(key)))
+    .filter(key => typeof enumeration[key] === "number" || typeof enumeration[key] === "string")
+    .map(key => ({
+      id: enumeration[key],
+      description: String(key).replace(separatorRegex, ' '),
+    }));
+}
+
+/**
+ * Helper to produce an array of enum values.
+ * @param enumeration Enumeration object.
+ */
+export function enumValuesToArray<T extends object>(enumeration: T) {
+  return Object.keys(enumeration)
+    .filter(key => isNaN(Number(key)))
+    .map((key) => enumeration[key as keyof typeof enumeration])
+    .filter(val => typeof val === "number" || typeof val === "string");
+}

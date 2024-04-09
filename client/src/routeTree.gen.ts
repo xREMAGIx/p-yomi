@@ -50,6 +50,9 @@ const AuthenticatedProductIdLazyImport = createFileRoute(
 const AuthenticatedOrderCreateLazyImport = createFileRoute(
   '/_authenticated/order/create',
 )()
+const AuthenticatedOrderIdLazyImport = createFileRoute(
+  '/_authenticated/order/$id',
+)()
 const AuthenticatedGoodsReceiptCreateLazyImport = createFileRoute(
   '/_authenticated/goods-receipt/create',
 )()
@@ -172,6 +175,13 @@ const AuthenticatedOrderCreateLazyRoute =
     import('./routes/_authenticated/order/create.lazy').then((d) => d.Route),
   )
 
+const AuthenticatedOrderIdLazyRoute = AuthenticatedOrderIdLazyImport.update({
+  path: '/order/$id',
+  getParentRoute: () => AuthenticatedRoute,
+} as any).lazy(() =>
+  import('./routes/_authenticated/order/$id.lazy').then((d) => d.Route),
+)
+
 const AuthenticatedGoodsReceiptCreateLazyRoute =
   AuthenticatedGoodsReceiptCreateLazyImport.update({
     path: '/goods-receipt/create',
@@ -244,6 +254,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedGoodsReceiptCreateLazyImport
       parentRoute: typeof AuthenticatedImport
     }
+    '/_authenticated/order/$id': {
+      preLoaderRoute: typeof AuthenticatedOrderIdLazyImport
+      parentRoute: typeof AuthenticatedImport
+    }
     '/_authenticated/order/create': {
       preLoaderRoute: typeof AuthenticatedOrderCreateLazyImport
       parentRoute: typeof AuthenticatedImport
@@ -296,6 +310,7 @@ export const routeTree = rootRoute.addChildren([
     AuthenticatedCustomerCreateLazyRoute,
     AuthenticatedGoodsReceiptIdLazyRoute,
     AuthenticatedGoodsReceiptCreateLazyRoute,
+    AuthenticatedOrderIdLazyRoute,
     AuthenticatedOrderCreateLazyRoute,
     AuthenticatedProductIdLazyRoute,
     AuthenticatedProductCreateLazyRoute,

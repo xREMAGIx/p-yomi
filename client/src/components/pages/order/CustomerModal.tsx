@@ -8,7 +8,7 @@ import Table, {
   TableHeader,
   TableRow,
 } from "@client/components/organisms/Table";
-import { ProductData } from "@server/models/product.model";
+import { CustomerData } from "@server/models/customer.model";
 import { forwardRef, useImperativeHandle, useMemo, useState } from "react";
 import {
   Controller,
@@ -18,7 +18,7 @@ import {
   useWatch,
 } from "react-hook-form";
 
-const productModalHeaderData = [
+const customerModalHeaderData = [
   {
     id: "action",
     keyValue: "action",
@@ -30,53 +30,46 @@ const productModalHeaderData = [
     title: "Name",
   },
   {
-    id: "description",
-    keyValue: "description",
-    title: "Description",
+    id: "phone",
+    keyValue: "phone",
+    title: "Phone",
   },
   {
-    id: "barcode",
-    keyValue: "barcode",
-    title: "Barcode",
-  },
-  {
-    id: "price",
-    keyValue: "price",
-    title: "Price",
+    id: "address",
+    keyValue: "address",
+    title: "Address",
   },
 ] as const;
 
 interface FilterForm {
   name: string;
-  description: string;
-  barcode: string;
-  price: string;
+  phone: string;
+  address: string;
 }
 
-interface ProductModalProps {
+interface CustomerModalProps {
   children?: React.ReactNode;
-  handleAddProduct?: (product: ProductData) => void;
+  handleAddCustomer?: (customer: CustomerData) => void;
 }
 
-export interface ProductModalRef {
-  handleListProduct: (products: ProductData[]) => void;
+export interface CustomerModalRef {
+  handleListCustomer: (customers: CustomerData[]) => void;
   handleOpen: () => void;
 }
 
-export const ProductModal = forwardRef<ProductModalRef, ProductModalProps>(
-  ({ handleAddProduct }, ref) => {
+export const CustomerModal = forwardRef<CustomerModalRef, CustomerModalProps>(
+  ({ handleAddCustomer }, ref) => {
     //* States
-    const [selectedProduct, setSelectedProduct] = useState<ProductData>();
-    const [products, setProducts] = useState<ProductData[]>([]);
+    const [selectedCustomer, setSelectedCustomer] = useState<CustomerData>();
+    const [customers, setCustomers] = useState<CustomerData[]>([]);
     const [isOpen, setIsOpen] = useState(false);
 
     //* Hook-form
     const filterMethods = useForm<FilterForm>({
       defaultValues: {
         name: "",
-        description: "",
-        barcode: "",
-        price: "",
+        phone: "",
+        address: "",
       },
     });
 
@@ -86,29 +79,27 @@ export const ProductModal = forwardRef<ProductModalRef, ProductModalProps>(
       filterMethods.reset();
     };
 
-    const handleProduct = (product: ProductData) => {
-      if (!handleAddProduct) return;
+    const handleCustomer = (customer: CustomerData) => {
+      if (!handleAddCustomer) return;
 
-      handleAddProduct(product);
+      handleAddCustomer(customer);
 
-      const updatedProducts = products.filter(
-        (ele) => ele.id !== (selectedProduct ?? product).id
+      const updatedCustomers = customers.filter(
+        (ele) => ele.id !== (selectedCustomer ?? customer).id
       );
-      setProducts(updatedProducts);
-      setSelectedProduct(undefined);
+      setCustomers(updatedCustomers);
+      setSelectedCustomer(undefined);
 
-      if (!updatedProducts.length) {
-        handleClose();
-      }
+      handleClose();
     };
 
     //* Imperative hanlder
     useImperativeHandle(ref, () => ({
-      handleListProduct: (newProducts) => {
-        setProducts(newProducts);
+      handleListCustomer: (newCustomers) => {
+        setCustomers(newCustomers);
       },
       handleOpen: () => {
-        setSelectedProduct(undefined);
+        setSelectedCustomer(undefined);
         setIsOpen(true);
       },
     }));
@@ -125,14 +116,14 @@ export const ProductModal = forwardRef<ProductModalRef, ProductModalProps>(
               header={
                 <TableHeader>
                   <TableRow isHead>
-                    {productModalHeaderData.map((ele) => (
+                    {customerModalHeaderData.map((ele) => (
                       <TableCell key={ele.id} isHead>
                         <Text>{ele.title}</Text>
                       </TableCell>
                     ))}
                   </TableRow>
                   <TableRow>
-                    {productModalHeaderData.map((ele) => {
+                    {customerModalHeaderData.map((ele) => {
                       if (ele.keyValue === "action") {
                         return <TableCell key={ele.id}></TableCell>;
                       }
@@ -144,7 +135,7 @@ export const ProductModal = forwardRef<ProductModalRef, ProductModalProps>(
                             defaultValue={""}
                             render={({ field, fieldState: { error } }) => (
                               <Input
-                                id={`goods-receipt-product-filter-${ele.keyValue}`}
+                                id={`goods-receipt-customer-filter-${ele.keyValue}`}
                                 {...field}
                                 error={error?.message}
                               />
@@ -158,10 +149,10 @@ export const ProductModal = forwardRef<ProductModalRef, ProductModalProps>(
               }
             >
               <TableContent
-                products={products}
-                handleProduct={handleProduct}
-                selectedProduct={selectedProduct}
-                handleSelectProduct={setSelectedProduct}
+                customers={customers}
+                handleCustomer={handleCustomer}
+                selectedCustomer={selectedCustomer}
+                handleSelectCustomer={setSelectedCustomer}
               />
             </Table>
           </FormProvider>
@@ -175,10 +166,10 @@ export const ProductModal = forwardRef<ProductModalRef, ProductModalProps>(
             </Button>
             <div className="u-m-l-8">
               <Button
-                disabled={!selectedProduct}
+                disabled={!selectedCustomer}
                 modifiers={["inline"]}
                 onClick={() =>
-                  selectedProduct && handleProduct(selectedProduct)
+                  selectedCustomer && handleCustomer(selectedCustomer)
                 }
               >
                 Add
@@ -192,25 +183,25 @@ export const ProductModal = forwardRef<ProductModalRef, ProductModalProps>(
 );
 
 interface TableContentProps {
-  products: ProductData[];
-  handleProduct: (product: ProductData) => void;
-  selectedProduct?: ProductData;
-  handleSelectProduct: (product: ProductData) => void;
+  customers: CustomerData[];
+  handleCustomer: (customer: CustomerData) => void;
+  selectedCustomer?: CustomerData;
+  handleSelectCustomer: (customer: CustomerData) => void;
 }
 
 const TableContent: React.FC<TableContentProps> = ({
-  products,
-  handleProduct,
-  selectedProduct,
-  handleSelectProduct,
+  customers,
+  handleCustomer,
+  selectedCustomer,
+  handleSelectCustomer,
 }) => {
   //* Hook-form
   const filterMethods = useFormContext<FilterForm>();
   const filter = useWatch({ control: filterMethods.control });
 
-  const filteredProducts = useMemo(() => {
-    let result = [...products];
-    const { name, description, barcode, price } = filter;
+  const filteredCustomers = useMemo(() => {
+    let result = [...customers];
+    const { name, phone, address } = filter;
 
     if (name) {
       result = result.filter((ele) =>
@@ -218,47 +209,41 @@ const TableContent: React.FC<TableContentProps> = ({
       );
     }
 
-    if (description) {
+    if (phone) {
       result = result.filter((ele) =>
-        ele.description?.toLowerCase().includes(description.toLowerCase())
+        ele.phone?.toLowerCase().includes(phone.toLowerCase())
       );
     }
 
-    if (barcode) {
+    if (address) {
       result = result.filter((ele) =>
-        ele.barcode?.toLowerCase().includes(barcode.toLowerCase())
-      );
-    }
-
-    if (price) {
-      result = result.filter((ele) =>
-        ele.price.toString().includes(price.toString())
+        ele.address?.toLowerCase().includes(address.toLowerCase())
       );
     }
 
     return result;
-  }, [products, filter]);
+  }, [customers, filter]);
 
   return (
     <>
-      {filteredProducts.map((product) => (
+      {filteredCustomers.map((customer) => (
         <TableRow
-          key={`row-${product.id}`}
-          isSelected={product.id === selectedProduct?.id}
-          onClick={() => handleSelectProduct(product)}
+          key={`row-${customer.id}`}
+          isSelected={customer.id === selectedCustomer?.id}
+          onClick={() => handleSelectCustomer(customer)}
         >
-          {productModalHeaderData.map((col) => {
+          {customerModalHeaderData.map((col) => {
             const keyVal = col.keyValue;
 
             if (keyVal === "action") {
               return (
-                <TableCell key={`${product.id}-${keyVal}`}>
+                <TableCell key={`${customer.id}-${keyVal}`}>
                   <Button
                     variant="icon"
                     modifiers={["inline"]}
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleProduct(product);
+                      handleCustomer(customer);
                     }}
                   >
                     <Icon iconName="plus" />
@@ -268,8 +253,8 @@ const TableContent: React.FC<TableContentProps> = ({
             }
 
             return (
-              <TableCell key={`${product.id}-${keyVal}`}>
-                <Text type="span">{product[keyVal]}</Text>
+              <TableCell key={`${customer.id}-${keyVal}`}>
+                <Text type="span">{customer[keyVal]}</Text>
               </TableCell>
             );
           })}

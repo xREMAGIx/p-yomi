@@ -4,12 +4,14 @@ import { Elysia, t } from "elysia";
 import { db } from "../config/database";
 import { queryPaginationModel } from "../models/base";
 import AuthService from "../services/auth.service";
+import CustomerService from "../services/customer.service";
 import GoodsReceiptService from "../services/goods-receipt.service";
 import InventoryService from "../services/inventory.service";
+import OrderService from "../services/order.service";
 import ProductService from "../services/product.service";
 import WarehouseService from "../services/warehouse.service";
 import * as CustomError from "./error";
-import CustomerService from "../services/customer.service";
+import PaymentService from "../services/payment.service";
 
 export const tokenPlugin = new Elysia({ name: "token-plugin" })
   .use(
@@ -121,5 +123,7 @@ export const servicesPlugin = new Elysia({ name: "services-plugin" })
       inventoryService: new InventoryService(db),
       goodsReceiptService: new GoodsReceiptService(db),
       customerService: new CustomerService(db),
+      orderService: new OrderService(db),
+      paymentService: new PaymentService(db),
     };
   });

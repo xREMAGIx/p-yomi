@@ -1,7 +1,7 @@
 import Button from "@client/components/atoms/Button";
 import Heading from "@client/components/atoms/Heading";
 import Input from "@client/components/atoms/Input";
-import { FORM_VALIDATION } from "@client/libs/constants";
+import { FORM_VALIDATION, TOAST_SUCCESS_MESSAGE } from "@client/libs/constants";
 import { handleCheckAuthError } from "@client/libs/error";
 import { productQueryKeys } from "@client/libs/query";
 import { server } from "@client/libs/server";
@@ -13,6 +13,7 @@ import {
   useRouter,
 } from "@tanstack/react-router";
 import { Controller, FormProvider, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 
 export const Route = createLazyFileRoute("/_authenticated/product/$id")({
   component: ProductDetail,
@@ -65,6 +66,8 @@ function ProductDetail() {
         handleCheckAuthError(error, navigate);
         throw error.value;
       }
+
+      toast.success(TOAST_SUCCESS_MESSAGE.UPDATE);
     },
   });
 

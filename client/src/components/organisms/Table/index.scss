@@ -27,11 +27,9 @@
 
   &-primary {
     #{$root}_header {
-      background: linear-gradient(
-        90deg,
-        var(--primary-color) calc((1366 - 819 - 126) / 1366 * 100%),
-        var(--tertiary) calc((1366 - 126) / 1366 * 100%)
-      );
+      background: linear-gradient(90deg,
+          var(--primary-color) calc((1366 - 819 - 126) / 1366 * 100%),
+          var(--tertiary) calc((1366 - 126) / 1366 * 100%));
       background-attachment: fixed;
 
       @include mobile-down {
@@ -40,18 +38,22 @@
         z-index: $z-1;
       }
     }
+
     #{$root}_header th {
       background-color: transparent !important;
     }
+
     #{$root}_header_cell {
       padding-top: 3px;
       padding-bottom: 3px;
     }
+
     #{$root}_body_cell {
       padding: rem(18) rem(16);
       position: relative;
       border-bottom: 0 !important;
     }
+
     #{$root}_body_cell::before {
       content: "";
       position: absolute;
@@ -72,11 +74,11 @@
   }
 
   &_header_row {
-    background: linear-gradient(
-      90deg,
-      var(--primary-color) 40%,
-      var(--tertiary-color) 90%
-    );
+    background-color: var(--primary-color);
+    // background: linear-gradient(90deg,
+    //     var(--primary-color) 40%,
+    //     var(--tertiary-color) 90%);
+    // background-attachment: fixed;
   }
 
   &_body_row {
@@ -137,6 +139,7 @@
   }
 
   &-firstColSticky {
+
     #{$root}_header_cell:first-child,
     #{$root}_body_cell:first-child {
       position: sticky;
@@ -144,6 +147,7 @@
       z-index: $z-1;
       left: 0;
     }
+
     #{$root}_body_cell:first-child {
       background-color: $white_smoke;
     }

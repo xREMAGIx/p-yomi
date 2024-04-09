@@ -1,4 +1,4 @@
-import { asc, count, desc, eq, like, sql } from "drizzle-orm";
+import { asc, count, desc, eq, like, or, sql } from "drizzle-orm";
 import { DBType } from "../config/database";
 import { customerTable } from "../db-schema";
 import {
@@ -22,12 +22,17 @@ export default class CustomerService {
   }
 
   async getList(params: GetListCustomerParams) {
-    const { sortBy, limit = 10, page = 1, name } = params;
+    const { sortBy, limit = 10, page = 1, name, phone } = params;
 
     const customerList = await this.db
       .select()
       .from(customerTable)
-      .where(name ? like(customerTable.name, `%${name}%`) : undefined)
+      .where(
+        or(
+          name ? like(customerTable.name, `%${name}%`) : undefined,
+          phone ? like(customerTable.phone, `%${phone}%`) : undefined
+        )
+      )
       .limit(limit)
       .offset(limit * (page - 1))
       .orderBy(
@@ -39,8 +44,12 @@ export default class CustomerService {
     const totalQueryResult = await this.db
       .select({ count: count() })
       .from(customerTable)
-      .where(name ? like(customerTable.name, `%${name}%`) : undefined);
-
+      .where(
+        or(
+          name ? like(customerTable.name, `%${name}%`) : undefined,
+          phone ? like(customerTable.phone, `%${phone}%`) : undefined
+        )
+      );
     const total = Number(totalQueryResult?.[0]?.count);
     const totalPages = Math.ceil(total / limit);
 
