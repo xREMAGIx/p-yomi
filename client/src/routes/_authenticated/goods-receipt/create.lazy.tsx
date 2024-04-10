@@ -12,7 +12,7 @@ import Table, {
 import {
   ProductModal,
   ProductModalRef,
-} from "@client/components/pages/goods-receipt/ProductModal";
+} from "@client/containers/goods-receipt/ProductModal";
 import {
   DATE_TIME_FORMAT,
   DEFAULT_PAGINATION,

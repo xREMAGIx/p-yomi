@@ -36,8 +36,12 @@
 
   background-color: var(--text-color);
 
-  &-soap {
-    background-color: $soap;
+  &-violet-color {
+    background-color: var(--menu-icon-color);
+  }
+
+  &-primary-color {
+    background-color: var(--primary-color);
   }
 
   &-loading {
@@ -118,5 +122,15 @@
   &-edit {
     -webkit-mask-image: url("../../../assets/icons/ic_edit.svg");
     mask-image: url("../../../assets/icons/ic_edit.svg");
+  }
+
+  &-filter {
+    -webkit-mask-image: url("../../../assets/icons/ic_filter.svg");
+    mask-image: url("../../../assets/icons/ic_filter.svg");
+  }
+
+  &-eyeConfig {
+    -webkit-mask-image: url("../../../assets/icons/ic_eye_config.svg");
+    mask-image: url("../../../assets/icons/ic_eye_config.svg");
   }
 }

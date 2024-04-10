@@ -1,7 +1,7 @@
 import Button from "@client/components/atoms/Button";
 import Heading from "@client/components/atoms/Heading";
 import LoadingOverlay from "@client/components/molecules/LoadingOverlay";
-import { CustomerInfoForm } from "@client/components/pages/customer/CustomerInfoForm";
+import { CustomerInfoForm } from "@client/containers/customer/CustomerInfoForm";
 import { TOAST_SUCCESS_MESSAGE } from "@client/libs/constants";
 import { handleCheckAuthError } from "@client/libs/error";
 import { customerQueryKeys } from "@client/libs/query";

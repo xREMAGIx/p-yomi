@@ -1,7 +1,8 @@
 {
   "action": {
     "create": "Create",
-    "back": "Back"
+    "back": "Back",
+    "search": "Search"
   },
   "app": {
     "login": "Login"

@@ -1,7 +1,8 @@
 {
   "action": {
     "create": "Tạo mới",
-    "back": "Trở về"
+    "back": "Trở về",
+    "search": "Tìm kiếm"
   },
   "app": {
     "login": "Đăng nhập"

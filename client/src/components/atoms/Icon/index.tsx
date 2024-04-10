@@ -19,6 +19,8 @@ const iconList = {
   customer: "customer",
   receipt: "receipt",
   edit: "edit",
+  filter: "filter",
+  eyeConfig: "eyeConfig",
 };
 
 export type IconName = keyof typeof iconList;
@@ -27,7 +29,7 @@ export type IconSize = "12" | "16" | "20" | "24" | "34" | "38";
 interface IconProps {
   iconName: IconName;
   size?: IconSize;
-  color?: Color;
+  color?: Color | "violet-color" | "primary-color";
 }
 const Icon: React.FC<IconProps> = ({ iconName, size, color }) => (
   <div

@@ -5,6 +5,7 @@
   --tertiary-color: #{$royal-purple};
   --text-color: #{$raisin_black};
   --background-color: #{$white};
+  --menu-icon-color: #{$dark_orchid};
 }
 
 [data-theme="dark"] {
@@ -14,6 +15,7 @@
   --tertiary-color: #{$purple-heart};
   --text-color: #{$baby_powder};
   --background-color: #{$jet};
+  --menu-icon-color: #{$bright_lilac};
 }
 
 html,
