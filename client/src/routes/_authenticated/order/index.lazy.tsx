@@ -12,7 +12,7 @@ import Table, {
 import {
   DeleteModal,
   DeleteModalRef,
-} from "@client/components/pages/common/DeleteModal";
+} from "@client/containers/common/DeleteModal";
 import { DATE_TIME_FORMAT, DEFAULT_PAGINATION } from "@client/libs/constants";
 import { handleConvertOrderStatusTag } from "@client/libs/converter";
 import { handleCheckAuthError } from "@client/libs/error";

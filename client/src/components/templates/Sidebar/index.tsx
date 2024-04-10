@@ -75,7 +75,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
               modifiers={["inline"]}
               onClick={handleMinimize}
             >
-              <Icon iconName="menu" color="soap" />
+              <Icon iconName="menu" color="violet-color" />
             </Button>
           </div>
           <div className="t-sidebar_heading">
@@ -94,7 +94,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
             >
               <div className="t-sidebar_menu_item">
                 <div className="u-m-r-8 u-m-x-4">
-                  <Icon iconName={ele.icon} size="24" color="soap" />
+                  <Icon iconName={ele.icon} size="24" color="violet-color" />
                 </div>
                 <div className="t-sidebar_menu_title">
                   <Text>{t(`menu.${ele.titleCode}`)}</Text>

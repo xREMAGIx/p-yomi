@@ -49,10 +49,9 @@
   }
 
   &-outlinePrimary {
-    background-color: $white;
     border: 1px solid var(--primary-color);
     box-shadow: 0 2px 0 rgba(var(--primary-color), 0.016);
-    color: var(--primary-color);
+    color: var(--text-color);
     @include font-base(16, 24);
 
     @include mobile-down {
@@ -106,6 +105,10 @@
       background: linear-gradient(180deg, $white -266.46%, transparent 279.88%);
       border: 1px solid $white06;
     }
+  }
+
+  &-round {
+    padding: rem(4);
   }
 
   &:disabled,

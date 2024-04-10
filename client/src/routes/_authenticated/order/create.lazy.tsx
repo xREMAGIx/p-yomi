@@ -6,8 +6,8 @@ import Select from "@client/components/molecules/Select";
 import {
   CustomerModal,
   CustomerModalRef,
-} from "@client/components/pages/order/CustomerModal";
-import { ProductTable } from "@client/components/pages/order/ProductTable";
+} from "@client/containers/order/CustomerModal";
+import { ProductTable } from "@client/containers/order/ProductTable";
 import {
   DEFAULT_PAGINATION,
   FORM_VALIDATION,

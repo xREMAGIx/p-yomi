@@ -1,0 +1,46 @@
+.a-checkbox {
+  &_main {
+    cursor: pointer;
+    @include adjust-flex(flex-start, center);
+
+    &_input {
+      appearance: none;
+      border-radius: rem(4);
+      cursor: inherit;
+      height: rem(16);
+      margin: 0;
+      outline: none;
+      position: relative;
+      width: rem(16);
+      border: 1px solid var(--text-color);
+
+      &::before {
+        border-bottom: rem(2) solid transparent;
+        border-left: rem(2) solid transparent;
+        box-sizing: border-box;
+        content: "";
+        display: block;
+        height: rem(5);
+        left: 15%;
+        position: absolute;
+        top: 25%;
+        transform: rotate(-46deg);
+        width: rem(10);
+        z-index: 1;
+      }
+
+      &:checked {
+        border-color: var(--primary-color);
+        background-color: var(--primary-color);
+
+        &::before {
+          border-color: $baby_powder;
+        }
+      }
+    }
+
+    &_label {
+      margin-left: rem(12);
+    }
+  }
+}

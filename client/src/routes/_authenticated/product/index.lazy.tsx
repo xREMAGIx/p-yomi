@@ -2,8 +2,8 @@ import Button from "@client/components/atoms/Button";
 import {
   DeleteModal,
   DeleteModalRef,
-} from "@client/components/pages/common/DeleteModal";
-import { ProductTable } from "@client/components/pages/product/ProductTable";
+} from "@client/containers/common/DeleteModal";
+import { ProductTable } from "@client/containers/product/ProductTable";
 import { handleCheckAuthError } from "@client/libs/error";
 import { productQueryKeys } from "@client/libs/query";
 import { server } from "@client/libs/server";

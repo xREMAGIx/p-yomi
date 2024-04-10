@@ -26,3 +26,87 @@ Status: In Progress
 **Runtime**
 
 - [Bun](https://bun.dev/)
+
+## Features
+
+#### Authentication
+
+- [x] Login
+- [x] Register
+- [ ] Forgot password
+- [ ] Logout
+
+#### Dashboard
+
+- [ ] How many orders (filters date range)
+- [ ] Revenue
+- [ ] Receivable
+- [ ] Debt
+
+#### Product
+
+- [x] CRUD
+- [ ] Search by name, barcode
+- [ ] Filter daterange
+- [ ] Inline filter, sorting
+- [ ] Upload images
+- [ ] Can check inventory across warehouses
+- [ ] Can have variety
+- [ ] Information for display in website
+- [ ] Scan barcode to search for product
+
+#### Warehouse
+
+- [x] CRUD
+- [ ] Can check if there’s any goods receipt, goods issue has been pending, completed
+
+#### Goods receipt
+
+- [x] CRUD
+- [ ] Implement status: pending, completed
+- [ ] Search, filter status
+
+#### Goods issue
+
+- [ ] CRUD
+- [ ] Search, filter status
+
+#### Transfer
+
+- [ ] CRUD
+- [ ] Search, filter status
+
+#### Order
+
+- [ ] CRUD
+- [ ] Filter date range, status, add total row
+- [ ] Can have multiple tabs at the same time
+
+#### Customer
+
+- [ ] CRUD
+
+#### Employee
+
+- [ ] CRUD
+- [ ] Can assign to a department
+
+#### Department
+
+- [ ] CRUD
+- [ ] Can see how many employee in it
+- [ ] Total salary
+
+#### Setting
+
+- [x] Darkmode
+- [x] Translation
+- [ ] Define all translation text
+
+#### Role
+
+- [ ] CRUD
+
+#### Permission
+
+- [ ] Assign permission for roles

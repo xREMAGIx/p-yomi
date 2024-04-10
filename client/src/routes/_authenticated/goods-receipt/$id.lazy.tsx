@@ -10,7 +10,10 @@ import Table, {
   TableHeader,
   TableRow,
 } from "@client/components/organisms/Table";
-import { ProductModal, ProductModalRef } from "@client/components/pages/goods-receipt/ProductModal";
+import {
+  ProductModal,
+  ProductModalRef,
+} from "@client/containers/goods-receipt/ProductModal";
 import {
   DATE_TIME_FORMAT,
   DEFAULT_PAGINATION,
@@ -144,9 +147,9 @@ function GoodsReceiptDetail() {
       goodReceiptMethods.reset({
         warehouse: data.data.warehouse
           ? {
-            label: data.data.warehouse.name,
-            value: data.data.warehouse.id,
-          }
+              label: data.data.warehouse.name,
+              value: data.data.warehouse.id,
+            }
           : null,
       });
 

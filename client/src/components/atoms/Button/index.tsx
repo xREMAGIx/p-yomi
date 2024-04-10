@@ -9,7 +9,7 @@ export type VariantButton =
   | "outlinePrimary"
   | "transparent"
   | "icon";
-export type StyleButton = "md" | "lg" | "inline";
+export type StyleButton = "md" | "lg" | "inline" | "round";
 export type TextStyle = GeneralTextStyle;
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {

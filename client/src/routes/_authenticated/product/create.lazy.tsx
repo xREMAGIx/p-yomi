@@ -5,6 +5,7 @@ import { FORM_VALIDATION, TOAST_SUCCESS_MESSAGE } from "@client/libs/constants";
 import { handleCheckAuthError } from "@client/libs/error";
 import { productQueryKeys } from "@client/libs/query";
 import { server } from "@client/libs/server";
+import { useTranslation } from "@client/libs/translation";
 import { CreateProductParams } from "@server/models/product.model";
 import { useMutation } from "@tanstack/react-query";
 import {
@@ -23,6 +24,7 @@ function ProductCreate() {
   //* Hooks
   const router = useRouter();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   //* Hook-form
   const methods = useForm<CreateProductParams>({
@@ -35,7 +37,7 @@ function ProductCreate() {
   });
 
   //* Mutation
-  const createMutation = useMutation({
+  const { isPending: isLoadingCreate, mutate: createMutate } = useMutation({
     mutationKey: productQueryKeys.create(),
     mutationFn: async (params: CreateProductParams) => {
       const { error } = await server.api.v1.product.index.post(params);
@@ -52,25 +54,34 @@ function ProductCreate() {
 
   //* Functions
   const onSubmit = (form: CreateProductParams) => {
-    createMutation.mutate({
+    createMutate({
       ...form,
     });
   };
 
   return (
     <div className="p-productCreate">
-      <Button
-        modifiers={["inline"]}
-        variant="outlinePrimary"
-        onClick={() => router.history.back()}
-      >
-        Back
-      </Button>
+      <div className="u-d-flex u-flex-jc-between">
+        <Button
+          modifiers={["inline"]}
+          variant="outlinePrimary"
+          onClick={() => router.history.back()}
+        >
+          {t("action.back")}
+        </Button>
+        <Button
+          modifiers={["inline"]}
+          isLoading={isLoadingCreate}
+          onClick={methods.handleSubmit(onSubmit)}
+        >
+          {t("action.create")}
+        </Button>
+      </div>
       <div className="p-productCreate_form">
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)}>
             <div className="u-m-t-16">
-              <Heading>Create product</Heading>
+              <Heading>{t("title.createProduct")}</Heading>
             </div>
             <div className="u-m-t-16">
               <Controller
@@ -141,9 +152,6 @@ function ProductCreate() {
                   />
                 )}
               />
-            </div>
-            <div className="u-m-t-32">
-              <Button type="submit">Submit</Button>
             </div>
           </form>
         </FormProvider>

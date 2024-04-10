@@ -11,7 +11,7 @@ import Table, {
 import {
   DeleteModal,
   DeleteModalRef,
-} from "@client/components/pages/common/DeleteModal";
+} from "@client/containers/common/DeleteModal";
 import { DATE_TIME_FORMAT, DEFAULT_PAGINATION } from "@client/libs/constants";
 import { handleCheckAuthError } from "@client/libs/error";
 import { customerQueryKeys } from "@client/libs/query";
