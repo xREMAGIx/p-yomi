@@ -21,6 +21,8 @@ const iconList = {
   edit: "edit",
   filter: "filter",
   eyeConfig: "eyeConfig",
+  sort: "sort",
+  language: "language",
 };
 
 export type IconName = keyof typeof iconList;

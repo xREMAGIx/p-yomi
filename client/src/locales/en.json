@@ -1,11 +1,19 @@
 {
   "action": {
-    "create": "Create",
+    "ascOrder": "Ascend",
     "back": "Back",
-    "search": "Search"
+    "create": "Create",
+    "descOrder": "Descend",
+    "filter": "Filter",
+    "search": "Search",
+    "sort": "Sort",
+    "sortBy": "Sort by",
+    "sortOrder": "Sort order",
+    "update": "Update"
   },
-  "app": {
-    "login": "Login"
+  "locale": {
+    "en": "English",
+    "vi": "Vietnamese"
   },
   "menu": {
     "customer": "Customer",
@@ -21,6 +29,10 @@
     "name": "Name",
     "price": "Price"
   },
+  "setting": {
+    "dark": "Dark",
+    "light": "Light"
+  },
   "table": {
     "action": "Action",
     "barcode": "Barcode",
@@ -31,6 +43,8 @@
     "updatedAt": "Updated at"
   },
   "title": {
-    "createProduct": "Create Product"
+    "login": "Login",
+    "productCreate": "Create Product",
+    "productDetail": "Product Detail"
   }
 }

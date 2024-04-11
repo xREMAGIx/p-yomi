@@ -48,16 +48,16 @@ export const inventoryRoutes = new Elysia({
           "/warehouse/:id",
           async ({
             idParams,
-            query: { sortBy = "desc", limit = 10, page = 1 },
+            query: { sortOrder = "desc", limit = 10, page = 1 },
             inventoryService,
           }) => {
-            if (sortBy !== "asc" && sortBy !== "desc") {
-              throw new InvalidParamError("Sortby not valid!");
+            if (sortOrder !== "asc" && sortOrder !== "desc") {
+              throw new InvalidParamError("sortOrder not valid!");
             }
 
             return await inventoryService.getStockInWarehouse({
               warehouseId: idParams,
-              sortBy: sortBy,
+              sortOrder: sortOrder,
               limit: Number(limit),
               page: Number(page),
             });

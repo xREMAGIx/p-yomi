@@ -1,7 +1,7 @@
 import Button from "@client/components/atoms/Button";
 import Heading from "@client/components/atoms/Heading";
-import Input from "@client/components/atoms/Input";
-import { FORM_VALIDATION, TOAST_SUCCESS_MESSAGE } from "@client/libs/constants";
+import InfoForm, { ProductInfoForm } from "@client/containers/product/InfoForm";
+import { TOAST_SUCCESS_MESSAGE } from "@client/libs/constants";
 import { handleCheckAuthError } from "@client/libs/error";
 import { productQueryKeys } from "@client/libs/query";
 import { server } from "@client/libs/server";
@@ -13,7 +13,7 @@ import {
   useNavigate,
   useRouter,
 } from "@tanstack/react-router";
-import { Controller, FormProvider, useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
 export const Route = createLazyFileRoute("/_authenticated/product/create")({
@@ -27,7 +27,7 @@ function ProductCreate() {
   const { t } = useTranslation();
 
   //* Hook-form
-  const methods = useForm<CreateProductParams>({
+  const methods = useForm<ProductInfoForm>({
     defaultValues: {
       description: "",
       barcode: "",
@@ -53,7 +53,7 @@ function ProductCreate() {
   });
 
   //* Functions
-  const onSubmit = (form: CreateProductParams) => {
+  const onSubmit = (form: ProductInfoForm) => {
     createMutate({
       ...form,
     });
@@ -81,78 +81,9 @@ function ProductCreate() {
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)}>
             <div className="u-m-t-16">
-              <Heading>{t("title.createProduct")}</Heading>
+              <Heading>{t("title.productCreate")}</Heading>
             </div>
-            <div className="u-m-t-16">
-              <Controller
-                control={methods.control}
-                name="name"
-                rules={{
-                  required: FORM_VALIDATION.REQUIRED,
-                }}
-                render={({ field, fieldState: { error } }) => (
-                  <Input
-                    id="product-create-name"
-                    label="Name"
-                    {...field}
-                    error={error?.message}
-                  />
-                )}
-              />
-            </div>
-            <div className="u-m-t-8">
-              <Controller
-                control={methods.control}
-                name="barcode"
-                rules={{
-                  required: FORM_VALIDATION.REQUIRED,
-                }}
-                render={({ field, fieldState: { error } }) => (
-                  <Input
-                    id="product-create-barcode"
-                    label="Barcode"
-                    {...field}
-                    value={field.value ?? ""}
-                    error={error?.message}
-                  />
-                )}
-              />
-            </div>
-            <div className="u-m-t-8">
-              <Controller
-                control={methods.control}
-                name="description"
-                rules={{
-                  required: FORM_VALIDATION.REQUIRED,
-                }}
-                render={({ field, fieldState: { error } }) => (
-                  <Input
-                    id="product-create-description"
-                    label="Description"
-                    {...field}
-                    value={field.value ?? ""}
-                    error={error?.message}
-                  />
-                )}
-              />
-            </div>
-            <div className="u-m-t-8">
-              <Controller
-                control={methods.control}
-                name="price"
-                rules={{
-                  required: FORM_VALIDATION.REQUIRED,
-                }}
-                render={({ field, fieldState: { error } }) => (
-                  <Input
-                    id="product-create-price"
-                    label="Price"
-                    {...field}
-                    error={error?.message}
-                  />
-                )}
-              />
-            </div>
+            <InfoForm />
           </form>
         </FormProvider>
       </div>

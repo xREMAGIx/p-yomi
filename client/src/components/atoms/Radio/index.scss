@@ -1,0 +1,58 @@
+.a-radio {
+  cursor: pointer;
+  $root: &;
+  @include adjust-flex(flex-start, center);
+
+  &_input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    display: none;
+
+    &:checked {
+      + #{$root}_holder {
+        border-color: var(--tertiary-color);
+
+        &::after {
+          background-color: var(--tertiary-color);
+        }
+      }
+
+      ~ #{$root}_label {
+        color: var(--text-color);
+      }
+    }
+  }
+
+  &_holder {
+    width: rem(16);
+    height: rem(16);
+    border-radius: 50%;
+    border: 1px solid var(--text-color);
+    position: relative;
+    flex-shrink: 0;
+
+    &::after {
+      content: " ";
+      width: rem(10);
+      height: rem(10);
+      border-radius: 50%;
+      background-color: transparent;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1;
+    }
+  }
+
+  &_label {
+    padding-left: rem(4);
+    @include font-base(16, 24);
+    @include mobile-down {
+      @include font-base(14, 22);
+    }
+    font-weight: 500;
+    color: var(--text-color);
+  }
+}

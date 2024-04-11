@@ -1,8 +1,18 @@
 export const productQueryKeys = {
   all: ["product"] as const,
   lists: () => [...productQueryKeys.all, "list"] as const,
-  list: ({ page, search }: { page: number; search: string }) =>
-    [...productQueryKeys.lists(), { page, search }] as const,
+  list: ({
+    page,
+    search,
+    sortBy,
+    sortOrder,
+  }: {
+    page?: number;
+    search?: string;
+    sortBy?: string;
+    sortOrder?: string;
+  }) =>
+    [...productQueryKeys.lists(), { page, search, sortBy, sortOrder }] as const,
   details: () => [...productQueryKeys.all, "detail"] as const,
   detail: (id: string | number) => [...productQueryKeys.details(), id] as const,
   creates: () => [...productQueryKeys.all, "create"] as const,

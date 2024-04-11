@@ -7,24 +7,24 @@ interface SwitchProps {
   handleClick?: () => void;
   handleChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   inputId: string;
-  firstLabel?: string;
-  secondLabel?: string;
+  offElement?: React.ReactNode;
+  onElement?: React.ReactNode;
 }
 
 const Switch: React.FC<SwitchProps> = ({
   isChecked,
   handleChange,
   inputId,
-  firstLabel,
-  secondLabel,
+  offElement,
+  onElement,
 }) => (
   <div
     className={mapModifiers("a-switch", isChecked && "isChecked")}
     // onClick={handleClick}
   >
-    {firstLabel || secondLabel ? (
+    {offElement || onElement ? (
       <label htmlFor={inputId} className="a-switch_label">
-        {isChecked ? firstLabel : secondLabel}
+        {isChecked ? offElement : onElement}
       </label>
     ) : (
       <label htmlFor={inputId}>

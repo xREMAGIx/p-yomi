@@ -66,9 +66,12 @@ export const listProductWithInventoryDataSchema = t.Object({
 });
 
 export type ProductData = Static<typeof baseSelectProductSchema>;
+
 export type ProductListData = Static<typeof listProductDataSchema>;
 
-export type GetListProductParams = Static<typeof listProductQuerySchema>;
+export type GetListProductParams = Static<typeof listProductQuerySchema> & {
+  sortBy: keyof ProductData;
+};
 
 export type GetDetailProductParams = {
   id: number;

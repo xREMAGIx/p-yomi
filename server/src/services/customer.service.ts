@@ -22,7 +22,7 @@ export default class CustomerService {
   }
 
   async getList(params: GetListCustomerParams) {
-    const { sortBy, limit = 10, page = 1, name, phone } = params;
+    const { sortOrder, limit = 10, page = 1, name, phone } = params;
 
     const customerList = await this.db
       .select()
@@ -36,7 +36,7 @@ export default class CustomerService {
       .limit(limit)
       .offset(limit * (page - 1))
       .orderBy(
-        sortBy === "asc"
+        sortOrder === "asc"
           ? asc(customerTable.createdAt)
           : desc(customerTable.createdAt)
       );

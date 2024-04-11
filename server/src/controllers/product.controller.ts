@@ -6,6 +6,7 @@ import {
   servicesPlugin,
 } from "../libs/plugins";
 import {
+  ProductData,
   createProductParamSchema,
   detailProductDataSchema,
   listProductDataSchema,
@@ -125,15 +126,33 @@ export const productRoutes = new Elysia({
       .get(
         "/",
         async ({
-          query: { sortBy = "desc", limit = 10, page = 1, ...rest },
+          query: {
+            sortBy: sortByParams,
+            sortOrder = "desc",
+            limit = 10,
+            page = 1,
+            ...rest
+          },
           productService,
         }) => {
-          if (sortBy !== "asc" && sortBy !== "desc") {
-            throw new InvalidContentError("Sortby not valid!");
+          const sortBy = sortByParams as keyof ProductData;
+          const sortByList: (keyof ProductData)[] = [
+            "name",
+            "price",
+            "createdAt",
+            "updatedAt",
+          ];
+          if (sortBy && !sortByList.includes(sortBy)) {
+            throw new InvalidContentError("sortBy not valid!");
+          }
+
+          if (sortOrder !== "asc" && sortOrder !== "desc") {
+            throw new InvalidContentError("sortOrder not valid!");
           }
 
           return await productService.getList({
             sortBy: sortBy,
+            sortOrder: sortOrder,
             limit: Number(limit),
             page: Number(page),
             ...rest,
@@ -151,15 +170,15 @@ export const productRoutes = new Elysia({
       .get(
         "/with-inventory",
         async ({
-          query: { sortBy = "desc", limit = 10, page = 1, ...rest },
+          query: { sortOrder = "desc", limit = 10, page = 1, ...rest },
           productService,
         }) => {
-          if (sortBy !== "asc" && sortBy !== "desc") {
-            throw new InvalidContentError("Sortby not valid!");
+          if (sortOrder !== "asc" && sortOrder !== "desc") {
+            throw new InvalidContentError("sortOrder not valid!");
           }
 
           return await productService.getListWithInventory({
-            sortBy: sortBy,
+            sortOrder: sortOrder,
             limit: Number(limit),
             page: Number(page),
             ...rest,

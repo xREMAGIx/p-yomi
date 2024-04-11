@@ -18,7 +18,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
 import dayjs from "dayjs";
 import { forwardRef, useImperativeHandle, useState } from "react";
-import { ProductFilter } from "./ProductFilter";
+import { ProductFilter, SortForm } from "./ProductFilter";
 
 const headerData = [
   {
@@ -96,6 +96,10 @@ export const ProductTable = forwardRef<ProductTableRef, ProductTableProps>(
         isShow: true,
       }))
     );
+    const [sortParams, setSortParams] = useState<SortForm>({
+      sortBy: "createdAt",
+      sortOrder: "desc",
+    });
 
     //* Refs
 
@@ -106,10 +110,14 @@ export const ProductTable = forwardRef<ProductTableRef, ProductTableProps>(
       queryKey: productQueryKeys.list({
         page: pagination.page,
         search: searchText,
+        sortBy: sortParams.sortBy,
+        sortOrder: sortParams.sortOrder,
       }),
       queryFn: async () => {
         const { data, error } = await server.api.v1.product.index.get({
           query: {
+            sortBy: sortParams.sortBy,
+            sortOrder: sortParams.sortOrder,
             limit: pagination.limit,
             page: pagination.page,
             name: searchText,
@@ -143,6 +151,10 @@ export const ProductTable = forwardRef<ProductTableRef, ProductTableProps>(
       setSearchText(searchText);
     };
 
+    const handleSort = (form: SortForm) => {
+      setSortParams(form);
+    };
+
     //* Imperative hanlder
     useImperativeHandle(ref, () => ({}));
 
@@ -151,8 +163,10 @@ export const ProductTable = forwardRef<ProductTableRef, ProductTableProps>(
         <div className="c-product_productTable_filter">
           <ProductFilter
             columns={columns}
+            sortKeys={["name", "price", "createdAt", "updatedAt"]}
             handleSearch={handleSearch}
             handleChangeShowCol={setColumns}
+            handleSort={handleSort}
           />
         </div>
         <div className="c-product_productTable_table u-m-t-32">

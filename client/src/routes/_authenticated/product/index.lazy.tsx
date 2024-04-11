@@ -56,6 +56,7 @@ function ProductList() {
   return (
     <div className="p-productList">
       <Button
+        variant="secondary"
         modifiers={["inline"]}
         onClick={() => navigate({ to: "/product/create" })}
       >
