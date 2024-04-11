@@ -85,7 +85,7 @@
     margin-top: rem(20);
     overflow-y: auto;
     padding: 0 rem(64) rem(24);
-    @include scroll-bars(6, $gainsboro, $white-smoke, 0, 1);
+    @include scroll-bars();
 
     @include tablet-down {
       margin-top: rem(12);

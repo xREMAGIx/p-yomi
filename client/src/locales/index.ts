@@ -4,13 +4,4 @@ export const TRANSLATIONS_MAPPING: Record<string, () => Promise<any>> = {
   vi: () => import("./vi.json"),
 };
 
-export const LOCALES_LIST = [
-  {
-    label: "English",
-    value: "en",
-  },
-  {
-    label: "Vietnamese",
-    value: "vi",
-  },
-];
+export const LOCALES_LIST = Object.keys(TRANSLATIONS_MAPPING);

@@ -127,7 +127,7 @@ export default class InventoryService {
   }
 
   async getStockInWarehouse(params: GetStockInWarehouseParams) {
-    const { warehouseId, sortBy, limit = 10, page = 1 } = params;
+    const { warehouseId, sortOrder, limit = 10, page = 1 } = params;
 
     const records = await this.db
       .select()
@@ -136,7 +136,7 @@ export default class InventoryService {
       .limit(limit)
       .offset(limit * (page - 1))
       .orderBy(
-        sortBy === "asc"
+        sortOrder === "asc"
           ? asc(inventoryTable.createdAt)
           : desc(inventoryTable.createdAt)
       )

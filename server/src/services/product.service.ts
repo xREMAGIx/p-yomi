@@ -24,7 +24,7 @@ export default class ProductService {
   }
 
   async getList(params: GetListProductParams) {
-    const { sortBy, limit = 10, page = 1, barcode, name } = params;
+    const { sortBy, sortOrder, limit = 10, page = 1, barcode, name } = params;
 
     const productList = await this.db
       .select()
@@ -38,9 +38,9 @@ export default class ProductService {
       .limit(limit)
       .offset(limit * (page - 1))
       .orderBy(
-        sortBy === "asc"
-          ? asc(productTable.createdAt)
-          : desc(productTable.createdAt)
+        sortOrder === "asc"
+          ? asc(productTable[sortBy ?? "createdAt"])
+          : desc(productTable[sortBy ?? "createdAt"])
       );
 
     const totalQueryResult = await this.db
@@ -109,7 +109,7 @@ export default class ProductService {
   }
 
   async getListWithInventory(params: GetListProductWithInventoryParams) {
-    const { sortBy, limit = 10, page = 1, barcode, name } = params;
+    const { sortOrder, limit = 10, page = 1, barcode, name } = params;
 
     const records = await this.db
       .select()
@@ -123,7 +123,7 @@ export default class ProductService {
       .limit(limit)
       .offset(limit * (page - 1))
       .orderBy(
-        sortBy === "asc"
+        sortOrder === "asc"
           ? asc(productTable.createdAt)
           : desc(productTable.createdAt)
       )

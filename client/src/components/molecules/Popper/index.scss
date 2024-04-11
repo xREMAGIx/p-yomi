@@ -7,12 +7,13 @@
     visibility: hidden;
     opacity: 0;
     position: absolute;
-    z-index: 1;
+    z-index: 2;
   }
 
   &_content {
+    min-width: rem(200);
     border-radius: rem(8);
-    padding: rem(8);
+    padding: rem(16);
     background-color: var(--background-color);
     box-shadow:
       rgba(var(--primary-color-alpha), 0.4) 0px 0px 0px 2px,
@@ -53,7 +54,7 @@
 
   &-ah-center {
     #{$root}_wrapper {
-      left: 0;
+      left: 50%;
     }
   }
 

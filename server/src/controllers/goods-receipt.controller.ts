@@ -134,15 +134,15 @@ export const goodsReceiptRoutes = new Elysia({
       .get(
         "/",
         async ({
-          query: { sortBy = "desc", limit = 10, page = 1 },
+          query: { sortOrder = "desc", limit = 10, page = 1 },
           goodsReceiptService,
         }) => {
-          if (sortBy !== "asc" && sortBy !== "desc") {
-            throw new InvalidContentError("Sortby not valid!");
+          if (sortOrder !== "asc" && sortOrder !== "desc") {
+            throw new InvalidContentError("sortOrder not valid!");
           }
 
           return await goodsReceiptService.getList({
-            sortBy: sortBy,
+            sortOrder: sortOrder,
             limit: Number(limit),
             page: Number(page),
           });

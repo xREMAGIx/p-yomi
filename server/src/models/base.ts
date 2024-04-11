@@ -2,7 +2,8 @@ import { Elysia, Static, t } from "elysia";
 
 export const queryPaginationSchema = t.Partial(
   t.Object({
-    sortBy: t.Union([t.Literal("asc"), t.Literal("desc")]),
+    sortBy: t.String(),
+    sortOrder: t.Union([t.Literal("asc"), t.Literal("desc")]),
     limit: t.Numeric(),
     page: t.Numeric(),
   })

@@ -22,7 +22,7 @@ export default class PaymentService {
   }
 
   async getList(params: GetListPaymentParams) {
-    const { sortBy, limit = 10, page = 1, status } = params;
+    const { sortOrder, limit = 10, page = 1, status } = params;
 
     const paymentList = await this.db
       .select()
@@ -31,7 +31,7 @@ export default class PaymentService {
       .limit(limit)
       .offset(limit * (page - 1))
       .orderBy(
-        sortBy === "asc"
+        sortOrder === "asc"
           ? asc(paymentTable.createdAt)
           : desc(paymentTable.createdAt)
       );

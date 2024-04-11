@@ -46,9 +46,11 @@ Status: In Progress
 #### Product
 
 - [x] CRUD
-- [ ] Search by name, barcode
-- [ ] Filter daterange
-- [ ] Inline filter, sorting
+- [x] Search by name, barcode
+- [x] Show/hide columns, sort by API
+- [ ] Filter date range
+- [ ] Inline search column, sorting
+- [ ] Status: Draft, Published, End of Service
 - [ ] Upload images
 - [ ] Can check inventory across warehouses
 - [ ] Can have variety

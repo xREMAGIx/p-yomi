@@ -30,8 +30,8 @@
       }
 
       &:checked {
-        border-color: var(--primary-color);
-        background-color: var(--primary-color);
+        border-color: var(--tertiary-color);
+        background-color: var(--tertiary-color);
 
         &::before {
           border-color: $baby_powder;

@@ -1,5 +1,11 @@
 import { mapModifiers } from "@client/libs/functions";
-import React, { useEffect, useRef, useState } from "react";
+import React, {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 import "./index.scss";
 
 type OriginVertical = "top" | "center" | "bottom";
@@ -19,73 +25,91 @@ interface PopperProps {
   children?: React.ReactNode;
 }
 
-const Popper: React.FC<PopperProps> = ({
-  children,
-  toggleEl,
-  customContentClass,
-  anchorOrigin = {
-    vertical: "bottom",
-    horizontal: "left",
-  },
-  transformOrigin = {
-    vertical: "top",
-    horizontal: "left",
-  },
-}) => {
-  //* States
-  const [isOpen, setIsOpen] = useState(false);
+export interface PopperRef {
+  handleClose: () => void;
+}
 
-  //* Refs
-  const popperRef = useRef<HTMLDivElement>(null);
+export const Popper = forwardRef<PopperRef, PopperProps>(
+  (
+    {
+      children,
+      toggleEl,
+      customContentClass,
+      anchorOrigin = {
+        vertical: "bottom",
+        horizontal: "left",
+      },
+      transformOrigin = {
+        vertical: "top",
+        horizontal: "left",
+      },
+    },
+    ref
+  ) => {
+    //* States
+    const [isOpen, setIsOpen] = useState(false);
 
-  //* Functions
-  const handleToggle = () => {
-    setIsOpen((prev) => !prev);
-  };
+    //* Refs
+    const popperRef = useRef<HTMLDivElement>(null);
 
-  //* Effects
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      const target = event.target as Node;
+    //* Functions
+    const handleToggle = () => {
+      setIsOpen((prev) => !prev);
+    };
 
-      if (popperRef.current && !popperRef.current.contains(target)) {
-        setIsOpen(false);
+    const handleClose = () => {
+      setIsOpen(false);
+    };
+
+    //* Imperative hanlder
+    useImperativeHandle(ref, () => ({
+      handleClose: handleClose,
+    }));
+
+    //* Effects
+    useEffect(() => {
+      function handleClickOutside(event: MouseEvent) {
+        const target = event.target as Node;
+
+        if (popperRef.current && !popperRef.current.contains(target)) {
+          setIsOpen(false);
+        }
       }
-    }
 
-    if (isOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-      return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
-      };
-    }
-  }, [isOpen]);
+      if (isOpen) {
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+          document.removeEventListener("mousedown", handleClickOutside);
+        };
+      }
+    }, [isOpen]);
 
-  return (
-    <div
-      ref={popperRef}
-      className={mapModifiers(
-        "m-popper",
-        isOpen && "open",
-        anchorOrigin && [
-          `av-${anchorOrigin.vertical}`,
-          `ah-${anchorOrigin.horizontal}`,
-        ],
-        transformOrigin &&
-          `t-v${transformOrigin.vertical}-h${transformOrigin.horizontal}`
-      )}
-    >
-      <div className="m-popper_toggle" onClick={handleToggle}>
-        {toggleEl}
-      </div>
-      <div className="m-popper_wrapper">
-        <div className={`m-popper_content ${customContentClass ?? ""}`}>
-          {children}
+    return (
+      <div
+        ref={popperRef}
+        className={mapModifiers(
+          "m-popper",
+          isOpen && "open",
+          anchorOrigin && [
+            `av-${anchorOrigin.vertical}`,
+            `ah-${anchorOrigin.horizontal}`,
+          ],
+          transformOrigin &&
+            `t-v${transformOrigin.vertical}-h${transformOrigin.horizontal}`
+        )}
+      >
+        <div className="m-popper_toggle" onClick={handleToggle}>
+          {toggleEl}
+        </div>
+        <div className="m-popper_wrapper">
+          <div className={`m-popper_content ${customContentClass ?? ""}`}>
+            {children}
+          </div>
         </div>
       </div>
-    </div>
-  );
-};
+    );
+  }
+);
 
 Popper.defaultProps = {
   anchorOrigin: {

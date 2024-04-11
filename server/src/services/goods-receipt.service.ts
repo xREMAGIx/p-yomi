@@ -24,7 +24,7 @@ export default class GoodsReceiptService {
   }
 
   async getList(params: QueryPaginationParams) {
-    const { sortBy, limit = 10, page = 1 } = params;
+    const { sortOrder, limit = 10, page = 1 } = params;
 
     const goodsReceiptResult = await this.db
       .select()
@@ -32,7 +32,7 @@ export default class GoodsReceiptService {
       .limit(limit)
       .offset(limit * (page - 1))
       .orderBy(
-        sortBy === "asc"
+        sortOrder === "asc"
           ? asc(goodsReceiptTable.createdAt)
           : desc(goodsReceiptTable.createdAt)
       )

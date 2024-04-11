@@ -1,11 +1,19 @@
 {
   "action": {
-    "create": "Tạo mới",
+    "ascOrder": "Từ dưới lên trên",
     "back": "Trở về",
-    "search": "Tìm kiếm"
+    "create": "Tạo mới",
+    "descOrder": "Từ trên xuống dưới",
+    "filter": "Lọc",
+    "search": "Tìm kiếm",
+    "sort": "Sắp xếp",
+    "sortBy": "Sắp xếp theo",
+    "sortOrder": "Thứ tự sắp xếp",
+    "update": "Cập nhật"
   },
-  "app": {
-    "login": "Đăng nhập"
+  "locale": {
+    "en": "Tiếng Anh",
+    "vi": "Tiếng Việt"
   },
   "menu": {
     "customer": "Khách hàng",
@@ -21,6 +29,10 @@
     "name": "Tên",
     "price": "Giá"
   },
+  "setting": {
+    "dark": "Tối",
+    "light": "Sáng"
+  },
   "table": {
     "action": "Thao tác",
     "barcode": "Mã vạch",
@@ -31,6 +43,8 @@
     "updatedAt": "Cập nhật lúc"
   },
   "title": {
-    "createProduct": "Tạo sản phẩm"
+    "login": "Đăng nhập",
+    "productCreate": "Tạo sản phẩm",
+    "productDetail": "Chi tiết sản phẩm"
   }
 }

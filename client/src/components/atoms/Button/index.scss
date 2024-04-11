@@ -7,12 +7,11 @@
   font: inherit;
   margin: 0;
   overflow: hidden;
-  padding: rem(4) rem(15);
+  padding: rem(5) rem(11);
   position: relative;
   transition: all $transition linear;
   width: 100%;
   border: 1px solid transparent;
-
   @include font-base(16, 24);
 
   @include mobile-down {
@@ -33,19 +32,6 @@
     background-color: var(--secondary-color);
     border: 1px solid var(--secondary-color);
     color: $white;
-  }
-
-  &-transparent {
-    background-color: $white;
-    border-radius: 2px;
-    box-shadow: 0 2px 0 rgba(var(--primary-color), 0.016);
-    color: var(--primary-color);
-    padding: rem(7) rem(15);
-
-    &:hover {
-      background-color: var(--primary-color);
-      color: $white;
-    }
   }
 
   &-outlinePrimary {
@@ -71,34 +57,21 @@
   }
 
   &-transparent {
-    background: linear-gradient(180deg, $white04 -266.46%, transparent 279.88%);
-    border-radius: rem(40);
-    color: $white;
-    font-weight: 500;
-    height: rem(38);
-    padding: rem(8) 0;
+    background: transparent;
+    color: var(--text-color);
     white-space: nowrap;
-    @include font-base(14, 22);
-    @include small-mobile {
-      padding: rem(8) rem(4);
-    }
+    border-radius: 0;
 
     &-active,
     &:hover {
-      background: linear-gradient(180deg, $white -266.46%, transparent 279.88%);
-      border: 1px solid $white06;
+      background: $white01;
     }
   }
 
   &-icon {
     border-radius: rem(40);
-    font-weight: 500;
-    padding: rem(4);
+    padding: rem(5);
     white-space: nowrap;
-
-    @include small-mobile {
-      padding: rem(4);
-    }
 
     &-active,
     &:hover {
@@ -108,7 +81,7 @@
   }
 
   &-round {
-    padding: rem(4);
+    padding: rem(5);
   }
 
   &:disabled,

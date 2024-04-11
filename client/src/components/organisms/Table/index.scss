@@ -4,7 +4,11 @@
   overflow: auto;
   box-shadow: rgba(var(--primary-color-alpha), 0.35) 0 rem(5) rem(15);
   border-radius: rem(8);
-  @include scroll-bars(4, $gainsboro, transparent, 4, 2);
+  @include scroll-bars();
+
+  &_container {
+    position: relative;
+  }
 
   &_header {
     position: sticky;
@@ -146,7 +150,7 @@
       border-bottom: 1px solid var(--primary-color);
     }
 
-    @include scroll-bars(8, $gainsboro, transparent, 4, 2);
+    @include scroll-bars();
   }
 
   &-sticky {

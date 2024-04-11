@@ -16,13 +16,13 @@ export default class WarehouseService {
   }
 
   async getList(params: QueryPaginationParams) {
-    const { sortBy, limit = 10, page = 1 } = params;
+    const { sortOrder, limit = 10, page = 1 } = params;
 
     const warehouseList = await this.db.query.warehouseTable.findMany({
       limit: limit,
       offset: limit * (page - 1),
       orderBy:
-        sortBy === "asc"
+        sortOrder === "asc"
           ? [asc(warehouseTable.createdAt)]
           : [desc(warehouseTable.createdAt)],
     });

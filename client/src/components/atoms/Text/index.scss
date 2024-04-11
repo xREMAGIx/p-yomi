@@ -20,6 +20,13 @@
     color: var(--secondary-color);
   }
 
+  &-14x20 {
+    @include font-base(14, 20);
+    @include mobile-down {
+      @include font-base(12, 18);
+    }
+  }
+
   @include style-font-family();
   @include style-color();
   @include style-font-weight();

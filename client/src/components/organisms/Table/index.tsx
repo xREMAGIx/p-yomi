@@ -80,19 +80,21 @@ const Table: React.FC<TableProps> = ({
   modifiers,
   spacing,
 }) => (
-  <div
-    className={mapModifiers(
-      "o-table",
-      classModifiers,
-      modifiers,
-      spacing && "spacing"
-    )}
-  >
+  <div className="o-table_container">
     {isLoading && <LoadingOverlay isLoading={isLoading} />}
-    <table className="o-table_wrap">
-      {header}
-      <tbody>{children}</tbody>
-    </table>
+    <div
+      className={mapModifiers(
+        "o-table",
+        classModifiers,
+        modifiers,
+        spacing && "spacing"
+      )}
+    >
+      <table className="o-table_wrap">
+        {header}
+        <tbody>{children}</tbody>
+      </table>
+    </div>
   </div>
 );
 

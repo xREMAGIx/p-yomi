@@ -35,7 +35,7 @@ export default class OrderService {
   }
 
   async getList(params: GetListOrderParams) {
-    const { sortBy, limit = 10, page = 1, customerPhone } = params;
+    const { sortOrder, limit = 10, page = 1, customerPhone } = params;
 
     const orderList = await this.db
       .select()
@@ -50,7 +50,7 @@ export default class OrderService {
       .limit(limit)
       .offset(limit * (page - 1))
       .orderBy(
-        sortBy === "asc"
+        sortOrder === "asc"
           ? asc(orderTable.createdAt)
           : desc(orderTable.createdAt)
       );
