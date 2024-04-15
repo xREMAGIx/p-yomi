@@ -5,10 +5,12 @@
     "create": "Create",
     "descOrder": "Descend",
     "filter": "Filter",
+    "pin": "Pin",
     "search": "Search",
     "sort": "Sort",
     "sortBy": "Sort by",
     "sortOrder": "Sort order",
+    "unpin": "Unpin",
     "update": "Update"
   },
   "locale": {
@@ -25,9 +27,14 @@
   },
   "product": {
     "barcode": "Barcode",
+    "costPrice": "Cost price",
     "description": "Description",
+    "draft": "Draft",
+    "endOfService": "End of service",
     "name": "Name",
-    "price": "Price"
+    "price": "Price",
+    "published": "Published",
+    "status": "Status"
   },
   "setting": {
     "dark": "Dark",
@@ -40,6 +47,7 @@
     "description": "Description",
     "name": "Name",
     "price": "Price",
+    "status": "Status",
     "updatedAt": "Updated at"
   },
   "title": {

@@ -27,14 +27,7 @@ function ProductCreate() {
   const { t } = useTranslation();
 
   //* Hook-form
-  const methods = useForm<ProductInfoForm>({
-    defaultValues: {
-      description: "",
-      barcode: "",
-      price: 0,
-      name: "",
-    },
-  });
+  const methods = useForm<ProductInfoForm>();
 
   //* Mutation
   const { isPending: isLoadingCreate, mutate: createMutate } = useMutation({
@@ -56,6 +49,7 @@ function ProductCreate() {
   const onSubmit = (form: ProductInfoForm) => {
     createMutate({
       ...form,
+      status: form.status.value,
     });
   };
 

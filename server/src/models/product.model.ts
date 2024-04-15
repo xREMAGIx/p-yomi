@@ -3,6 +3,18 @@ import Elysia, { Static, t } from "elysia";
 import { productTable } from "../db-schema";
 import { metaPaginationSchema, queryPaginationSchema } from "./base";
 
+export enum ProductStatus {
+  DRAFT = "draft",
+  PUBLISHED = "published",
+  END_OF_SERVICE = "endOfService",
+}
+
+export enum ProductStatusCode {
+  DRAFT = 0,
+  PUBLISHED = 1,
+  END_OF_SERVICE = 2,
+}
+
 export const baseSelectProductSchema = createSelectSchema(productTable);
 
 export const baseInsertProductSchema = createInsertSchema(productTable);
@@ -25,16 +37,30 @@ export const detailProductDataSchema = t.Object({
 });
 
 export const createProductParamSchema = t.Composite([
-  t.Omit(baseInsertProductSchema, ["id", "createdAt", "updatedAt", "price"]),
+  t.Omit(baseInsertProductSchema, [
+    "id",
+    "createdAt",
+    "updatedAt",
+    "price",
+    "costPrice",
+  ]),
   t.Object({
     price: t.Optional(t.Numeric()),
+    costPrice: t.Optional(t.Numeric()),
   }),
 ]);
 
 export const updateProductParamSchema = t.Composite([
-  t.Omit(baseInsertProductSchema, ["id", "createdAt", "updatedAt", "price"]),
+  t.Omit(baseInsertProductSchema, [
+    "id",
+    "createdAt",
+    "updatedAt",
+    "price",
+    "costPrice",
+  ]),
   t.Object({
     price: t.Optional(t.Numeric()),
+    costPrice: t.Optional(t.Numeric()),
   }),
 ]);
 
@@ -70,7 +96,7 @@ export type ProductData = Static<typeof baseSelectProductSchema>;
 export type ProductListData = Static<typeof listProductDataSchema>;
 
 export type GetListProductParams = Static<typeof listProductQuerySchema> & {
-  sortBy: keyof ProductData;
+  sortBy?: keyof ProductData;
 };
 
 export type GetDetailProductParams = {

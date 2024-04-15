@@ -6,7 +6,11 @@ import { handleCheckAuthError } from "@client/libs/error";
 import { productQueryKeys } from "@client/libs/query";
 import { server } from "@client/libs/server";
 import { useTranslation } from "@client/libs/translation";
-import { UpdateProductParams } from "@server/models/product.model";
+import {
+  ProductStatus,
+  ProductStatusCode,
+  UpdateProductParams,
+} from "@server/models/product.model";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   createLazyFileRoute,
@@ -39,7 +43,7 @@ function ProductDetail() {
 
   //* Query
   useQuery({
-    queryKey: [...productQueryKeys.detail(id)],
+    queryKey: productQueryKeys.detail(id),
     queryFn: async () => {
       const { data, error } = await server.api.v1.product({ id: id }).get();
 
@@ -53,6 +57,13 @@ function ProductDetail() {
         barcode: data.data.barcode ?? "",
         description: data.data.description ?? "",
         price: data.data.price,
+        costPrice: data.data.costPrice,
+        status: {
+          label: t(
+            `product.${ProductStatus[ProductStatusCode[data.data.status] as keyof typeof ProductStatus]}`
+          ),
+          value: data.data.status,
+        },
       });
       return data.data;
     },
@@ -79,6 +90,7 @@ function ProductDetail() {
     updateMutate({
       ...form,
       id: Number(id),
+      status: form.status.value,
     });
   };
 

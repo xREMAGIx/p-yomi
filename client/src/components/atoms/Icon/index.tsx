@@ -23,6 +23,10 @@ const iconList = {
   eyeConfig: "eyeConfig",
   sort: "sort",
   language: "language",
+  pin: "pin",
+  tableOption: "tableOption",
+  sortAsc: "sortAsc",
+  sortDesc: "sortDesc",
 };
 
 export type IconName = keyof typeof iconList;

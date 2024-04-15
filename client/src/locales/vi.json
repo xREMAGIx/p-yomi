@@ -1,14 +1,16 @@
 {
   "action": {
-    "ascOrder": "Từ dưới lên trên",
+    "ascOrder": "Từ thấp đến cao",
     "back": "Trở về",
     "create": "Tạo mới",
-    "descOrder": "Từ trên xuống dưới",
+    "descOrder": "Từ cao xuống thấp",
     "filter": "Lọc",
+    "pin": "Ghim",
     "search": "Tìm kiếm",
     "sort": "Sắp xếp",
     "sortBy": "Sắp xếp theo",
     "sortOrder": "Thứ tự sắp xếp",
+    "unpin": "Bỏ ghim",
     "update": "Cập nhật"
   },
   "locale": {
@@ -25,9 +27,14 @@
   },
   "product": {
     "barcode": "Mã vạch",
+    "costPrice": "Giá nhập",
     "description": "Mô tả",
+    "draft": "Nháp",
+    "endOfService": "Không khả dụng",
     "name": "Tên",
-    "price": "Giá"
+    "price": "Giá",
+    "published": "Đã đăng",
+    "status": "Trạng thái"
   },
   "setting": {
     "dark": "Tối",
@@ -40,6 +47,7 @@
     "description": "Mô tả",
     "name": "Tên",
     "price": "Giá",
+    "status": "Trạng thái",
     "updatedAt": "Cập nhật lúc"
   },
   "title": {

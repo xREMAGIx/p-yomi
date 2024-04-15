@@ -35,7 +35,7 @@ export const productRoutes = new Elysia({
       .post(
         "/",
         async ({ body, userId, productService }) => {
-          const data = await productService.create({ ...body });
+          const data = await productService.create({ ...body, userId });
 
           return {
             data: data,
@@ -82,9 +82,10 @@ export const productRoutes = new Elysia({
           //* Update
           .put(
             "/:id",
-            async ({ idParams, body, productService }) => {
+            async ({ idParams, body, userId, productService }) => {
               const data = await productService.update({
                 ...body,
+                userId,
                 id: idParams,
               });
 
