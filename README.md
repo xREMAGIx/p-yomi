@@ -48,12 +48,18 @@ Status: In Progress
 - [x] CRUD
 - [x] Search by name, barcode
 - [x] Show/hide columns, sort by API
+- [x] Checkboxes in table for multiple selection
 - [ ] Filter date range
-- [ ] Inline search column, sorting
-- [ ] Status: Draft, Published, End of Service
-- [ ] Upload images
-- [ ] Can check inventory across warehouses
+- [x] Inline search column, sorting
+- [x] Sticky multiple columns
+- [x] Status: Draft, Published, End of Service
+- [x] Add cost price for calculate profit.
+- [x] Tracking who created, updated
+- [ ] Multiple prices: wholesale prices, web, ...
+- [ ] Can see inventory across warehouses
 - [ ] Can have variety
+- [ ] Import data using exel: xls
+- [ ] Upload images
 - [ ] Information for display in website
 - [ ] Scan barcode to search for product
 
@@ -112,3 +118,9 @@ Status: In Progress
 #### Permission
 
 - [ ] Assign permission for roles
+
+## Database
+
+![Database img](database.png)
+
+Generated using [TablePlus Diagram plugin](https://github.com/TablePlus/diagram-plugin)

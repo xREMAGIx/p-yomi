@@ -18,6 +18,8 @@ export const metaPaginationSchema = t.Object({
 
 export type QueryPaginationParams = Static<typeof queryPaginationSchema>;
 
+export type WithAuthenParams<T> = T & { userId: number };
+
 //* Model
 export const queryPaginationModel = new Elysia().model({
   "pagination.query": queryPaginationSchema,

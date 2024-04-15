@@ -2,6 +2,7 @@
   $root: &;
   position: relative;
   overflow: auto;
+  max-height: rem(320);
   box-shadow: rgba(var(--primary-color-alpha), 0.35) 0 rem(5) rem(15);
   border-radius: rem(8);
   @include scroll-bars();
@@ -13,12 +14,14 @@
   &_header {
     position: sticky;
     top: 0;
+    z-index: 3;
   }
 
   &_wrap {
     width: 100%;
     border: 0;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
 
     @include mobile-down {
       min-width: rem(500);
@@ -81,14 +84,6 @@
     }
   }
 
-  &_header_row {
-    background-color: var(--primary-color);
-    // background: linear-gradient(90deg,
-    //     var(--primary-color) 40%,
-    //     var(--tertiary-color) 90%);
-    // background-attachment: fixed;
-  }
-
   &_body_row {
     &-selected {
       background-color: rgba(var(--primary-color-alpha), 0.7);
@@ -104,6 +99,8 @@
   }
 
   &_header_cell {
+    position: relative;
+    background-color: var(--primary-color);
     color: $white;
     padding: rem(16) rem(12);
 
@@ -116,7 +113,14 @@
     }
   }
 
+  &_header_icon {
+    position: absolute;
+    left: rem(12);
+    bottom: rem(4);
+  }
+
   &_body_cell {
+    background-color: var(--background-color);
     border: 1px solid rgba(var(--primary-color-alpha), 0.2);
     min-width: rem(160);
     padding: rem(8) rem(12);
@@ -138,6 +142,10 @@
 
     &-align-center {
       text-align: center;
+    }
+
+    &-noPadding {
+      padding: 0;
     }
   }
 

@@ -9,6 +9,7 @@ import {
   ProductWithInventoryData,
   UpdateProductParams,
 } from "../models/product.model";
+import { WithAuthenParams } from "../models/base";
 
 export default class ProductService {
   private db;
@@ -75,23 +76,30 @@ export default class ProductService {
     });
   }
 
-  async create(params: CreateProductParams) {
+  async create(params: WithAuthenParams<CreateProductParams>) {
+    const { userId, ...body } = params;
+
     const results = await this.db
       .insert(productTable)
-      .values(params)
+      .values({
+        ...body,
+        createdByUserId: userId,
+        updatedByUserId: userId,
+      })
       .returning();
 
     return results[0];
   }
 
-  async update(params: UpdateProductParams) {
-    const { id, ...rest } = params;
+  async update(params: WithAuthenParams<UpdateProductParams>) {
+    const { id, userId, ...rest } = params;
 
     const results = await this.db
       .update(productTable)
       .set({
         ...rest,
         updatedAt: sql`now()`,
+        updatedByUserId: userId,
       })
       .where(eq(productTable.id, id))
       .returning();

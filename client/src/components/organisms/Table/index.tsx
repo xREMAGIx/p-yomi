@@ -16,6 +16,7 @@ interface TableCellProps
   colSpan?: number;
   rowSpan?: number;
   classModify?: string;
+  modifiers?: "noPadding"[];
   textAlign?: TableTextAlign;
 }
 type TableModifiers = "primary" | "firstColSticky";
@@ -55,13 +56,14 @@ export const TableCell: React.FC<TableCellProps> = ({
   children,
   classModify,
   textAlign = "left",
+  modifiers,
   ...props
 }) => {
   const Element = isHead ? "th" : "td";
   return (
     <Element
       {...props}
-      className={`${mapModifiers(isHead ? "o-table_header_cell" : "o-table_body_cell", `align-${textAlign}`, props.onClick && "cursor")} ${classModify || ""}`}
+      className={`${mapModifiers(isHead ? "o-table_header_cell" : "o-table_body_cell", `align-${textAlign}`, modifiers, props.onClick && "cursor")} ${classModify || ""}`}
     >
       {children}
     </Element>

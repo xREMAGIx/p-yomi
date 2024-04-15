@@ -35,6 +35,47 @@ export const productTable = pgTable("product", {
   description: text("description"),
   barcode: text("barcode"),
   price: integer("price").default(0).notNull(),
+  costPrice: integer("cost_price").default(0).notNull(),
+  createdByUserId: integer("created_by_user_id")
+    .references(() => userTable.id)
+    .default(-1)
+    .notNull(),
+  updatedByUserId: integer("updated_by_user_id")
+    .references(() => userTable.id)
+    .default(-1)
+    .notNull(),
+  status: integer("status").notNull(),
+});
+
+export const productVarietyTable = pgTable("product_variety", {
+  id: serial("id").primaryKey(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  productId: integer("product_id")
+    .references(() => productTable.id)
+    .notNull(),
+  color: text("color"),
+  size: text("size"),
+});
+
+export const productPricing = pgTable("product_pricing", {
+  id: serial("id").primaryKey(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  productId: integer("product_id")
+    .references(() => productTable.id)
+    .notNull(),
+  customerTypeId: integer("customer_type_id")
+    .references(() => customerTypeTable.id)
+    .notNull(),
 });
 
 //* Warehouse
@@ -63,6 +104,14 @@ export const customerTable = pgTable("customer", {
   address: text("address"),
   email: text("email"),
   dateOfBirth: timestamp("date_of_birth", { withTimezone: true }),
+  customerTypeId: integer("customer_type_id")
+    .references(() => customerTypeTable.id)
+    .notNull(),
+});
+
+export const customerTypeTable = pgTable("customer_type", {
+  id: serial("id").primaryKey(),
+  name: text("name"),
 });
 
 //* Inventory

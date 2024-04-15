@@ -143,4 +143,24 @@
     -webkit-mask-image: url("../../../assets/icons/ic_language.svg");
     mask-image: url("../../../assets/icons/ic_language.svg");
   }
+
+  &-pin {
+    -webkit-mask-image: url("../../../assets/icons/ic_pin.svg");
+    mask-image: url("../../../assets/icons/ic_pin.svg");
+  }
+
+  &-tableOption {
+    -webkit-mask-image: url("../../../assets/icons/ic_table_option.svg");
+    mask-image: url("../../../assets/icons/ic_table_option.svg");
+  }
+
+  &-sortAsc {
+    -webkit-mask-image: url("../../../assets/icons/ic_sort_ascend.svg");
+    mask-image: url("../../../assets/icons/ic_sort_ascend.svg");
+  }
+
+  &-sortDesc {
+    -webkit-mask-image: url("../../../assets/icons/ic_sort_descend.svg");
+    mask-image: url("../../../assets/icons/ic_sort_descend.svg");
+  }
 }
