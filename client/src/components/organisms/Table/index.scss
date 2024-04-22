@@ -2,7 +2,8 @@
   $root: &;
   position: relative;
   overflow: auto;
-  max-height: rem(320);
+  min-height: rem(310);
+  max-height: rem(520);
   box-shadow: rgba(var(--primary-color-alpha), 0.35) 0 rem(5) rem(15);
   border-radius: rem(8);
   @include scroll-bars();

@@ -72,23 +72,27 @@ export const listProductWithInventoryQuerySchema = t.Composite([
   }),
 ]);
 
+export const productInventoryDataSchema = t.Object({
+  quantityAvailable: t.Number(),
+  warehouseId: t.Numeric(),
+  warehouseName: t.String(),
+});
+
 export const productWithInventoryDataSchema = t.Composite([
   baseSelectProductSchema,
   t.Object({
     totalAvailable: t.Number(),
-    inventory: t.Array(
-      t.Object({
-        quantityAvailable: t.Number(),
-        warehouseId: t.Numeric(),
-        warehouseName: t.String(),
-      })
-    ),
+    inventory: t.Array(productInventoryDataSchema),
   }),
 ]);
 
 export const listProductWithInventoryDataSchema = t.Object({
   data: t.Array(productWithInventoryDataSchema),
   meta: metaPaginationSchema,
+});
+
+export const detailProductWithInventoryDataSchema = t.Object({
+  data: productWithInventoryDataSchema,
 });
 
 export type ProductData = Static<typeof baseSelectProductSchema>;
@@ -107,6 +111,8 @@ export type CreateProductParams = Static<typeof createProductParamSchema>;
 export type UpdateProductParams = Static<typeof updateProductParamSchema> & {
   id: number;
 };
+
+export type ProductInventoryData = Static<typeof productInventoryDataSchema>;
 
 export type GetListProductWithInventoryParams = Static<
   typeof listProductWithInventoryQuerySchema

@@ -1,17 +1,14 @@
+type ListParams = {
+  page?: number;
+  search?: string;
+  sortBy?: string;
+  sortOrder?: string;
+};
+
 export const productQueryKeys = {
   all: ["product"] as const,
   lists: () => [...productQueryKeys.all, "list"] as const,
-  list: ({
-    page,
-    search,
-    sortBy,
-    sortOrder,
-  }: {
-    page?: number;
-    search?: string;
-    sortBy?: string;
-    sortOrder?: string;
-  }) =>
+  list: ({ page, search, sortBy, sortOrder }: ListParams) =>
     [...productQueryKeys.lists(), { page, search, sortBy, sortOrder }] as const,
   details: () => [...productQueryKeys.all, "detail"] as const,
   detail: (id: string | number) => [...productQueryKeys.details(), id] as const,
@@ -26,8 +23,11 @@ export const productQueryKeys = {
 export const warehouseQueryKeys = {
   all: ["warehouse"] as const,
   lists: () => [...warehouseQueryKeys.all, "list"] as const,
-  list: ({ page }: { page: number }) =>
-    [...warehouseQueryKeys.lists(), { page }] as const,
+  list: ({ page, search, sortBy, sortOrder }: ListParams) =>
+    [
+      ...warehouseQueryKeys.lists(),
+      { page, search, sortBy, sortOrder },
+    ] as const,
   details: () => [...warehouseQueryKeys.all, "detail"] as const,
   detail: (id: string | number) =>
     [...warehouseQueryKeys.details(), id] as const,
@@ -39,8 +39,7 @@ export const warehouseQueryKeys = {
   update: (id: string | number) =>
     [...warehouseQueryKeys.updates(), id] as const,
   deletes: () => [...warehouseQueryKeys.all, "delete"] as const,
-  delete: (id: string | number) =>
-    [...warehouseQueryKeys.deletes(), id] as const,
+  delete: () => [...warehouseQueryKeys.deletes()] as const,
 };
 
 export const goodsReceiptQueryKeys = {

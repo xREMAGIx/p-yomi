@@ -17,6 +17,7 @@ import {
 import { handleCheckAuthError } from "@client/libs/error";
 import { inventoryQueryKeys, warehouseQueryKeys } from "@client/libs/query";
 import { server } from "@client/libs/server";
+import { useTranslation } from "@client/libs/translation";
 import { UpdateInventoryConfigParams } from "@server/models/inventory.model";
 import { UpdateWarehouseParams } from "@server/models/warehouse.model";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -79,6 +80,7 @@ const headerData = [
 
 function WarehouseDetail() {
   //* Hooks
+  const { t } = useTranslation();
   const { id } = Route.useParams();
   const router = useRouter();
   const navigate = useNavigate();
@@ -201,7 +203,7 @@ function WarehouseDetail() {
           variant="outlinePrimary"
           onClick={() => router.history.back()}
         >
-          Back
+          {t("action.back")}
         </Button>
         <Button
           modifiers={["inline"]}
@@ -214,7 +216,7 @@ function WarehouseDetail() {
       <div className="p-warehouseDetail_form">
         <FormProvider {...methods}>
           <div className="u-m-t-16">
-            <Heading>Warehouse detail</Heading>
+            <Heading>{t("action.warehouseDetail")}</Heading>
           </div>
           <div className="u-m-t-16">
             <Controller

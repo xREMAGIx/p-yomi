@@ -31,6 +31,8 @@
     "description": "Mô tả",
     "draft": "Nháp",
     "endOfService": "Không khả dụng",
+    "info": "Thông tin",
+    "inventory": "Tồn kho",
     "name": "Tên",
     "price": "Giá",
     "published": "Đã đăng",
@@ -48,11 +50,16 @@
     "name": "Tên",
     "price": "Giá",
     "status": "Trạng thái",
-    "updatedAt": "Cập nhật lúc"
+    "updatedAt": "Cập nhật lúc",
+    "warehouseId": "Mã kho",
+    "warehouseName": "Tên kho",
+    "quantityAvailable": "Tồn"
   },
   "title": {
     "login": "Đăng nhập",
     "productCreate": "Tạo sản phẩm",
-    "productDetail": "Chi tiết sản phẩm"
+    "productDetail": "Chi tiết sản phẩm",
+    "warehouseCreate": "Tạo kho",
+    "warehouseDetail": "Chi tiết kho"
   }
 }

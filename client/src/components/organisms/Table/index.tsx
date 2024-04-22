@@ -94,7 +94,7 @@ const Table: React.FC<TableProps> = ({
     >
       <table className="o-table_wrap">
         {header}
-        <tbody>{children}</tbody>
+        <tbody className="o-table_body">{children}</tbody>
       </table>
     </div>
   </div>

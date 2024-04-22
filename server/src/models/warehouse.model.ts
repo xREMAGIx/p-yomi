@@ -1,11 +1,18 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-typebox";
 import Elysia, { Static, t } from "elysia";
 import { warehouseTable } from "../db-schema";
-import { metaPaginationSchema } from "./base";
+import { metaPaginationSchema, queryPaginationSchema } from "./base";
 
 export const baseSelectWarehouseSchema = createSelectSchema(warehouseTable);
 
 export const baseInsertWarehouseSchema = createInsertSchema(warehouseTable);
+
+export const listWarehouseQuerySchema = t.Composite([
+  queryPaginationSchema,
+  t.Object({
+    name: t.Optional(t.String()),
+  }),
+]);
 
 export const listWarehouseDataSchema = t.Object({
   data: t.Array(baseSelectWarehouseSchema),
@@ -30,6 +37,10 @@ export const updateWarehouseParamSchema = t.Omit(baseInsertWarehouseSchema, [
 
 export type WarehouseData = Static<typeof baseSelectWarehouseSchema>;
 export type WarehouseListData = Static<typeof listWarehouseDataSchema>;
+
+export type GetListWarehouseParams = Static<typeof listWarehouseQuerySchema> & {
+  sortBy?: keyof WarehouseData;
+};
 
 export type GetDetailWarehouseParams = {
   id: number;

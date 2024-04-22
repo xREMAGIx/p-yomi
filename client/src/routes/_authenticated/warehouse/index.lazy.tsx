@@ -1,46 +1,32 @@
 import Button from "@client/components/atoms/Button";
-import Link from "@client/components/atoms/Link";
 import Text from "@client/components/atoms/Text";
-import Pagination from "@client/components/molecules/Pagination";
-import Table, {
-  TableCell,
-  TableHeader,
-  TableRow,
-} from "@client/components/organisms/Table";
+import AdvanceTable from "@client/components/templates/AdvanceTable";
+import {
+  AdvanceTableColumnType,
+  SortForm,
+} from "@client/components/templates/AdvanceTable/types";
+import {
+  DeleteModal,
+  DeleteModalRef,
+} from "@client/containers/common/DeleteModal";
 import { DATE_TIME_FORMAT, DEFAULT_PAGINATION } from "@client/libs/constants";
 import { handleCheckAuthError } from "@client/libs/error";
 import { warehouseQueryKeys } from "@client/libs/query";
 import { server } from "@client/libs/server";
-import { useQuery } from "@tanstack/react-query";
+import { useTranslation } from "@client/libs/translation";
+import { GetElementType } from "@client/libs/types";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
 import dayjs from "dayjs";
-import { useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
 export const Route = createLazyFileRoute("/_authenticated/warehouse/")({
   component: WarehouseList,
 });
 
-const headerData = [
-  {
-    id: "name",
-    keyValue: "name",
-    title: "Name",
-  },
-  {
-    id: "createdAt",
-    keyValue: "createdAt",
-    title: "Created at",
-  },
-
-  {
-    id: "updatedAt",
-    keyValue: "updatedAt",
-    title: "Updated at",
-  },
-];
-
 function WarehouseList() {
   //* Hooks
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   //* States
@@ -50,15 +36,35 @@ function WarehouseList() {
     total: 0,
     totalPages: 1,
   });
+  const [searchText, setSearchText] = useState("");
+  const [sortParams, setSortParams] = useState<SortForm>({
+    sortBy: "createdAt",
+    sortOrder: "desc",
+  });
+
+  //* Refs
+  const deleteModalRef = useRef<DeleteModalRef>(null);
 
   //* Query
-  const { data, isFetching: isLoadingList } = useQuery({
-    queryKey: [...warehouseQueryKeys.list({ page: pagination.page })],
+  const {
+    data,
+    isFetching: isLoadingList,
+    refetch: listRefetch,
+  } = useQuery({
+    queryKey: warehouseQueryKeys.list({
+      page: pagination.page,
+      search: searchText,
+      sortBy: sortParams.sortBy,
+      sortOrder: sortParams.sortOrder,
+    }),
     queryFn: async () => {
       const { data, error } = await server.api.v1.warehouse.index.get({
         query: {
           limit: pagination.limit,
           page: pagination.page,
+          search: searchText,
+          sortBy: sortParams.sortBy,
+          sortOrder: sortParams.sortOrder,
         },
       });
 
@@ -75,9 +81,69 @@ function WarehouseList() {
     },
   });
 
+  //* Mutation
+  const { mutate: deleteMutate, isPending: isDeleteLoading } = useMutation({
+    mutationKey: warehouseQueryKeys.delete(),
+    mutationFn: async (params: { id: number }) => {
+      const { error } = await server.api.v1.product({ id: params.id }).delete();
+
+      if (error) {
+        handleCheckAuthError(error, navigate);
+        throw error.value;
+      }
+
+      listRefetch();
+
+      deleteModalRef.current?.handleClose();
+    },
+  });
+
+  //* Memos
+  const headerData: AdvanceTableColumnType<
+    GetElementType<NonNullable<typeof data>>
+  >[] = useMemo(() => {
+    return [
+      {
+        colId: "name",
+        colKeyValue: "name",
+      },
+      {
+        colId: "createdAt",
+        colKeyValue: "createdAt",
+        renderCell: (cellData) => (
+          <Text type="span">
+            {dayjs(cellData["createdAt"]).format(DATE_TIME_FORMAT.DATE_TIME)}
+          </Text>
+        ),
+      },
+
+      {
+        colId: "updatedAt",
+        colKeyValue: "updatedAt",
+        renderCell: (cellData) => (
+          <Text type="span">
+            {dayjs(cellData["updatedAt"]).format(DATE_TIME_FORMAT.DATE_TIME)}
+          </Text>
+        ),
+      },
+    ];
+  }, []);
+
   //* Functions
-  const handleChangePage = (page: number) => {
-    setPagination((prev) => ({ ...prev, page: page }));
+  const handleDelete = (props: { id: number }) => {
+    deleteMutate({ id: props.id });
+  };
+
+  const handleOpenAskDelete = (
+    record: GetElementType<NonNullable<typeof data>>
+  ) => {
+    deleteModalRef.current?.handleOpen({ id: record.id });
+  };
+
+  const handleEditRecord = (
+    record: GetElementType<NonNullable<typeof data>>
+  ) => {
+    navigate({ to: "/warehouse/$id", params: { id: record.id.toString() } });
   };
 
   return (
@@ -86,72 +152,29 @@ function WarehouseList() {
         modifiers={["inline"]}
         onClick={() => navigate({ to: "/warehouse/create" })}
       >
-        Create
+        {t("action.create")}
       </Button>
 
       <div className="p-warehouseList_table u-m-t-32">
-        <Table
+        <AdvanceTable
           isLoading={isLoadingList}
-          header={
-            <TableHeader>
-              <TableRow isHead>
-                {headerData.map((ele) => (
-                  <TableCell key={ele.id} isHead>
-                    <span>{ele.title}</span>
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHeader>
-          }
-        >
-          {data?.map((ele) => (
-            <TableRow key={`row-${ele.id}`}>
-              {headerData.map((col) => {
-                const keyVal = col.keyValue as keyof typeof ele;
-                const data = ele[keyVal];
-                if (
-                  keyVal === "createdAt" ||
-                  keyVal === "updatedAt" ||
-                  data instanceof Date
-                ) {
-                  return (
-                    <TableCell key={`${ele.id}-${col.keyValue}`}>
-                      <Text type="span">
-                        {dayjs(data).format(DATE_TIME_FORMAT.DATE_TIME)}
-                      </Text>
-                    </TableCell>
-                  );
-                }
+          headerData={headerData}
+          data={data ?? []}
+          sortKeys={["name", "createdAt", "updatedAt"]}
+          inlineSearchKeys={["name"]}
+          handleSearchText={setSearchText}
+          handleSortParams={setSortParams}
+          handleEditRecord={handleEditRecord}
+          handleDeleteRecord={handleOpenAskDelete}
+        />
+      </div>
 
-                if (keyVal === "name") {
-                  return (
-                    <TableCell key={`${ele.id}-${col.keyValue}`}>
-                      <Link
-                        to="/warehouse/$id"
-                        params={{ id: ele.id.toString() }}
-                      >
-                        {data}
-                      </Link>
-                    </TableCell>
-                  );
-                }
-
-                return (
-                  <TableCell key={`${ele.id}-${col.keyValue}`}>
-                    <Text type="span">{data}</Text>
-                  </TableCell>
-                );
-              })}
-            </TableRow>
-          ))}
-        </Table>
-        <div className="u-m-t-32">
-          <Pagination
-            currentPage={pagination.page}
-            totalPage={pagination.totalPages}
-            getPageNumber={handleChangePage}
-          />
-        </div>
+      <div className="p-warehouseList_deleteModal">
+        <DeleteModal
+          ref={deleteModalRef}
+          isLoading={isDeleteLoading}
+          handleDelete={handleDelete}
+        />
       </div>
     </div>
   );

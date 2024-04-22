@@ -1,6 +1,7 @@
 import { asc, count, desc, eq, like, or, sql } from "drizzle-orm";
 import { DBType } from "../config/database";
 import { inventoryTable, productTable, warehouseTable } from "../db-schema";
+import { WithAuthenParams } from "../models/base";
 import {
   CreateProductParams,
   GetDetailProductParams,
@@ -9,7 +10,6 @@ import {
   ProductWithInventoryData,
   UpdateProductParams,
 } from "../models/product.model";
-import { WithAuthenParams } from "../models/base";
 
 export default class ProductService {
   private db;
@@ -201,5 +201,61 @@ export default class ProductService {
         totalPages: totalPages,
       },
     };
+  }
+
+  async getDetailWithInventory(params: GetDetailProductParams) {
+    const { id } = params;
+
+    const records = await this.db
+      .select()
+      .from(productTable)
+      .where(eq(productTable.id, id))
+      .rightJoin(inventoryTable, eq(inventoryTable.productId, productTable.id))
+      .leftJoin(
+        warehouseTable,
+        eq(warehouseTable.id, inventoryTable.warehouseId)
+      );
+
+    const results = records.reduce((prev: ProductWithInventoryData[], curr) => {
+      const { product, inventory, warehouse } = curr;
+
+      if (!product) return prev;
+
+      const existedRecordIdx = prev.findIndex((ele) => ele.id === product.id);
+
+      if (existedRecordIdx > -1) {
+        const modifyList = [...prev];
+        modifyList[existedRecordIdx] = {
+          ...modifyList[existedRecordIdx],
+          totalAvailable: modifyList[existedRecordIdx].totalAvailable ?? 0,
+          inventory: [
+            ...modifyList[existedRecordIdx].inventory,
+            {
+              quantityAvailable: inventory?.quantityAvailable ?? 0,
+              warehouseId: inventory?.warehouseId ?? -1,
+              warehouseName: warehouse?.name ?? "",
+            },
+          ],
+        };
+        return modifyList;
+      }
+
+      return [
+        ...prev,
+        {
+          ...product,
+          totalAvailable: inventory?.quantityAvailable ?? 0,
+          inventory: [
+            {
+              quantityAvailable: inventory?.quantityAvailable ?? 0,
+              warehouseId: inventory?.warehouseId ?? -1,
+              warehouseName: warehouse?.name ?? "",
+            },
+          ],
+        },
+      ];
+    }, []);
+
+    return results[0];
   }
 }

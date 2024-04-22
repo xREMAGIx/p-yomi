@@ -1,10 +1,10 @@
-import { asc, desc, eq, sql } from "drizzle-orm";
+import { asc, count, desc, eq, like, or, sql } from "drizzle-orm";
 import { DBType } from "../config/database";
 import { warehouseTable } from "../db-schema";
-import { QueryPaginationParams } from "../models/base";
 import {
   CreateWarehouseParams,
   GetDetailWarehouseParams,
+  GetListWarehouseParams,
   UpdateWarehouseParams,
 } from "../models/warehouse.model";
 
@@ -15,22 +15,26 @@ export default class WarehouseService {
     this.db = db;
   }
 
-  async getList(params: QueryPaginationParams) {
-    const { sortOrder, limit = 10, page = 1 } = params;
+  async getList(params: GetListWarehouseParams) {
+    const { sortBy, sortOrder, limit = 10, page = 1, name } = params;
 
-    const warehouseList = await this.db.query.warehouseTable.findMany({
-      limit: limit,
-      offset: limit * (page - 1),
-      orderBy:
+    const warehouseList = await this.db
+      .select()
+      .from(warehouseTable)
+      .where(or(name ? like(warehouseTable.name, `%${name}%`) : undefined))
+      .limit(limit)
+      .offset(limit * (page - 1))
+      .orderBy(
         sortOrder === "asc"
-          ? [asc(warehouseTable.createdAt)]
-          : [desc(warehouseTable.createdAt)],
-    });
+          ? asc(warehouseTable[sortBy ?? "createdAt"])
+          : desc(warehouseTable[sortBy ?? "createdAt"])
+      );
 
-    const totalQueryResult = await this.db.execute(sql<{ count: string }>`
-        SELECT count(*) FROM ${warehouseTable};
-    `);
-    const total = Number(totalQueryResult.rows[0].count);
+    const totalQueryResult = await this.db
+      .select({ count: count() })
+      .from(warehouseTable)
+      .where(or(name ? like(warehouseTable.name, `%${name}%`) : undefined));
+    const total = Number(totalQueryResult?.[0]?.count);
     const totalPages = Math.ceil(total / limit);
 
     return {

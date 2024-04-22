@@ -1,6 +1,6 @@
 # Project Yomi
 
-Fullstack CMS project
+Fullstack CMS E-commerce project
 
 Status: In Progress
 
@@ -55,8 +55,9 @@ Status: In Progress
 - [x] Status: Draft, Published, End of Service
 - [x] Add cost price for calculate profit.
 - [x] Tracking who created, updated
+- [ ] Show, clear applied filter
 - [ ] Multiple prices: wholesale prices, web, ...
-- [ ] Can see inventory across warehouses
+- [x] Can see inventory across warehouses
 - [ ] Can have variety
 - [ ] Import data using exel: xls
 - [ ] Upload images
@@ -72,6 +73,7 @@ Status: In Progress
 
 - [x] CRUD
 - [ ] Implement status: pending, completed
+- [ ] Only when the status is completed will we update inventory
 - [ ] Search, filter status
 
 #### Goods issue

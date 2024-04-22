@@ -1,5 +1,8 @@
 import Button from "@client/components/atoms/Button";
 import Heading from "@client/components/atoms/Heading";
+import Tabs, { Tab, TabPanel } from "@client/components/organisms/Tabs";
+import AdvanceTable from "@client/components/templates/AdvanceTable";
+import { AdvanceTableColumnType } from "@client/components/templates/AdvanceTable/types";
 import InfoForm, { ProductInfoForm } from "@client/containers/product/InfoForm";
 import { TOAST_SUCCESS_MESSAGE } from "@client/libs/constants";
 import { handleCheckAuthError } from "@client/libs/error";
@@ -7,6 +10,7 @@ import { productQueryKeys } from "@client/libs/query";
 import { server } from "@client/libs/server";
 import { useTranslation } from "@client/libs/translation";
 import {
+  ProductInventoryData,
   ProductStatus,
   ProductStatusCode,
   UpdateProductParams,
@@ -17,6 +21,7 @@ import {
   useNavigate,
   useRouter,
 } from "@tanstack/react-router";
+import { useMemo, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
@@ -31,6 +36,9 @@ function ProductDetail() {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
+  //* States
+  const [activeTabKey, setActiveTabKey] = useState("info");
+
   //* Hook-form
   const methods = useForm<ProductInfoForm>({
     defaultValues: {
@@ -42,10 +50,13 @@ function ProductDetail() {
   });
 
   //* Query
-  useQuery({
+  const { data } = useQuery({
     queryKey: productQueryKeys.detail(id),
     queryFn: async () => {
-      const { data, error } = await server.api.v1.product({ id: id }).get();
+      const { data, error } = await server.api.v1.product({ id: id })[
+        // eslint-disable-next-line no-unexpected-multiline
+        "with-inventory"
+      ].get();
 
       if (error) {
         handleCheckAuthError(error, navigate);
@@ -68,10 +79,11 @@ function ProductDetail() {
       return data.data;
     },
   });
+  console.log("🚀 ~ ProductDetail ~ data:", data);
 
   //* Mutation
   const { mutate: updateMutate, isPending: isLoadingUpdate } = useMutation({
-    mutationKey: [...productQueryKeys.update(id)],
+    mutationKey: productQueryKeys.update(id),
     mutationFn: async (params: UpdateProductParams) => {
       const { id, ...body } = params;
       const { error } = await server.api.v1.product({ id: id }).put(body);
@@ -84,6 +96,21 @@ function ProductDetail() {
       toast.success(TOAST_SUCCESS_MESSAGE.UPDATE);
     },
   });
+
+  //* Memos
+  const tabsData = useMemo(
+    () => [
+      {
+        id: "info",
+        label: t("product.info"),
+      },
+      {
+        id: "inventory",
+        label: t("product.inventory"),
+      },
+    ],
+    [t]
+  );
 
   //* Functions
   const onSubmit = (form: ProductInfoForm) => {
@@ -112,16 +139,85 @@ function ProductDetail() {
           {t("action.update")}
         </Button>
       </div>
-      <div className="p-productDetail_form">
-        <FormProvider {...methods}>
-          <form onSubmit={methods.handleSubmit(onSubmit)}>
-            <div className="u-m-t-16">
-              <Heading>{t("title.productDetail")}</Heading>
-            </div>
-            <InfoForm />
-          </form>
-        </FormProvider>
+      <div className="u-m-t-16">
+        <Heading>{t("title.productDetail")}</Heading>
+      </div>
+      <div className="u-m-t-24">
+        <Tabs variableMutate={activeTabKey} modifiers={["primary"]}>
+          {tabsData.map((item, index) => (
+            <Tab
+              key={`tab-${index.toString()}`}
+              label={item.label}
+              active={item.id === activeTabKey}
+              handleClick={() => setActiveTabKey(item.id)}
+            />
+          ))}
+        </Tabs>
+        <TabPanel key={`tab-panel-info`} active>
+          {(() => {
+            switch (activeTabKey) {
+              case "info":
+                return (
+                  <FormProvider {...methods}>
+                    <ProductInfoTab />
+                  </FormProvider>
+                );
+              case "inventory":
+                return (
+                  <FormProvider {...methods}>
+                    <ProductInventoryTab data={data?.inventory ?? []} />
+                  </FormProvider>
+                );
+              default:
+                return null;
+            }
+          })()}
+        </TabPanel>
       </div>
     </div>
   );
 }
+
+const ProductInfoTab: React.FC = () => {
+  return (
+    <div className="p-productDetail_form">
+      <form>
+        <InfoForm />
+      </form>
+    </div>
+  );
+};
+
+interface ProductInventoryTabProps {
+  data: ProductInventoryData[];
+}
+
+const ProductInventoryTab: React.FC<ProductInventoryTabProps> = ({ data }) => {
+  //* Hooks
+
+  //* Memos
+  const headerData = useRef<AdvanceTableColumnType<ProductInventoryData>[]>([
+    {
+      colId: "warehouseId",
+      colKeyValue: "warehouseId",
+    },
+    {
+      colId: "warehouseName",
+      colKeyValue: "warehouseName",
+    },
+    {
+      colId: "quantityAvailable",
+      colKeyValue: "quantityAvailable",
+    },
+  ]);
+
+  return (
+    <div className="p-productDetail_inventory">
+      <AdvanceTable
+        inlineSearchKeys={["warehouseName"]}
+        headerData={headerData.current}
+        data={data}
+      />
+    </div>
+  );
+};
