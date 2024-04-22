@@ -27,6 +27,35 @@ export function commafy(num: number) {
   return str.join(".");
 }
 
+export const handleScrollCenter = (
+  ref: React.RefObject<HTMLDivElement | null>,
+  classNameEleActive: string
+) => {
+  const eleScroll = ref.current;
+  const eleActive = document.querySelector(classNameEleActive);
+  if (!eleActive || !eleScroll) return;
+  // get width element scroll
+  const widthEleScroll = eleScroll.getBoundingClientRect().width;
+  // get distance element scroll compared to y window
+  const xEleScroll = eleScroll.getBoundingClientRect().x;
+  // get width element active
+  const widthEleActive = eleActive.getBoundingClientRect().width;
+  // get distance element active compared to y window
+  const xEleActive = eleActive.getBoundingClientRect().x;
+  // get position sroll bar
+  const positionScroll = eleScroll.scrollLeft;
+  const scrollX =
+    xEleActive -
+    xEleScroll +
+    widthEleActive / 2 +
+    positionScroll -
+    widthEleScroll / 2;
+  eleScroll.scroll({
+    left: scrollX,
+    behavior: "smooth",
+  });
+};
+
 type Descripted<T> = {
   [K in keyof T]: {
     readonly id: T[K];

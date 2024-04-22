@@ -5,6 +5,7 @@ import { FORM_VALIDATION, TOAST_SUCCESS_MESSAGE } from "@client/libs/constants";
 import { handleCheckAuthError } from "@client/libs/error";
 import { warehouseQueryKeys } from "@client/libs/query";
 import { server } from "@client/libs/server";
+import { useTranslation } from "@client/libs/translation";
 import { CreateWarehouseParams } from "@server/models/warehouse.model";
 import { useMutation } from "@tanstack/react-query";
 import {
@@ -23,6 +24,7 @@ function WarehouseCreate() {
   //* Hooks
   const router = useRouter();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   //* Hook-form
   const methods = useForm<CreateWarehouseParams>({
@@ -33,7 +35,7 @@ function WarehouseCreate() {
 
   //* Mutation
   const createMutation = useMutation({
-    mutationKey: [...warehouseQueryKeys.create()],
+    mutationKey: warehouseQueryKeys.create(),
     mutationFn: async (params: CreateWarehouseParams) => {
       const { error } = await server.api.v1.warehouse.index.post(params);
 
@@ -61,13 +63,13 @@ function WarehouseCreate() {
         variant="outlinePrimary"
         onClick={() => router.history.back()}
       >
-        Back
+        {t("action.back")}
       </Button>
       <div className="p-warehouseCreate_form">
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)}>
             <div className="u-m-t-16">
-              <Heading>Create warehouse</Heading>
+              <Heading>{t("title.warehouseCreate")}</Heading>
             </div>
             <div className="u-m-t-16">
               <Controller

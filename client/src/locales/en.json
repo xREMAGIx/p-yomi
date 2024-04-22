@@ -31,10 +31,15 @@
     "description": "Description",
     "draft": "Draft",
     "endOfService": "End of service",
+    "info": "Info",
+    "inventory": "Inventory",
     "name": "Name",
     "price": "Price",
     "published": "Published",
-    "status": "Status"
+    "status": "Status",
+    "warehouseId": "Warehouse id",
+    "warehouseName": "Warehouse name",
+    "quantityAvailable": "Quantity available"
   },
   "setting": {
     "dark": "Dark",
@@ -48,11 +53,16 @@
     "name": "Name",
     "price": "Price",
     "status": "Status",
-    "updatedAt": "Updated at"
+    "updatedAt": "Updated at",
+    "warehouseId": "Warehouse id",
+    "warehouseName": "Warehouse name",
+    "quantityAvailable": "Quantity available"
   },
   "title": {
     "login": "Login",
     "productCreate": "Create Product",
-    "productDetail": "Product Detail"
+    "productDetail": "Product Detail",
+    "warehouseCreate": "Warehouse Create",
+    "warehouseDetail": "Warehouse Detail"
   }
 }

@@ -9,6 +9,7 @@ import {
   ProductData,
   createProductParamSchema,
   detailProductDataSchema,
+  detailProductWithInventoryDataSchema,
   listProductDataSchema,
   listProductQuerySchema,
   listProductWithInventoryDataSchema,
@@ -76,6 +77,29 @@ export const productRoutes = new Elysia({
               response: detailProductDataSchema,
               detail: {
                 summary: "Get Product Detail",
+              },
+            }
+          )
+          //* Detail
+          .get(
+            "/:id/with-inventory",
+            async ({ idParams, error, productService }) => {
+              const data = await productService.getDetailWithInventory({
+                id: idParams,
+              });
+
+              if (!data) {
+                throw error(404, "Not Found UwU");
+              }
+
+              return {
+                data,
+              };
+            },
+            {
+              response: detailProductWithInventoryDataSchema,
+              detail: {
+                summary: "Get Product Detail with Inventory",
               },
             }
           )
@@ -189,7 +213,7 @@ export const productRoutes = new Elysia({
           query: listProductQuerySchema,
           response: listProductWithInventoryDataSchema,
           detail: {
-            summary: "Get Product List",
+            summary: "Get Product List with Inventory",
           },
         }
       )

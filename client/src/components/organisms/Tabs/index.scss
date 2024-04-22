@@ -1,0 +1,123 @@
+.o-tabs {
+  $root: &;
+  @include adjust-flex(flex-start, stretch);
+
+  @include mobile-up {
+    border-bottom: 1px solid $gainsboro;
+  }
+
+  @include mobile-down {
+    display: block;
+  }
+
+  &_labels {
+    overflow-x: auto;
+    @include scroll-bars();
+    @include adjust-flex(flex-start, center);
+
+    @include mobile-down {
+      border-bottom: 1px solid var(--text-color);
+      padding-bottom: rem(10);
+    }
+  }
+
+  &-left {
+    #{$root}_labels {
+      justify-content: flex-start;
+    }
+  }
+
+  &-center {
+    justify-content: center;
+
+    #{$root}_labels {
+      justify-content: center;
+    }
+  }
+
+  &_label {
+    color: var(--text-color);
+    white-space: nowrap;
+
+    @include font-base(16, 24);
+    @include mobile-down {
+      @include font-base(14, 22);
+    }
+  }
+
+  &_tab {
+    border-bottom: rem(4) solid transparent;
+    cursor: pointer;
+    margin-left: rem(20);
+    margin-right: rem(20);
+    padding: rem(4) rem(8);
+    transition: all $transition ease-in-out;
+
+    @include mobile-down {
+      margin-left: rem(8);
+      margin-right: rem(8);
+      padding-bottom: rem(8);
+      padding-top: rem(8);
+    }
+
+    &:first-child {
+      margin-left: 0;
+    }
+
+    &:last-child {
+      margin-right: 0;
+    }
+
+    &:hover {
+      #{$root}_label {
+        color: var(--text-color);
+      }
+
+      border-bottom: rem(4) solid var(--primary-color);
+    }
+
+    &-customComponent {
+      flex-shrink: 0;
+    }
+
+    &-active {
+      #{$root}_label {
+        color: var(--text-color);
+        font-weight: 700;
+      }
+
+      border-bottom: rem(4) solid var(--primary-color);
+    }
+  }
+
+  &_panel {
+    display: none;
+
+    &-active {
+      display: block;
+      margin-top: rem(20);
+    }
+  }
+
+  &-secondary {
+    #{$root}_tab {
+      &:hover,
+      &-active {
+        #{$root}_label {
+          color: var(--text-color);
+        }
+        border-bottom: rem(4) solid var(--secondary-color);
+      }
+    }
+  }
+
+  &-noBorder {
+    @include mobile-up {
+      border-bottom: 0;
+    }
+
+    #{$root}_labels {
+      border-bottom: 0;
+    }
+  }
+}
