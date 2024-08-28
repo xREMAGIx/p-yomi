@@ -2,7 +2,7 @@
 
 Fullstack CMS E-commerce project
 
-Status: In Progress
+Status: Dropped - replaced by [p-robin](https://github.com/xREMAGIx/p-robin)
 
 ## Tech Stack
 
